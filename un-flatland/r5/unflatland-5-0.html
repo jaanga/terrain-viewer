@@ -14,10 +14,10 @@
 
 	// UF.stats, UF.renderer, UF.scene, UF.camera, UF.controls;
 
-	UF.fileName = 'places-2000.csv';
+	UF.fileName = '../../gazetteer/places-2000.csv';
 	UF.startPlace = 1620; // San Francisco ~ but see below
 
-	UF.tileZoom = 6;
+	UF.tileZoom = 5;
 	UF.tileExaggeration = 5;
 
 	UF.mapType = 0;
@@ -211,7 +211,7 @@
 		UF.target = new THREE.Mesh( geometry, material );
 		UF.scene.add( UF.target );
 
-		var mapTexture = THREE.ImageUtils.loadTexture( '../textures/grid-512a.png' );
+		var mapTexture = THREE.ImageUtils.loadTexture( '../../textures/grid-512a.png' );
 		mapTexture.wrapS = mapTexture.wrapT = THREE.RepeatWrapping;
 		mapTexture.repeat.set( 16, 16 );
 
@@ -328,9 +328,9 @@
 		var heightMap = UF.heightMaps[count];
 
 		if ( UF.tileZoom < 8) {
-			heightMap.src =  '../de15-png-tms/' + UF.tileZoom + '/' + x + '/' + y +'.png';
+			heightMap.src =  '../../../terrain/' + UF.tileZoom + '/' + x + '/' + y +'.png';
 		} else {
-			heightMap.src =  '../de15-png-tms/7+/' + x + '/' + y +'.png';
+			heightMap.src =  '../../../terrain/7+/' + x + '/' + y +'.png';
 			// heightMap.src =  '../de15-png-tms/7+/7/' + x + '/' + y +'.png';
 		}
 // console.log( count, x, y, dx, dy );
@@ -367,7 +367,7 @@
 				
 				if ( UF.mapType < 1 ) {
 					UF.ocean.visible = true;
-					var mapTexture = THREE.ImageUtils.loadTexture( '../textures/grid-512a.png' );
+					var mapTexture = THREE.ImageUtils.loadTexture( '../../textures/grid-512a.png' );
 					mapTexture.wrapS = mapTexture.wrapT = THREE.RepeatWrapping;
 					mapTexture.repeat.set( 16, 16 );
 					//UF.terrains.children[count].material = new THREE.MeshPhongMaterial( { map: mapTexture } );
@@ -404,7 +404,7 @@
 			} else if ( UF.tileZoom < 19 ) {
 				if ( UF.mapType < 1 ) {
 					UF.ocean.visible = true;
-					var mapTexture = THREE.ImageUtils.loadTexture( '../textures/grid-512a.png' );
+					var mapTexture = THREE.ImageUtils.loadTexture( '../../textures/grid-512a.png' );
 					mapTexture.wrapS = mapTexture.wrapT = THREE.RepeatWrapping;
 					mapTexture.repeat.set( 16, 16 );
 					//UF.terrains.children[count].material = new THREE.MeshPhongMaterial( { map: mapTexture } );
