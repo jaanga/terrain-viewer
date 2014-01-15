@@ -1,7 +1,7 @@
-unFlatland Read Me
-==================
+Jaanga Terrain Viewer Read Me
+=============================
 
-Live demo: [UnFlatland]( http://jaanga.github.io/cookbook/un-flatland/index.html )
+Live demo: [UnFlatland]( http://jaanga.github.io/projects/terrain-viewer/index.html )
 
 For an amusing applied use of this technology see: [FGx Plane Spotter]( http://fgx.github.io/fgx-plane-spotter/inde.html )
 
