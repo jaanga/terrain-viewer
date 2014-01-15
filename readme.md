@@ -1,9 +1,26 @@
 Jaanga Terrain Viewer Read Me
 =============================
 
-Live demo: [UnFlatland]( http://jaanga.github.io/terrain-viewer/index.html )
+Live demo: [UnFlatland R5 light 15 second data]( http://jaanga.github.io/terrain-viewer/un-flatland/r5/un-flatland-r5-light-de15.html)
 
-For an amusing applied use of this technology see: [FGx Plane Spotter]( http://fgx.github.io/fgx-plane-spotter/inde.html )
+* Loads Jonathan de Ferranti's 15 second data set
+* About one data point about every 500 meters
+* Data set overs the entire world
+* Approx 185 MB file size
+
+Live demo: [UnFlatland R5 light 3 second data]( http://jaanga.github.io/terrain-viewer/un-flatland/r5/un-flatland-r5-light-de3.html )
+
+* Loads Jonathan de Ferranti's 3 second data set
+* About one data point about every 100 meters
+* Data set covers the USA only
+* Approx 160 MB
+
+2014-01-15 ~ These are very interim, developer versions just to get going. There's no 'skinning', some serious bugs and unkempt code.
+
+In particular, in zoom levels or above, if you happen to land on the edges of a tile then funny boxes appear. Please ignore and go somewhere else.
+
+
+For an amusing applied use ( older version ) of this technology see: [FGx Plane Spotter]( http://fgx.github.io/fgx-plane-spotter/inde.html )
 
 For [Leap Motion]( https://www.leapmotion.com/ ) device enabled and earlier versions see: [Flying Leap 3D]( https://github.com/jaanga/gestification/tree/gh-pages/projects/flying-leap-3d )
 
@@ -17,6 +34,8 @@ You have two ways of viewing the FGx Plane Spotter files:
 * Code hosted on GitHub: [jaanga.github.io]( http://jaanga.github.io/cookbook/un-flatland/ "view the files as apps." ) <input value="<< You are now probably here." size=28 style="font:bold 12pt monospace;border-width:0;" >  
 * Source code on GitHub: [github.com/jaanga]( https://github.com/jaanga/cookbook/tree/gh-pages/un-flatland/ "View the files as source code." ) <scan style=display:none ><< You are now probably here.</scan>
 
+
+2014-01-15 ~ Following text is out of data 
 
 ## <a name="features"></a>Features
 
@@ -196,6 +215,10 @@ See also and in particular <a href="http://fgx.github.io" target="_blank">FGx on
 
 
 ## Change Log
+
+2014-01-15 ~ Theo
+
+* R5 light is up
 
 2013-12-18 ~ Theo
 

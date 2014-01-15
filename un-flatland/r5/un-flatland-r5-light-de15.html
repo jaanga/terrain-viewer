@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang=en>
+<head>
+<title>unFlatLand R5 light ~ DE15</title>
+<meta charset=utf-8>
+</head>
+<body>
+<script src = http://mrdoob.github.io/three.js/examples/js/Detector.js ></script>
+<script src = http://mrdoob.github.io/three.js/build/three.min.js ></script>
+<script src = http://mrdoob.github.io/three.js/examples/js/controls/TrackballControls.js ></script>
+<script src = http://mrdoob.github.io/three.js/examples/js/libs/stats.min.js ></script>
+<script>
+	var UF = UF || {};
+
+	UF.fileName = '../../gazetteer/places-2000.csv';
+	UF.startPlace = 1620; // San Francisco ~ but see below
+
+	UF.tileZoom = 5;
+	UF.tileExaggeration = 3;
+
+	UF.mapType = 0;
+	UF.mapTypes = [
+		['Native',''],
+		['Google Maps','http://mt1.google.com/vt/x='],
+		['Google Maps Terrain','http://mt1.google.com/vt/lyrs=t&x='],
+		['Google Maps Satellite','http://mt1.google.com/vt/lyrs=s&x='],
+		['Google Maps Hybrid','http://mt1.google.com/vt/lyrs=y&x='],
+		['Open Street Map','http://b.tile.openstreetmap.org/'],
+		['Open Cycle Map', 'http://c.tile.opencyclemap.org/cycle/'],
+		['MapQuest OSM', 'http://otile3.mqcdn.com/tiles/1.0.0/osm/'],
+		['MapQuest Satellite', 'http://otile3.mqcdn.com/tiles/1.0.0/sat/'],
+		['Stamen terrain background','http://tile.stamen.com/terrain-background/'],
+		['FGx Terrain','../../fgx-terrain/'],
+//		['FGx GloTect','../glo-tect/'],
+		['Mesh Normal',''],
+		['Wireframe',''],
+		['HeightMap','']
+//		['ArcGIS Server Tiled Map Service','http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/']  // not CORS compatible?
+// 		['http://vec04.maps.yandex.net/tiles?l=map&v=2.26.0&x=3&y=6&z=4&lang=ru-RU		','']
+	];
+
+	var pi = Math.PI, pi2 = pi * 2, pi05 = pi * 0.5;
+	// var d2r = pi / 180, r2d = 180 / pi;  // degrees & radians
+
+	init();
+	animate();
+
+	function init() {
+		var geometry, material, mesh;
+
+		var css = document.body.appendChild( document.createElement('style') );
+		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden; }' +
+			'h1 a {text-decoration: none; }' +
+		'';
+
+		var data = requestFile( UF.fileName );
+		var lines = data.split(/\r\n|\n/);
+		UF.places = [];
+		for ( var i = 1, length = lines.length - 2; i < length; i++ ) {
+			UF.places.push( lines[i].split( ';' ) );
+		}
+		// UF.startPlace = parseInt( Math.random() * UF.places.length, 10 );
+		var lat = UF.places[ UF.startPlace][1];
+		var lon = UF.places[ UF.startPlace][2];
+
+		var info = document.body.appendChild( document.createElement( 'div' ) );
+		info.style.cssText = 'border: 0px solid red; left: 20px; position: absolute; top: 25px; width: 15% ';
+		info.innerHTML = '<h1>unFlatland R5 light DE15 ' +
+			'<a href=# title="Get help and info" onclick=help.style.display="block"; ><large>&#x24D8;</large></a></h1>' +
+			'<div style=height{900px; >Target<br>lat: <input type="text" id="inpLat" value="' + UF.places[ UF.startPlace][1] +'" size=8 /><br>' +
+				'lng: <input type="text" id="inpLng" value="' + UF.places[ UF.startPlace][2] +'" size=8 /> ' +
+				'<button onclick="updateTiles( inpLat.value, inpLng.value );" title="Click Go to update camera longitude and latitude" >Go</button><hr>' +
+				'<select title="Choose one of ' + UF.places.length + ' icao listings" id=selPlace ' +
+					'onchange="updateTiles( UF.places[this.selectedIndex][1], UF.places[this.selectedIndex][2] );' +
+					'inpLat.value = UF.places[this.selectedIndex][1]; inpLng.value = UF.places[this.selectedIndex][2]; " ></select><br>' +
+				'<select title="Are we there yet?" id=selZoom onchange="UF.tileZoom=this.selectedIndex; updateTiles( UF.places[ selPlace.selectedIndex ][1], UF.places[selPlace.selectedIndex][2] );"></select> ' +
+				'<select title="Select the amount of vertical distortion" id=selExagg onchange="UF.tileExaggeration = 1 + this.selectedIndex; ' +
+					'updateTiles( UF.places[ selPlace.selectedIndex ][1], UF.places[selPlace.selectedIndex][2] );"></select> ' +
+// 				'<select title="Select the 2D overlay" id=selMapType onchange="UF.mapType=this.selectedIndex; updateTiles( UF.places[selPlace.selectedIndex ][1], UF.places[selPlace.selectedIndex ][2] );"><select>' +
+				'<br><br>' +
+//				'<a href="" >Trackball Controller</a> &#10070; ' +
+//				'<a href="JavaScript:getFirstPersonController();" title="Happy flying!" >First Person Controller</a>' +
+//				'  &#10070; <input id=chkPlacards type="checkbox" onchange=togglePlacards(); > Placards' +
+			'</div><br>' +
+			'<div id=touch style=display:none;height:' + window.innerHeight + 'px;width:100%; ></div>' +
+			'<div id=help onclick=help.style.display="none"; style=display:none;background-color:#ccc;opacity:0.7;left:0;margin:auto;padding:20px;position:absolute;right:0;top:200px;width:60%; >' +
+				'unFlatland R5.0<br><br>' +
+				'<i>Note: Works only in Google Chrome and Firefox.</i><br>' +
+				'<p>Trackball General Controls:<br>' +
+					'&bull; Rotate globe: Left mouse / press 1 finger<br>' +
+					'&bull; Zoom in current level: Mousewheel / two fingers<br>' +
+					'&bull; Drag globe: Right mouse / press 2 fingers<br>' +
+				'</p>' +
+				'&#10070; ' +
+				'<p>First Person General Controls:<br>' +
+					'&bull; WASD/cursor keys: four directions<br>' +
+					'&bull; RF/Page Up PageDn: move up / down<br>' +
+					'&bull; Mouse wheel only: speed up/slow down / down<br>' +
+					'&bull; Spacebar/mousewheel click: pause<br>' +
+					'&bull; Mouse/trackpad: update heading<br>' +
+				'</p>' +
+
+				'<a href="https://github.com/jaangs/" target="_blank">Source code</a><br>' +
+				'<small>credits: <a href="http://threejs.org" target="_blank">three.js</a> - ' +
+				'<a href="http://khronos.org/webgl/" target="_blank">webgl</a> - ' +
+				'<a href="http://jaanga.github.io" target="_blank">jaanga</a><br>' +
+				'copyright &copy; 2013 jaanga authors ~ MIT license</small><br><br>' +
+				'<i>Click anywhere in this message to hide...</i>' +
+			'</div>' +
+
+		'<div id=dataDiv></div>';
+
+		for ( var option, i = 0, len = UF.places.length; i < len; i++ ) {
+			selPlace.appendChild( document.createElement( 'option' ) );
+			selPlace.children[i].text = UF.places[i][0];
+		}
+		selPlace.selectedIndex = UF.startPlace;
+
+		for ( var option, i = 1; i < 19; i++ ) {
+			selZoom.appendChild( document.createElement( 'option' ) );
+			selZoom.children[i - 1].text = 'Zoom level ' + (i - 1);
+		}
+		selZoom.selectedIndex = UF.tileZoom;
+
+		for ( var option, i = 0; i < 10; i++ ) {
+			selExagg.appendChild( document.createElement( 'option' ) );
+			selExagg.children[i].text ='Exaggeration scale ' + ( i + 1 ) + ':1';
+		}
+		selExagg.selectedIndex = UF.tileExaggeration;
+/*
+		for ( var option, i = 0, len = UF.mapTypes.length; i < len; i++ ) {
+			selMapType.appendChild( option = document.createElement( 'option' ) );
+			selMapType.children[i].text = UF.mapTypes[i][0];
+		}
+		selMapType.selectedIndex = UF.mapType;
+*/
+
+		UF.stats = new Stats();
+		UF.stats.domElement.style.cssText = 'position: absolute; top: 0px; zIndex: 100; ';
+		document.body.appendChild( UF.stats.domElement );
+
+		if ( ! Detector.webgl ) {
+			UF.renderer = new THREE.CanvasRenderer();
+		} else {
+			UF.renderer = new THREE.WebGLRenderer( { alpha: 1, antialias: true, clearColor: 0xffffff }  );
+		}
+		UF.renderer.setSize( window.innerWidth, window.innerHeight );
+		// UF.renderer.shadowMapEnabled = true;
+		document.body.appendChild( UF.renderer.domElement );
+		UF.scene = new THREE.Scene();
+
+		UF.camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 5000 );
+		UF.camera.position.set( 0, 200, 300 );
+		UF.controls = new THREE.TrackballControls( UF.camera, UF.renderer.domElement );
+
+// axes
+		UF.scene.add( new THREE.ArrowHelper( v(1, 0, 0), v(0, 0, 0), 30, 0xcc0000) );
+		UF.scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 30, 0x00cc00) );
+		UF.scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 30, 0x0000cc) );
+
+// target
+		geometry = new THREE.CubeGeometry( 2, 100, 2 );
+		material = new THREE.MeshNormalMaterial();
+		UF.target = new THREE.Mesh( geometry, material );
+
+		UF.positions = [];
+		UF.heightMaps = [];
+		UF.heightMapsX = [];
+		UF.heightMapsY = [];
+
+		UF.canvases = [];
+		UF.contexts = [];
+		for (var cnt = 0, y = 0; y < 2; y++) {
+			for (var x = 0; x < 2; x++) {
+				//material = new THREE.MeshNormalMaterial( {  side: THREE.DoubleSide, shading: THREE.SmoothShading } );
+				//geometry = new THREE.PlaneGeometry( 1, 1);
+				//geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -Math.PI / 2 ) );
+				//var mesh = new THREE.Mesh( geometry, material );
+				var position = v( -128 + x * 256, 0, -128 + y * 256);
+				UF.positions.push( position );
+
+				var heightMap = document.createElement('img' );
+				UF.heightMaps.push( heightMap );
+
+				var canvas = document.createElement( 'canvas' );
+				canvas.width = canvas.height = 256;
+				document.body.appendChild( canvas );
+				canvas.style.cssText = 'opacity: 1; position: absolute; right: 0; top: ' + ( cnt * 25) + '%;' ;
+				UF.canvases.push( canvas );
+
+				var context = UF.canvases[cnt++].getContext( '2d' );
+				UF.contexts.push( context );
+			}
+		}
+		updateTiles( lat, lon );
+	}
+
+	function updateTiles( lat, lon) {
+		if (UF.scene ) {
+			UF.scene = new THREE.Scene();
+		}
+		UF.terrains = new THREE.Object3D();
+		UF.scene.add( UF.terrains );
+		UF.scene.add( UF.target );
+
+		var br = '<br>', br2 = '<br><br>';
+		var txt = 'UF.tileZoom ' + UF.tileZoom + br;
+		txt += 'lon ' + lon + br;
+		txt += 'lat ' + lat + br2;
+
+		var lat = parseFloat( lat );
+		var lon = parseFloat( lon );
+
+		UF.xTile = lon2tile( lon, UF.tileZoom );
+		txt += 'xTile ' + UF.xTile + br;
+		UF.yTile = lat2tile( lat, UF.tileZoom );
+		txt += 'yTile ' + UF.yTile + br2;
+
+		if ( UF.tileZoom < 8 ) {
+		} else {
+			var zoomScale = Math.pow( 2, UF.tileZoom - 7);
+
+			var xHeightMapTile = lon2tile( lon, 7 );
+			txt += 'xHeightMapTile ' + xHeightMapTile + br;
+
+			var yHeightMapTile = lat2tile( lat, 7 );
+			txt += 'yHeightMapTile ' + yHeightMapTile + br2;
+
+			var xHeightMapTileZoom = zoomScale * xHeightMapTile;
+			var yHeightMapTileZoom = zoomScale * yHeightMapTile;
+
+			xDelta = UF.xTile - xHeightMapTileZoom;
+			txt += 'xDelta ' + xDelta + br;
+			yDelta = UF.yTile - yHeightMapTileZoom;
+			txt += 'xDelta ' + xDelta + br2;
+
+			UF.heightMapsX = [];
+			UF.heightMapsY = [];
+		}
+
+		var lonTileUL = tile2lon( UF.xTile, UF.tileZoom ).toFixed(3);
+		var lonTileLR = tile2lon( UF.xTile + 1, UF.tileZoom ).toFixed(3);
+		xTarget = 255 * (lonTileUL - lon) / ( lonTileUL - lonTileLR);
+		txt += 'xTarget ' + Math.round(xTarget) + br;
+
+		var latTileUL = tile2lat( UF.yTile, UF.tileZoom ).toFixed(3);
+		var latTileLR = tile2lat( UF.yTile + 1, UF.tileZoom ).toFixed(3);
+		yTarget = 255 * (latTileUL - lat) / ( latTileUL - latTileLR);
+		txt += 'yTarget ' + Math.round(yTarget) + br;
+
+		if ( xTarget < 128) {
+			xTarget += 256;
+			if ( UF.tileZoom > 1 ) {UF.xTile--; }
+		}
+		if ( yTarget < 128  && UF.tileZoom > 1 ) {
+			yTarget += 256;
+			if ( UF.tileZoom > 1 ) { UF.yTile--; }
+		}
+
+		UF.target.position.set( -256 + xTarget, 40, -256 + yTarget);
+
+		for (var k = 0, y = 0; y < 2; y++) {
+			for (var x = 0; x < 2; x++) {
+				if ( UF.tileZoom < 8 ) {
+					//var xx = x + UF.xTile;
+					//var max = Math.pow( 2, UF.tileZoom );
+					//var yy = y + UF.yTile;
+					//if ( xx >= max ) { xx = 0; } 
+					//if ( yy >= max ) return;
+					updateTerrain( k++, x + UF.xTile, y + UF.yTile, 0, 0 ); 
+				} else {
+					UF.heightMapsX.push( ( x + xDelta ) );
+					UF.heightMapsY.push( ( y + yDelta ) );
+					updateTerrain( k++, xHeightMapTile, yHeightMapTile, x, y ); 
+				}
+			} 
+		}
+		dataDiv.innerHTML = txt;
+	}
+
+	function updateTerrain( count, x, y, dx, dy) {
+		var heightMap = UF.heightMaps[count];
+
+		if ( UF.tileZoom < 8) {
+			heightMap.src =  '../../../terrain/' + UF.tileZoom + '/' + x + '/' + y +'.png';
+		} else {
+			heightMap.src =  '../../../terrain/7+/' + x + '/' + y +'.png';
+			// heightMap.src =  '../../../terrain-de3/' + x + '/' + y +'.png';
+		}
+// console.log( count, x, y, dx, dy );
+
+		heightMap.onload = function() {
+			var context = UF.contexts[count];
+
+			if ( UF.tileZoom < 8 ) {
+				context.drawImage( heightMap, 0, 0, 256, 256, 0, 0, 256, 256);
+				var iScale = 0.02 * UF.tileExaggeration;
+			} else {
+				var zoomScale = Math.pow( 2, UF.tileZoom - 7);
+				var hm = UF.heightMaps[count];
+				xLength = hm.width / zoomScale;
+				yLength = hm.height / zoomScale;
+				xStart = UF.heightMapsX[count] * xLength;
+				yStart = UF.heightMapsY[count] * yLength;
+				UF.contexts[count].drawImage( heightMap, xStart, yStart, xLength, yLength, 0, 0, 256, 256);
+				var iScale = 0.04 * UF.tileExaggeration;
+// console.log( count, xStart, yStart, xLength, yLength );
+			}
+
+			var material = new THREE.MeshNormalMaterial( { shading: THREE.SmoothShading } );
+			var geometry = new THREE.PlaneGeometry( 256, 256, 255, 255);
+			geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -Math.PI / 2 ) );
+
+			var imgd = context.getImageData( 0, 0, 256, 256 );
+			var pix = imgd.data;
+			var verts = geometry.vertices;
+			for ( var i = 0, j = 0, len = pix.length; i < len; i += 4 ) {
+				verts[j++].y = iScale * ( pix[i] + pix[i + 1] + pix[i + 2] );
+			}
+			var mesh = new THREE.Mesh( geometry, material );
+			mesh.position = UF.positions[count];
+			mesh.geometry.computeFaceNormals();
+			mesh.geometry.computeVertexNormals();
+			UF.terrains.add( mesh );
+
+			context.lineWidth = 8;
+			context.strokeStyle = '#aa0000';
+			context.strokeRect( 0, 0, 256, 256 );	
+		};
+	}
+
+	function animate() {
+		requestAnimationFrame( animate );
+		UF.controls.update();
+		UF.renderer.render( UF.scene, UF.camera );
+		UF.stats.update();
+	}
+
+	function requestFile( fname ) {
+		var xmlHttp = new XMLHttpRequest();
+		xmlHttp.open( 'GET', fname, false );
+		xmlHttp.send( null );
+		return xmlHttp.responseText;
+	}
+
+	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
+
+	function cos( a ){ return Math.cos( a ); }
+	function sin( a ){ return Math.sin( a ); }
+	function pow( a, b ){ return Math.pow( a, b ); }
+
+// http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#Tile_servers
+	function lon2tile( lon, zoom ) {
+		return Math.floor( ( lon + 180 ) / 360 * pow( 2, zoom ) );
+	}
+
+	function lat2tile( lat, zoom ) {
+		return Math.floor(( 1 - Math.log( Math.tan( lat * pi / 180) + 1 / cos( lat * pi / 180)) / pi )/2 * pow(2, zoom) );
+	}
+
+	function tile2lon( x, z ) {
+		return ( x / pow( 2, z ) * 360 - 180 );
+	}
+
+	function tile2lat( y, z ) {
+		var n = pi - 2 * pi * y / pow( 2, z );
+		return 180 / pi * Math.atan( 0.5 * ( Math.exp( n ) - Math.exp( -n ) ));
+	}
+</script>
+</body>
+</html>
