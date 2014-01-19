@@ -15,8 +15,8 @@
 	UF.fileName = '../../gazetteer/places-2000.csv';
 	UF.startPlace = 1620; // San Francisco ~ but see below
 
-	UF.tileZoom = 8;
-	UF.terrainScaleVertical = 5;
+	UF.tileZoom = 5;
+	UF.tileExaggeration = 3;
 
 	UF.mapType = 0;
 	UF.mapTypes = [
@@ -74,7 +74,7 @@
 					'onchange="updateTiles( UF.places[this.selectedIndex][1], UF.places[this.selectedIndex][2] );' +
 					'inpLat.value = UF.places[this.selectedIndex][1]; inpLng.value = UF.places[this.selectedIndex][2]; " ></select><br>' +
 				'<select title="Are we there yet?" id=selZoom onchange="UF.tileZoom=this.selectedIndex; updateTiles( UF.places[ selPlace.selectedIndex ][1], UF.places[selPlace.selectedIndex][2] );"></select> ' +
-				'<select title="Select the amount of vertical scale. 0=flat. 1/2=normal." id=selScale onchange="UF.terrainScaleVertical = this.selectedIndex; ' +
+				'<select title="Select the amount of vertical distortion" id=selExagg onchange="UF.tileExaggeration = 1 + this.selectedIndex; ' +
 					'updateTiles( UF.places[ selPlace.selectedIndex ][1], UF.places[selPlace.selectedIndex][2] );"></select> ' +
 // 				'<select title="Select the 2D overlay" id=selMapType onchange="UF.mapType=this.selectedIndex; updateTiles( UF.places[selPlace.selectedIndex ][1], UF.places[selPlace.selectedIndex ][2] );"><select>' +
 				'<br><br>' +
@@ -123,10 +123,10 @@
 		selZoom.selectedIndex = UF.tileZoom;
 
 		for ( var option, i = 0; i < 10; i++ ) {
-			selScale.appendChild( document.createElement( 'option' ) );
-			selScale.children[i].text ='Vertical scale ' + ( i ) + ':1';
+			selExagg.appendChild( document.createElement( 'option' ) );
+			selExagg.children[i].text ='Exaggeration scale ' + ( i + 1 ) + ':1';
 		}
-		selScale.selectedIndex = UF.terrainScaleVertical;
+		selExagg.selectedIndex = UF.tileExaggeration;
 /*
 		for ( var option, i = 0, len = UF.mapTypes.length; i < len; i++ ) {
 			selMapType.appendChild( option = document.createElement( 'option' ) );
@@ -154,14 +154,14 @@
 		UF.controls = new THREE.TrackballControls( UF.camera, UF.renderer.domElement );
 
 // axes
-		//UF.scene.add( new THREE.ArrowHelper( v(1, 0, 0), v(0, 0, 0), 30, 0xcc0000) );
-		//UF.scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 30, 0x00cc00) );
-		//UF.scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 30, 0x0000cc) );
+		UF.scene.add( new THREE.ArrowHelper( v(1, 0, 0), v(0, 0, 0), 30, 0xcc0000) );
+		UF.scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 30, 0x00cc00) );
+		UF.scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 30, 0x0000cc) );
 
 // target
-		//geometry = new THREE.CubeGeometry( 2, 100, 2 );
-		//material = new THREE.MeshNormalMaterial();
-		//UF.target = new THREE.Mesh( geometry, material );
+		geometry = new THREE.CubeGeometry( 2, 100, 2 );
+		material = new THREE.MeshNormalMaterial();
+		UF.target = new THREE.Mesh( geometry, material );
 
 		UF.positions = [];
 		UF.heightMaps = [];
@@ -201,54 +201,38 @@
 		}
 		UF.terrains = new THREE.Object3D();
 		UF.scene.add( UF.terrains );
-
-// axes
-		UF.scene.add( new THREE.ArrowHelper( v(1, 0, 0), v(0, 0, 0), 30, 0xcc0000) );
-		UF.scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 30, 0x00cc00) );
-		UF.scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 30, 0x0000cc) );
-
-		geometry = new THREE.CubeGeometry( 1, 80, 1 );
-		material = new THREE.MeshNormalMaterial();
-		UF.target = new THREE.Mesh( geometry, material );
 		UF.scene.add( UF.target );
 
 		var br = '<br>', br2 = '<br><br>';
-		var txt = '';
-
-		//txt += UF.tileZoom ' + UF.tileZoom + br;
-		//txt += 'lon ' + lon + br;
-		//txt += 'lat ' + lat + br2;
+		var txt = 'UF.tileZoom ' + UF.tileZoom + br;
+		txt += 'lon ' + lon + br;
+		txt += 'lat ' + lat + br2;
 
 		var lat = parseFloat( lat );
 		var lon = parseFloat( lon );
 
 		UF.xTile = lon2tile( lon, UF.tileZoom );
-		UF.yTile = lat2tile( lat, UF.tileZoom );
-
 		txt += 'xTile ' + UF.xTile + br;
+		UF.yTile = lat2tile( lat, UF.tileZoom );
 		txt += 'yTile ' + UF.yTile + br2;
 
-		if ( UF.tileZoom < 1 ) {
-			updateTerrain( 0, 0, 0, 0, 0 ); 
-			return;
-
-		} else if ( UF.tileZoom > 7 ) {
+		if ( UF.tileZoom < 8 ) {
+		} else {
 			var zoomScale = Math.pow( 2, UF.tileZoom - 7);
 
 			var xHeightMapTile = lon2tile( lon, 7 );
-			var yHeightMapTile = lat2tile( lat, 7 );
-
 			txt += 'xHeightMapTile ' + xHeightMapTile + br;
+
+			var yHeightMapTile = lat2tile( lat, 7 );
 			txt += 'yHeightMapTile ' + yHeightMapTile + br2;
 
 			var xHeightMapTileZoom = zoomScale * xHeightMapTile;
 			var yHeightMapTileZoom = zoomScale * yHeightMapTile;
 
 			xDelta = UF.xTile - xHeightMapTileZoom;
+			txt += 'xDelta ' + xDelta + br;
 			yDelta = UF.yTile - yHeightMapTileZoom;
-
-			txt += 'x HMapDelta ' + xDelta + br;
-			txt += 'y HMapDelta ' + yDelta + br2;
+			txt += 'xDelta ' + xDelta + br2;
 
 			UF.heightMapsX = [];
 			UF.heightMapsY = [];
@@ -257,94 +241,60 @@
 		var lonTileUL = tile2lon( UF.xTile, UF.tileZoom ).toFixed(3);
 		var lonTileLR = tile2lon( UF.xTile + 1, UF.tileZoom ).toFixed(3);
 		xTarget = 255 * (lonTileUL - lon) / ( lonTileUL - lonTileLR);
+		txt += 'xTarget ' + Math.round(xTarget) + br;
 
 		var latTileUL = tile2lat( UF.yTile, UF.tileZoom ).toFixed(3);
 		var latTileLR = tile2lat( UF.yTile + 1, UF.tileZoom ).toFixed(3);
 		yTarget = 255 * (latTileUL - lat) / ( latTileUL - latTileLR);
+		txt += 'yTarget ' + Math.round(yTarget) + br;
 
 		if ( xTarget < 128) {
-			if ( UF.tileZoom > 2 && UF.xTile > 0 ) { 
-				if ( UF.tileZoom < 8 ) {
-				UF.xTile--; 
-				} else {
-					if ( xDelta > 0 ) {
-						xDelta--;
-					} else {
-						xHeightMapTile--;
-						xDelta = Math.pow( 2, UF.tileZoom - 7) - 1;
-					}
-				}
-				xTarget += 256;
-			}
+			xTarget += 256;
+			if ( UF.tileZoom > 1 ) {UF.xTile--; }
 		}
-		if ( yTarget < 128 && UF.tileZoom > 1 ) {
-			if ( UF.tileZoom > 2 && UF.yTile > 0 ) {
-				if ( UF.tileZoom < 8 ) {
-					UF.yTile--; 
-				} else {
-					if ( yDelta > 0 ) {
-						yDelta--;
-					} else {
-						yHeightMapTile--;
-						yDelta = Math.pow( 2, UF.tileZoom - 7) - 1;
-					}
-				}
-				yTarget += 256;
-			}
+		if ( yTarget < 128  && UF.tileZoom > 1 ) {
+			yTarget += 256;
+			if ( UF.tileZoom > 1 ) { UF.yTile--; }
 		}
-
-		txt += 'x Mesh Target ' + Math.round(xTarget) + br;
-		txt += 'y Mesh Target ' + Math.round(yTarget) + br;
 
 		UF.target.position.set( -256 + xTarget, 40, -256 + yTarget);
 
-		for (var cnt = 0, y = 0; y < 2; y++) {
+		for (var k = 0, y = 0; y < 2; y++) {
 			for (var x = 0; x < 2; x++) {
-				var context = UF.contexts[cnt];
-				context.fillStyle = 'aaaa88';
-				context.fillRect( 0, 0, 256, 256 );
 				if ( UF.tileZoom < 8 ) {
-					updateTerrain( cnt++, x + UF.xTile, y + UF.yTile ); 
+					//var xx = x + UF.xTile;
+					//var max = Math.pow( 2, UF.tileZoom );
+					//var yy = y + UF.yTile;
+					//if ( xx >= max ) { xx = 0; } 
+					//if ( yy >= max ) return;
+					updateTerrain( k++, x + UF.xTile, y + UF.yTile, 0, 0 ); 
 				} else {
 					UF.heightMapsX.push( ( x + xDelta ) );
 					UF.heightMapsY.push( ( y + yDelta ) );
-					updateTerrain( cnt++, xHeightMapTile, yHeightMapTile ); 
+					updateTerrain( k++, xHeightMapTile, yHeightMapTile, x, y ); 
 				}
 			} 
 		}
-
 		dataDiv.innerHTML = txt;
 	}
 
-	function updateTerrain( count, x, y ) {
+	function updateTerrain( count, x, y, dx, dy) {
 		var heightMap = UF.heightMaps[count];
 
 		if ( UF.tileZoom < 8) {
-			//var zoomScale = Math.pow( 2, UF.tileZoom);
-			//if ( x >= zoomScale ) x = 0;
 			heightMap.src =  '../../../terrain/' + UF.tileZoom + '/' + x + '/' + y +'.png';
 		} else {
-			var zoomScale = Math.pow( 2, UF.tileZoom - 7);
-			if ( UF.heightMapsX[count] >= zoomScale ) { 
-				x += 1; 
-				UF.heightMapsX[count] = 0;
-			}
-			if ( UF.heightMapsY[count] >= zoomScale ) { 
-				y += 1; 
-				UF.heightMapsY[count] = 0;
-			}
-
-
 			// heightMap.src =  '../../../terrain/7+/' + x + '/' + y +'.png';
 			heightMap.src =  'F:/ferranti/de3-png-tms-dev/' + x + '/' + y +'.png';
 		}
+// console.log( count, x, y, dx, dy );
 
 		heightMap.onload = function() {
 			var context = UF.contexts[count];
 
 			if ( UF.tileZoom < 8 ) {
 				context.drawImage( heightMap, 0, 0, 256, 256, 0, 0, 256, 256);
-				var iScale = 0.01 * UF.terrainScaleVertical;
+				var iScale = 0.02 * UF.tileExaggeration;
 			} else {
 				var zoomScale = Math.pow( 2, UF.tileZoom - 7);
 				var hm = UF.heightMaps[count];
@@ -353,7 +303,7 @@
 				xStart = UF.heightMapsX[count] * xLength;
 				yStart = UF.heightMapsY[count] * yLength;
 				UF.contexts[count].drawImage( heightMap, xStart, yStart, xLength, yLength, 0, 0, 256, 256);
-				var iScale = 0.04 * UF.terrainScaleVertical;
+				var iScale = 0.04 * UF.tileExaggeration;
 // console.log( count, xStart, yStart, xLength, yLength );
 			}
 
@@ -364,8 +314,11 @@
 			var imgd = context.getImageData( 0, 0, 256, 256 );
 			var pix = imgd.data;
 			var verts = geometry.vertices;
-			for ( var i = 0, j = 0, len = pix.length; i < len; i += 4 ) {
-				verts[j++].y = iScale * ( pix[i] + pix[i + 1] + pix[i + 2] );
+			for ( var k, i = 0, j = 0, len = pix.length; i < len; i += 4 ) {
+					var scl = 0.1 * ( pix[i] + pix[i + 1] + pix[i + 2] );
+						// var sscale = 1  + 0.00001 * scale * elevations3;
+						var b = geometry.vertices[k];
+						geometry.vertices[k++].set( sscale * b.x, sscale * b.y, sscale * b.z  );
 			}
 			var mesh = new THREE.Mesh( geometry, material );
 			mesh.position = UF.positions[count];
@@ -375,7 +328,7 @@
 
 			context.lineWidth = 8;
 			context.strokeStyle = '#aa0000';
-			context.strokeRect( 0, 0, 256, 256 );
+			context.strokeRect( 0, 0, 256, 256 );	
 		};
 	}
 
@@ -396,7 +349,7 @@
 	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
 
 	function cos( a ){ return Math.cos( a ); }
-	// function sin( a ){ return Math.sin( a ); }
+	function sin( a ){ return Math.sin( a ); }
 	function pow( a, b ){ return Math.pow( a, b ); }
 
 // http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#Tile_servers
