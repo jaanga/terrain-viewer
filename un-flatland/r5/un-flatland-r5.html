@@ -13,7 +13,7 @@
 	var UF = UF || {};
 
 	UF.fileName = '../../gazetteer/places-2000.csv';
-	UF.startPlace = 154; // 620; // San Francisco ~ but see below
+	UF.startPlace = 1620; // San Francisco ~ but see below
 
 	UF.tileZoom = 7;
 	UF.terrainScaleVertical = 10;
@@ -350,8 +350,8 @@
 		for (var cnt = 0, y = 0; y < 2; y++) {
 			for (var x = 0; x < 2; x++) {
 				var context = UF.contexts[cnt];
-				//context.fillStyle = '000000';
-				//context.fillRect( 0, 0, 256, 256 );
+				context.fillStyle = '000000';
+				context.fillRect( 0, 0, 256, 256 );
 				if ( UF.tileZoom < 8 ) {
 					updateTerrain( cnt++, x + UF.xTile, y + UF.yTile, 0, 0 ); 
 				} else {
@@ -362,7 +362,7 @@
 			} 
 			
 		}
-		dataDiv.innerHTML = txt;
+//		dataDiv.innerHTML = txt;
 	}
 
 	function updateTerrain( count, x, y, dx, dy) {
