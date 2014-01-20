@@ -13,9 +13,9 @@
 	var UF = UF || {};
 
 	UF.fileName = '../../gazetteer/places-2000.csv';
-	UF.startPlace = 1620; // San Francisco ~ but see below
+	UF.startPlace = 154; // 620; // San Francisco ~ but see below
 
-	UF.tileZoom = 9;
+	UF.tileZoom = 7;
 	UF.terrainScaleVertical = 10;
 
 	UF.mapType = 5;
@@ -213,7 +213,8 @@
 		UF.target = new THREE.Mesh( geometry, material );
 		UF.scene.add( UF.target );
 
-		var mapTexture = THREE.ImageUtils.loadTexture( '../../textures/grid-512a.png' );
+		// var mapTexture = THREE.ImageUtils.loadTexture( '../../textures/grid-512a.png' );
+		var mapTexture = THREE.ImageUtils.loadTexture( 'http://jaanga.github.io/terrain-viewer/textures/grid-512a.png' );
 
 		UF.terrains = new THREE.Object3D();
 		UF.heightMaps = [];
@@ -349,8 +350,8 @@
 		for (var cnt = 0, y = 0; y < 2; y++) {
 			for (var x = 0; x < 2; x++) {
 				var context = UF.contexts[cnt];
-				context.fillStyle = '000000';
-				context.fillRect( 0, 0, 256, 256 );
+				//context.fillStyle = '000000';
+				//context.fillRect( 0, 0, 256, 256 );
 				if ( UF.tileZoom < 8 ) {
 					updateTerrain( cnt++, x + UF.xTile, y + UF.yTile, 0, 0 ); 
 				} else {
@@ -388,7 +389,11 @@
 		}
 
 		heightMap.onload = function() {
-			var context = UF.contexts[count];
+			var canvas = document.createElement( 'canvas' );
+			canvas.width = canvas.height = 256;
+			var context = canvas.getContext( '2d' );
+
+			// var context = UF.contexts[count];
 
 			if ( UF.tileZoom < 8 ) {
 				context.drawImage( heightMap, 0, 0, 256, 256, 0, 0, 256, 256);
@@ -426,7 +431,8 @@
 
 			if ( UF.tileZoom < 8 ) {
 				if ( UF.mapType < 1 ) {
-					var mapTexture = THREE.ImageUtils.loadTexture( '../../textures/grid-512a.png' );
+					// var mapTexture = THREE.ImageUtils.loadTexture( '../../textures/grid-512a.png' );
+					var mapTexture = THREE.ImageUtils.loadTexture( 'http://jaanga.github.io/terrain-viewer/textures/grid-512a.png' );
 					mapTexture.wrapS = mapTexture.wrapT = THREE.RepeatWrapping;
 					mapTexture.repeat.set( 16, 16 );
 					UF.terrains.children[count].material = new THREE.MeshPhongMaterial( { map: mapTexture } );
