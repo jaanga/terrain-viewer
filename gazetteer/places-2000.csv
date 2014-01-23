@@ -92,7 +92,7 @@ Arlington TX;+32.73670;-97.11330
 Arlington VA;+38.90000;-77.10000
 Armour SD;+43.30000;-98.35000
 Arvada CO;+39.80000;-105.07800
-Ascenci&oacute;n Island;-7.88000;-14.42000
+Ascencion Island;-7.88000;-14.42000
 Ash Fork AZ;+35.21700;-112.48300
 Asheville NC;+35.59500;-82.55720
 Ashland KS;+37.18300;-99.76700
@@ -182,7 +182,7 @@ Beirut Lebanon;+33.88330;+35.50000
 Beja Portugal;+38.14600;-7.92200
 Belem Brazil;-1.38330;-48.48330
 Belen NM;+34.66700;-106.75000
-Belfast N. Ireland;+54.63000;-5.87000
+Belfast N Ireland;+54.63000;-5.87000
 Belgrade Serbia;+44.80000;+20.53330
 Belize City;+15.53330;-88.30000
 Belleville IL;+38.51700;-89.98300
@@ -231,7 +231,7 @@ Bogalusa LA;+30.80000;-89.86700
 Bogota Colombia;+4.63330;-74.09990
 Boise City OK;+36.70000;-102.50000
 Boise ID;+43.61860;-116.19900
-Boise ID;+43.63333;-116.26700
+Boise2 ID;+43.63333;-116.26700
 Bologna Italy;+44.53800;+11.29000
 Bombay India;+18.96670;+72.83330
 Bonn Germany;+50.72000;+7.08000
@@ -494,6 +494,7 @@ Denver CO;+39.74940;-104.98900
 Derby CT;+41.33300;-73.08300
 Derby England;+52.81700;-1.33300
 Derry NH;+42.88170;-71.32330
+Derwydd Wales;51.8333;-4.0
 Des Moines IA;+41.58720;-93.61670
 Des Plaines IL;+42.04330;-87.87000
 Desiderio AAF S. Kore;+36.95000;+127.03330
@@ -538,13 +539,13 @@ Durham NC;+36.00000;-78.91250
 Durham NC;+36.00000;-78.91250
 Dusseldorf Germany;+51.28300;+6.75000
 Dutch Harbor AK;+53.91000;-166.54000
-E. Brunswick NJ;+40.44000;-74.42000
-E. Lansing MI;+42.73500;-84.48330
-E. Las Vegas NV;+36.09500;-115.04200
-E. Los Angeles CA;+34.02000;-118.15300
+E Brunswick NJ;+40.44000;-74.42000
+E Lansing MI;+42.73500;-84.48330
+E Las Vegas NV;+36.09500;-115.04200
+E Los Angeles CA;+34.02000;-118.15300
 E. St Louis IL;+38.62170;-90.15500
-E. Stroudsburg PA;+41.08330;-75.21670
-E. Wenatchee WA;+47.20340;-120.05300
+E Stroudsburg PA;+41.08330;-75.21670
+E Wenatchee WA;+47.20340;-120.05300
 Eagan MN;+44.83000;-93.22000
 Eagle River AK;+61.32170;-149.56700
 Eagle AK;+64.70000;-141.33300
@@ -871,6 +872,7 @@ Invercargill New Zeal;-46.41670;+168.31670
 Iowa City IA;+41.66030;-91.53140
 Ipswich Australia;-27.63330;+152.71670
 Iqaluit NWT;+63.76000;-68.55000
+Iquique Chile;-20.2167;-70.1500
 Iron River MI;+46.15000;-88.65000
 Irvine CA;+33.67500;-117.76000
 Irving TX;+32.81330;-96.93670

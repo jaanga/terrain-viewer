@@ -56,7 +56,7 @@
 		var data = requestFile( UF.fileName );
 		var lines = data.split(/\r\n|\n/);
 		UF.places = [];
-		for ( var i = 1, length = lines.length - 2; i < length; i++ ) {
+		for ( var i = 1, length = lines.length - 1; i < length; i++ ) {
 			UF.places.push( lines[i].split( ';' ) );
 		}
 
@@ -261,9 +261,9 @@
 		var br = '<br>', br2 = '<br><br>';
 		var txt = '';
 
-		txt += 'tileZoom ' + UF.tileZoom + br;
-		txt += 'lon ' + lon + br;
-		txt += 'lat ' + lat + br2;
+//		txt += 'tileZoom ' + UF.tileZoom + br;
+//		txt += 'lon ' + lon + br;
+//		txt += 'lat ' + lat + br2;
 
 		var lat = parseFloat( lat );
 		var lon = parseFloat( lon );
@@ -362,7 +362,7 @@
 			} 
 			
 		}
-//		dataDiv.innerHTML = txt;
+		dataDiv.innerHTML = txt;
 	}
 
 	function updateTerrain( count, x, y, dx, dy) {
