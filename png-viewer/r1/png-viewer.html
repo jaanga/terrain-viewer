@@ -9,22 +9,33 @@
 
 	var x = 20;
 	var y = 49;
-	document.body.style.cssText = ' font: normal 12pt monospace; ';
 
-	var info = document.body.appendChild( document.createElement( 'div' ) );
-	info.innerHTML = '<h1>Jaanga Terrain PNG Viewer<br><div id=menu></div></h1>';
+	var image;
+	var pi = Math.PI;
 
-	var image = document.body.appendChild( document.createElement( 'img' ) );
-	image.src = 'http://jaanga.github.com/terrain/7+/' + x + '/' + y + '.png';
-	setText();
+	init();
+
+	function init() {
+		var hashes = location.hash.split('#');
+		x = ( hashes[1] !== undefined ) ? hashes[1] : x;
+		y = ( hashes[2] !== undefined ) ? hashes[2] : y;
+
+		document.body.style.cssText = ' font: normal 12pt monospace; ';
+
+		var info = document.body.appendChild( document.createElement( 'div' ) );
+		info.innerHTML = '<h1>Jaanga Terrain PNG Viewer ~ <span id=menu></span></h1>';
+
+		image = document.body.appendChild( document.createElement( 'img' ) );
+		getImage();
+	}
 
 	function getImage( direction) {
 		if ( direction === 'left' ) {
 			x--;
-			if ( x < 0 ) x = 31;
+			if ( x < 0 ) x = 127;
 		} else if ( direction === 'right' ) {
 			x++;
-			if ( x > 31 ) x = 0;
+			if ( x > 127 ) x = 0;
 		} else if ( direction === 'up' ) {
 			y--;
 			if ( y < 0 ) y = 127;
@@ -32,18 +43,47 @@
 			y++;
 			if ( y > 127 ) y = 0;
 		}
-		setText();
-		image.src = 'http://jaanga.github.com/terrain/7+/' + x + '/' + y + '.png';
+
+		if ( x < 32 ) {
+			xDir = 'terrain-de3-0-31/';
+		} else if ( x < 64 ) {
+			xDir = 'terrain-de3-32-63/';
+		} else if ( x < 96 ) {
+			xDir = 'terrain-de3-64-95/';
+		} else {
+			xDir = 'terrain-de3-96-127/';
+		}
+
+		image.src = 'http://jaanga.github.com/' + xDir + x + '/' + y + '.png';
+		image.onload = setText;
 	}
 
 	function setText() {
-		var txt = 'x: ' + x + ' y: ' + y;
+		var txt = 'dir: ' + xDir + ' ~ x: ' + x + ' y: ' + y + 
+		' ~ lon: ' + tile2lon( x, 7 ).toFixed(3) + ' lat: ' + tile2lat( y, 7).toFixed(3) +
+		' ~ width: ' + image.width + ' height: ' + image.height + ' pixels: ' + ( image.width * image.height) ;
 		txt += '<br>' +
 			'<a href=JavaScript:getImage("left"); >&#8678;</a> ' +
 			'<a href=JavaScript:getImage("right"); >&#8680;</a> ' +
 			'<a href=JavaScript:getImage("up"); >&#8679;</a> ' +
-			'<a href=JavaScript:getImage("down"); >&#8681;</a>';
+			'<a href=JavaScript:getImage("down"); >&#8681;</a> ~ ' +
+			'<a href=JavaScript:link(); >permalink</a>';
 		menu.innerHTML = txt;
+	}
+
+	function link() {
+		window.location.hash = '#' + x + '#' + y;
+	}
+
+	function pow( a, b ){ return Math.pow( a, b ); }
+
+	function tile2lon( x, z ) {
+		return ( x / pow( 2, z ) * 360 - 180 );
+	}
+
+	function tile2lat( y, z ) {
+		var n = pi - 2 * pi * y / pow( 2, z );
+		return 180 / pi * Math.atan( 0.5 * ( Math.exp( n ) - Math.exp( -n ) ));
 	}
 </script>
 </body>
