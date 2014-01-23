@@ -1,8 +1,6 @@
 Terrain Viewer ~ Hello World ~ 15 Second Data
 ==============================================
 
-http://jaanga.github.io/terrain-viewer/hello-world/
-
 Demos:  
 [Hello World ~ default (San Francisco Bay Area)]( r1/hello-world.html )  
 [Hello World ~ the world]( http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html#0#0#0#5 )  
@@ -15,7 +13,7 @@ Demos:
 
 ## Concept
 
-Provide a basic viewer of Jaanga Terrain data that can be used as the basis or boilerplate for new apps
+Provide a basic viewer of Jaanga Terrain 15 Second data that can be used as the basis or boilerplate for new apps
 
 ## Features
 
@@ -29,9 +27,8 @@ Provide a basic viewer of Jaanga Terrain data that can be used as the basis or b
 You have two ways of viewing the FGx files:
 
 * Code hosted on GitHub: [fgx.github.io]( http://jaanga.github.io/terrain-viewer/hello-world/ "view the files as apps." ) <input value="<< You are now probably here." size=28 style="font:bold 12pt monospace;border-width:0;" >  
-* Source code on GitHub: [github.com/fgx]( https://github.com/jaanga/terrain-viewer/hello-world/ "View the files as source code." ) <scan style=display:none ><< You are now probably here.</scan>
+* Source code on GitHub: [github.com/fgx]( https://github.com/jaanga/terrain-viewer/tree/gh-pages/hello-world/ "View the files as source code." ) <scan style=display:none ><< You are now probably here.</scan>
 
-Home page: [fgx.ch]( http://www.fgx.ch )
 
 
 ### System Requirements
