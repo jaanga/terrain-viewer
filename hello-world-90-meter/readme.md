@@ -1,7 +1,7 @@
-Jaanga Terrain Viewer ~ Hell World 3 Seconds
+Jaanga Terrain Viewer ~ Hell World 90 Meter
 ============================================
 
 Demo:
-[Hello World 3 Seconds]( r1/hello-world-3-seconds.html )
+[Hello World 90 Meter]( r1/hello-world-90-meter.html )
 
 
