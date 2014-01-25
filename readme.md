@@ -1,23 +1,29 @@
 Jaanga Terrain Viewer Read Me
 =============================
 
-Live demo: [UnFlatland r5]( http://jaanga.github.io/terrain-viewer/un-flatland/r1/un-flatland-r5.html )
+Live demo: [UnFlatland r5]( http://jaanga.github.io/terrain-viewer/un-flatland/r1/un-flatland-r5.html )  
+Source code: [Hello World]( https://github.com/jaanga/terrain-viewer/tree/gh-pages/un-flatland)
 
 * Loads Jonathan de Ferranti's 3 second data set
 * About one data point about every 90 meters
 * Approx 2.85B
 
-Live demo: [Hello World]( http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html )
+Live demo: [Hello World]( http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html )  
+Source code: [Hello World]( https://github.com/jaanga/terrain-viewer/tree/gh-pages/hello-world)
 
 * Loads Jonathan de Ferranti's 15 second data set
 * About one data point about every 500 meters
 * Data set overs the entire world
 * Approx 185 MB file size
 * Very simple code - can be used as boileeplate
+* Set location, zoom and scale using window.location.hash. Source code page has sample links
 
-Live Demo: [PNG Viewer]( http://jaanga.github.io/terrain-viewer/png-viewer/r1/png-viewer.html )
+Live Demo: [PNG Viewer]( http://jaanga.github.io/terrain-viewer/png-viewer/r1/png-viewer.html )  
+Source code: [Hello World]( https://github.com/jaanga/terrain-viewer/tree/gh-pages/png-viewer )
 
 * View the PNG files used as heightmaps
+* Set location, zoom and scale using window.location.hash. Source code page has sample links
+
 
 
 <!--
