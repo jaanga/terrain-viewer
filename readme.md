@@ -15,6 +15,11 @@ Live demo: [Hello World]( http://jaanga.github.io/terrain-viewer/hello-world/r1/
 * Approx 185 MB file size
 * Very simple code - can be used as boileeplate
 
+Live Demo: [PNG Viewer]( http://jaanga.github.io/terrain-viewer/png-viewer/r1/png-viewer.html )
+
+* View the PNG files used as heightmaps
+
+
 <!--
 2014-01-15 ~ These are very interim, developer versions just to get going. There's no 'skinning', some serious bugs and unkempt code.
 In particular, in zoom levels or above, if you happen to land on the edges of a tile then funny boxes appear. Please ignore and go somewhere else.
