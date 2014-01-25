@@ -1,24 +1,24 @@
 Jaanga Terrain Viewer Read Me
 =============================
 
-Live demo: [UnFlatland R5 light 15 second data]( http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html )
+Live demo: [UnFlatland r5]( http://jaanga.github.io/terrain-viewer/un-flatland/r1/un-flatland-r5.html )
+
+* Loads Jonathan de Ferranti's 3 second data set
+* About one data point about every 90 meters
+* Approx 2.85B
+
+Live demo: [Hello World]( http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html )
 
 * Loads Jonathan de Ferranti's 15 second data set
 * About one data point about every 500 meters
 * Data set overs the entire world
 * Approx 185 MB file size
+* Very simple code - can be used as boileeplate
 
-Live demo: [Hello World 90 Meter]( http://jaanga.github.io/terrain-viewer/hello-world-90-meter/r1/hello-world-90-meter.html )
-
-* Loads Jonathan de Ferranti's 3 second data set
-* About one data point about every 100 meters
-* Data set covers the USA only
-* Approx 160 MB
-
+<!--
 2014-01-15 ~ These are very interim, developer versions just to get going. There's no 'skinning', some serious bugs and unkempt code.
-
 In particular, in zoom levels or above, if you happen to land on the edges of a tile then funny boxes appear. Please ignore and go somewhere else.
-
+-->
 
 For an amusing applied use ( older version ) of this technology see: [FGx Plane Spotter]( http://fgx.github.io/fgx-plane-spotter/inde.html )
 
