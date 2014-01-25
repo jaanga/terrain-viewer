@@ -2,7 +2,7 @@ Jaanga Terrain Viewer Read Me
 =============================
 
 Live demo: [UnFlatland r5]( http://jaanga.github.io/terrain-viewer/un-flatland/r1/un-flatland-r5.html )  
-Source code: [Hello World]( https://github.com/jaanga/terrain-viewer/tree/gh-pages/un-flatland)
+Source code: [UnFlatland r5]( https://github.com/jaanga/terrain-viewer/tree/gh-pages/un-flatland)
 
 * Loads Jonathan de Ferranti's 3 second data set
 * About one data point about every 90 meters
@@ -19,7 +19,7 @@ Source code: [Hello World]( https://github.com/jaanga/terrain-viewer/tree/gh-pag
 * Set location, zoom and scale using window.location.hash. Source code page has sample links
 
 Live Demo: [PNG Viewer]( http://jaanga.github.io/terrain-viewer/png-viewer/r1/png-viewer.html )  
-Source code: [Hello World]( https://github.com/jaanga/terrain-viewer/tree/gh-pages/png-viewer )
+Source code: [PNG Viewer]( https://github.com/jaanga/terrain-viewer/tree/gh-pages/png-viewer )
 
 * View the PNG files used as heightmaps
 * Set location, zoom and scale using window.location.hash. Source code page has sample links
