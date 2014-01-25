@@ -34,7 +34,7 @@
 //		['FGx GloTect','../glo-tect/'],
 //		['Mesh Normal',''],
 		['Wireframe',''],
-		['HeightMap','../../../terrain/']
+		['HeightMap','../../../']
 //		['ArcGIS Server Tiled Map Service','http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/']  // not CORS compatible?
 // 		['http://vec04.maps.yandex.net/tiles?l=map&v=2.26.0&x=3&y=6&z=4&lang=ru-RU		','']
 	];
@@ -68,10 +68,11 @@
 		info.style.cssText = 'border: 0px solid red; left: 20px; position: absolute; top: 25px; width: 15% ';
 		info.innerHTML = '<h1>unFlatLand R5 ' +
 			'<a href=# title="Get help and info" onclick=help.style.display="block"; ><large>&#x24D8;</large></a></h1>' +
-			'<div style=height{900px; >Target<br>lat: <input type="text" id="inpLat" value="' + UF.places[ UF.startPlace][1] +'" size=8 /><br>' +
+			'<div style=height{900px; >' +
+				'Target<br>lat: <input type="text" id="inpLat" value="' + UF.places[ UF.startPlace][1] +'" size=8 /><br>' +
 				'lng: <input type="text" id="inpLng" value="' + UF.places[ UF.startPlace][2] +'" size=8 /> ' +
 				'<button onclick="updateTiles( inpLat.value, inpLng.value );" title="Click Go to update camera longitude and latitude" >Go</button><hr>' +
-				'<select title="Choose one of ' + UF.places.length + ' icao listings" id=selPlace ' +
+				'<select title="Choose one of ' + UF.places.length + ' places" id=selPlace ' +
 					'onchange="updateTiles( UF.places[this.selectedIndex][1], UF.places[this.selectedIndex][2] );' +
 					'inpLat.value = UF.places[this.selectedIndex][1]; inpLng.value = UF.places[this.selectedIndex][2]; " ></select><br>' +
 				'<select title="Are we there yet?" id=selZoom onchange="UF.tileZoom=this.selectedIndex; updateTiles( UF.places[ selPlace.selectedIndex ][1], UF.places[selPlace.selectedIndex][2] );"></select> ' +
@@ -279,7 +280,7 @@
 			return;
 
 		} else if ( UF.tileZoom > 7 ) {
-			var zoomScale = Math.pow( 2, UF.tileZoom - 7);
+			var zoomScale = ow( 2, UF.tileZoom - 7);
 
 			var xHeightMapTile = lon2tile( lon, 7 );
 			txt += 'xHeightMapTile ' + xHeightMapTile + br;

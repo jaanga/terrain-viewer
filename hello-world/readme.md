@@ -19,7 +19,7 @@ Provide a basic viewer of Jaanga Terrain 15 Second data that can be used as the 
 
 - Loads 15 second data (acurate to 500 meters) quickly
 - Shows data for any location for zoom levels 0 to 8;
-- Supports hash tags for zoom, position and vertical scale
+- Supports permalink hash tags for zoom, position and vertical scale
 - Very simple JavaScript code
 
 ## Project Links
