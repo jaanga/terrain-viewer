@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang=en>
+<head>
+<title></title>
+<meta charset=utf-8>
+</head>
+<body>
+<script src = http://mrdoob.github.io/three.js/examples/js/Detector.js ></script>
+<script src = http://mrdoob.github.io/three.js/build/three.min.js ></script>
+<script src = http://mrdoob.github.io/three.js/examples/js/controls/TrackballControls.js ></script>
+<script src = http://mrdoob.github.io/three.js/examples/js/libs/stats.min.js ></script>
+<script>
+	var stats, renderer, scene, camera, controls;
+
+	var fileName = 'places-2000.csv';
+	var places = [];
+	startPlace = 1620; // San Francisco ~ but see below
+
+	var tileZoom = 7;
+
+	mapType = 5;
+	mapTypes = [
+		['Native',''],
+		['Google Maps','http://mt1.google.com/vt/x='],
+		['Google Maps Terrain','http://mt1.google.com/vt/lyrs=t&x='],
+		['Google Maps Satellite','http://mt1.google.com/vt/lyrs=s&x='],
+		['Google Maps Hybrid','http://mt1.google.com/vt/lyrs=y&x='],
+		['Open Street Map','http://b.tile.openstreetmap.org/'],
+		['Open Cycle Map', 'http://c.tile.opencyclemap.org/cycle/'],
+		['MapQuest OSM', 'http://otile3.mqcdn.com/tiles/1.0.0/osm/'],
+		['MapQuest Satellite', 'http://otile3.mqcdn.com/tiles/1.0.0/sat/'],
+		['Stamen terrain background','http://tile.stamen.com/terrain-background/'],
+		['FGx Terrain','../../fgx-terrain/'],
+		['FGx GloTect','../glo-tect/'],
+		['Wireframe','']
+//		['ArcGIS Server Tiled Map Service','http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/']  // not CORS compatible?
+// 		['http://vec04.maps.yandex.net/tiles?l=map&v=2.26.0&x=3&y=6&z=4&lang=ru-RU		','']
+	];
+
+	var tileExaggeration = 5;
+
+	var terrains = new THREE.Object3D();
+	var heightMaps = [];
+	var heightMapsX = [];
+	var heightMapsY = [];
+	var target;
+
+	var pi = Math.PI, pi2 = pi * 2, pi05 = pi * 0.5;
+	// var d2r = pi / 180, r2d = 180 / pi;  // degrees & radians
+
+	init();
+	animate();
+
+	function init() {
+		var geometry, material, mesh;
+
+		var css = document.body.appendChild( document.createElement('style') );
+		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden; }' +
+			'h1 a {text-decoration: none; }' +
+		'';
+
+		var data = requestFile( fileName );
+		var lines = data.split(/\r\n|\n/);
+		var length = lines.length - 2;
+		var line, sep = ';';
+
+		for ( var i = 1; i < length; i++ ) {
+			//lines[i] = lines[i].replace(/["']/g, ""); // better to delete in original files
+			//line = lines[i].split( sep );
+			places.push( lines[i].split( sep ) );
+		}
+		// startPlace = parseInt( Math.random() * places.length, 10 );
+		lat = places[ startPlace][1];
+		lon = places[ startPlace][2];
+
+		var info = document.body.appendChild( document.createElement( 'div' ) );
+		info.style.cssText = 'border: 0px solid red; left: 20px; position: absolute; top: 25px; width: 15% ';
+		info.innerHTML = '<h1>Terrain TMS ' +
+			'<a href=# title="Get help and info" onclick=help.style.display="block"; ><large>&#x24D8;</large></a></h1>' +
+			'<div style=height{900px; >Target<br>lat: <input type="text" id="inpLat" value="' + places[ startPlace][1] +'" size=8 /><br>' +
+				'lng: <input type="text" id="inpLng" value="' + places[ startPlace][2] +'" size=8 /> ' +
+				'<button onclick="tileZoomer( inpLat.value, inpLng.value );" title="Click Go to update camera longitude and latitude" >Go</button><hr>' +
+				'<select title="Choose one of ' + places.length + ' icao listings" id=selPlace ' +
+					'onchange="tileZoomer( places[this.selectedIndex][1], places[this.selectedIndex][2] );' +
+					'inpLat.value = places[this.selectedIndex][1]; inpLng.value = places[this.selectedIndex][2]; " ></select><br>' +
+				'<select title="Are we there yet?" id=selZoom onchange="tileZoom=this.selectedIndex; tileZoomer( places[ selPlace.selectedIndex ][1], places[selPlace.selectedIndex][2] );"></select> ' +
+				'<select title="Select the amount of vertical distortion" id=selExagg onchange="tileExaggeration = this.selectedIndex; ' +
+					'tileZoomer( places[ selPlace.selectedIndex ][1], places[selPlace.selectedIndex][2] );"></select> ' +
+				'<select title="Select the 2D overlay" id=selMapType onchange="mapType=this.selectedIndex; tileZoomer( places[selPlace.selectedIndex ][1], places[selPlace.selectedIndex ][2] );"><select>' +
+				'<br><br>' +
+//				'<a href="" >Trackball Controller</a> &#10070; ' +
+//				'<a href="JavaScript:getFirstPersonController();" title="Happy flying!" >First Person Controller</a>' +
+//				'  &#10070; <input id=chkPlacards type="checkbox" onchange=togglePlacards(); > Placards' +
+			'</div><br>' +
+			'<div id=touch style=display:none;height:' + window.innerHeight + 'px;width:100%; ></div>' +
+			'<div id=help onclick=help.style.display="none"; style=display:none;background-color:#ccc;opacity:0.7;left:0;margin:auto;padding:20px;position:absolute;right:0;top:200px;width:60%; >' +
+				'unFlatland R5.0<br><br>' +
+				'<i>Note: Works only in Google Chrome and Firefox.</i><br>' +
+				'<p>Trackball General Controls:<br>' +
+					'&bull; Rotate globe: Left mouse / press 1 finger<br>' +
+					'&bull; Zoom in current level: Mousewheel / two fingers<br>' +
+					'&bull; Drag globe: Right mouse / press 2 fingers<br>' +
+				'</p>' +
+				'&#10070; ' +
+				'<p>First Person General Controls:<br>' +
+					'&bull; WASD/cursor keys: four directions<br>' +
+					'&bull; RF/Page Up PageDn: move up / down<br>' +
+					'&bull; Mouse wheel only: speed up/slow down / down<br>' +
+					'&bull; Spacebar/mousewheel click: pause<br>' +
+					'&bull; Mouse/trackpad: update heading<br>' +
+				'</p>' +
+
+				'<a href="https://github.com/jaangs/" target="_blank">Source code</a><br>' +
+				'<small>credits: <a href="http://threejs.org" target="_blank">three.js</a> - ' +
+				'<a href="http://khronos.org/webgl/" target="_blank">webgl</a> - ' +
+				'<a href="http://jaanga.github.io" target="_blank">jaanga</a><br>' +
+				'copyright &copy; 2013 jaanga authors ~ MIT license</small><br><br>' +
+				'<i>Click anywhere in this message to hide...</i>' +
+			'</div>' +
+
+		'<div id=dataDiv></div>';
+
+		for ( var option, i = 0, len = places.length; i < len; i++ ) {
+			selPlace.appendChild( document.createElement( 'option' ) );
+			selPlace.children[i].text = places[i][0];
+		}
+		selPlace.selectedIndex = startPlace;
+
+		for ( var option, i = 1; i < 19; i++ ) {
+			selZoom.appendChild( document.createElement( 'option' ) );
+			selZoom.children[i - 1].text = 'Zoom level ' + (i - 1);
+		}
+		selZoom.selectedIndex = tileZoom;
+
+		for ( var option, i = 0; i < 10; i++ ) {
+			selExagg.appendChild( document.createElement( 'option' ) );
+			selExagg.children[i].text ='Exaggeration scale ' + ( i + 1 ) + ':1';
+		}
+		selExagg.selectedIndex = tileExaggeration;
+
+		for ( var option, i = 0, len = mapTypes.length; i < len; i++ ) {
+			selMapType.appendChild( option = document.createElement( 'option' ) );
+			selMapType.children[i].text = mapTypes[i][0];
+		}
+		selMapType.selectedIndex = mapType;
+
+		stats = new Stats();
+		stats.domElement.style.cssText = 'position: absolute; top: 0px; zIndex: 100; ';
+		document.body.appendChild( stats.domElement );
+
+		if ( ! Detector.webgl ) {
+			renderer = new THREE.CanvasRenderer();
+		} else {
+			renderer = new THREE.WebGLRenderer( { alpha: 1, antialias: true, clearColor: 0xffffff }  );
+		}
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		renderer.shadowMapEnabled = true;
+		document.body.appendChild( renderer.domElement );
+		scene = new THREE.Scene();
+
+		camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 5000 );
+		camera.position.set( 0, 200, 300 );
+		controls = new THREE.TrackballControls( camera, renderer.domElement );
+
+		var light = new THREE.AmbientLight( 0x666666);
+		scene.add( light );
+
+		light = new THREE.DirectionalLight( 0xeeeeee, 0.5 );
+		//light.position = camera.position;
+		light.position.set( -300, 200, 100 );
+		light.castShadow = true;
+
+		light.shadowMapWidth = 2048;
+		light.shadowMapHeight = 2048;
+		light.shadowCameraNear = 30;
+		light.shadowCameraFar = 700;
+		light.shadowCameraFov = 100;
+
+		var d = 320;
+		light.shadowCameraLeft = -d;
+		light.shadowCameraRight = d;
+		light.shadowCameraTop = d;
+		light.shadowCameraBottom = -d;
+// light.shadowCameraVisible = true;
+		scene.add( light );
+
+		light2 = new THREE.DirectionalLight( 0xeeeeee, 0.5 );
+		//light.position = camera.position;
+		light2.position.set( 200, 300, 100 );
+		light2.castShadow = true;
+
+		light2.shadowMapWidth = 2048;
+		light2.shadowMapHeight = 2048;
+		light2.shadowCameraNear = 30;
+		light2.shadowCameraFar = 600;
+		light2.shadowCameraFov = 100;
+
+		var d = 300;
+		light2.shadowCameraLeft = -d;
+		light2.shadowCameraRight = d;
+		light2.shadowCameraTop = d;
+		light2.shadowCameraBottom = -d;
+//light2.shadowCameraVisible = true;
+		scene.add( light2 );
+
+
+// axes
+		scene.add( new THREE.ArrowHelper( v(1, 0, 0), v(0, 0, 0), 30, 0xcc0000) );
+		scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 30, 0x00cc00) );
+		scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 30, 0x0000cc) );
+
+// ground plane
+/*
+		var br = '<br>';
+		var txt = 'tileZoom ' + tileZoom + br;
+		txt += 'lon ' + lon + br;
+		txt += 'lat ' + lat + br;
+
+		var zoomScale = Math.pow( 2, tileZoom - 7);
+
+		var xHeightMapTile = lon2tile( lon, tileZoom);
+		var yHeightMapTile = lat2tile( lat, tileZoom );
+
+		var xHeightMapTileZoom = zoomScale * xHeightMapTile;
+		var yHeightMapTileZoom = zoomScale * yHeightMapTile;
+
+		var xTile = lon2tile( lon, tileZoom );
+		var yTile = lat2tile( lat, tileZoom );
+
+		xDelta = xTile - xHeightMapTileZoom;
+		// xBoxStartUL = xDelta * 1200 / zoomScale;
+
+		yDelta = yTile - yHeightMapTileZoom;
+		// yBoxStartUL = yDelta * 1200 / zoomScale;
+
+		txt += 'zoomSlice ' + zoomScale + ' ' + br;
+		txt += 'xHeightMapTile ' + xHeightMapTile + br + 'yHeightMapTile ' + yHeightMapTile + br + xHeightMapTileZoom + ' ' + yHeightMapTileZoom + br + br;
+		txt += 'xtile ' + xTile + br + 'yTile ' + yTile + br + 'xDelta ' + xDelta + ' yDelta ' + yDelta + br;
+		// txt += 'xBoxStartUL ' + xBoxStartUL + ' yBoxStartUL ' + yBoxStartUL + ' length ' + length + br + br;
+		
+		var lonTileUL = tile2lon( xTile, tileZoom ).toFixed(3);
+		var latTileUL = tile2lat( yTile, tileZoom ).toFixed(3);
+		var lonTileLR = tile2lon( xTile + 1, tileZoom ).toFixed(3);
+		var latTileLR = tile2lat( yTile + 1, tileZoom ).toFixed(3);
+
+		txt += 'lonTileUL '+ lonTileUL + ' latTileUL '+ latTileUL + br;
+		txt += 'lonTileLR '+ lonTileLR + ' latTileLR '+ latTileLR + br + br;
+*/
+		xTarget = 255 * (lonTileUL - lon) / ( lonTileUL - lonTileLR);
+		yTarget = 255 * (latTileUL - lat) / ( latTileUL - latTileLR);
+
+		txt += 'xTarget ' + Math.round(xTarget) + br;
+		txt += 'yTarget ' + Math.round(yTarget) + br;
+
+
+
+/*
+		if ( xTarget < 128 ) {
+			xDelta--;
+			xTarget += 256;
+		}
+
+		if ( yTarget < 128 ) {
+			yDelta--;
+			yTarget += 256;
+		}
+*/
+
+		geometry = new THREE.PlaneGeometry( 512, 512 );
+		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -Math.PI / 2 ) );
+		material = new THREE.MeshNormalMaterial( { opacity: 0.3, side: THREE.DoubleSide, transparent: true } );
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( 0, 1.205, 0);
+		//scene.add( mesh );
+
+		geometry = new THREE.CubeGeometry( 3, 100, 3 );
+		material = new THREE.MeshNormalMaterial();
+		target = new THREE.Mesh( geometry, material );
+		// mesh.position.set( -256 + xTarget, 40, -256 + yTarget);
+		scene.add( target );
+
+		var heightMap;
+		//var mapTexture = THREE.ImageUtils.loadTexture( 'water.jpg' );
+		var mapTexture = THREE.ImageUtils.loadTexture( 'grid-512a.png' );
+		mapTexture.wrapS = THREE.RepeatWrapping;
+		mapTexture.wrapT = THREE.RepeatWrapping;
+		mapTexture.repeat.set( 16, 16 );
+
+		for (var y = 0; y < 2; y++) {
+			for (var x = 0; x < 2; x++) {
+				// material = new THREE.MeshNormalMaterial( {  side: THREE.DoubleSide, shading: THREE.SmoothShading } );
+				material = new THREE.MeshPhongMaterial( { map: mapTexture, side: THREE.DoubleSide, color: 0xffffff, ambient: 0xffffff, specular: 0xdddddd, shininess: 100, shading: THREE.SmoothShading} );
+				// material = new THREE.MeshBasicMaterial( { map: mapTexture, side: THREE.DoubleSide, color: 0xffffff, ambient: 0xaaaaaa, shading: THREE.SmoothShading} );
+
+				geometry = new THREE.PlaneGeometry( 256, 256, 255, 255);
+				geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -Math.PI / 2 ) );
+				mesh = new THREE.Mesh( geometry, material );
+				mesh.position.set( -128 + x * 256, 0, -128 + y * 256);
+				mesh.receiveShadow = true;
+				mesh.castShadow = true;
+				terrains.add( mesh );
+
+				heightMap = document.createElement('img' );
+				heightMaps.push( heightMap );
+			}
+		}
+		scene.add( terrains );
+
+		tileZoomer( lat, lon );
+
+		// dataDiv.innerHTML += txt;
+	}
+
+	function tileZoomer( lat, lon) {
+		var lat = parseFloat( lat );
+		var lon = parseFloat( lon );
+		var zoomScale = Math.pow( 2, tileZoom - 7);
+
+		var xTile = lon2tile( lon, tileZoom );
+		var yTile = lat2tile( lat, tileZoom );
+
+		if ( tileZoom < 8 ) {
+			var xHeightMapTile = lon2tile( lon, tileZoom );
+			var yHeightMapTile = lat2tile( lat, tileZoom );
+		} else {
+			var xHeightMapTile = lon2tile( lon, 7 );
+			var yHeightMapTile = lat2tile( lat, 7 );
+		}
+
+		var xHeightMapTileZoom = zoomScale * xHeightMapTile;
+		var yHeightMapTileZoom = zoomScale * yHeightMapTile;
+
+		xDelta = xTile - xHeightMapTileZoom;
+		yDelta = yTile - yHeightMapTileZoom;
+
+		heightMapsX = [];
+		heightMapsY = [];
+
+		for (var k = 0, y = 0; y < 2; y++) {
+			for (var x = 0; x < 2; x++) {
+				heightMapsX.push( ( x + xDelta ) );
+				heightMapsY.push( ( y + yDelta ) );
+				updateTerrain( k++, x + xHeightMapTile, y + yHeightMapTile ); 
+			} 
+		}
+	}
+
+	function updateTerrain( count, x, y ) {
+				var heightMap = heightMaps[count];
+				if ( tileZoom < 8) {
+					heightMap.src =  tileZoom + '/' + x + '/' + y +'.png';
+				} else {
+					heightMap.src =  '../../de3-7/' + x + '/' + y +'.png';
+				}
+console.log( x, y );
+				
+				heightMap.onload = function() {
+					var canvas = document.createElement( 'canvas' );
+					canvas.width = canvas.height = 256;
+					document.body.appendChild( canvas );
+					canvas.style.cssText = 'position: absolute; right: 0; top: ' + ( count * 25) + '%;' ;
+// console.log( heightMap, heightMaps[count].width );
+					var context = canvas.getContext( '2d' );
+
+					if ( tileZoom < 8 ) {
+						context.drawImage( heightMap, 0, 0, 256, 256, 0, 0, 256, 256);
+console.log( count );
+					} else if ( tileZoom < 9 ) {
+						context.drawImage( heightMap, 0, 0, 1200, 1200, 0, 0, 256, 256);
+console.log( count );
+					} else {
+
+						var zoomScale = Math.pow( 2, tileZoom - 7);
+						xLength = heightMaps[count].width / zoomScale;
+						yLength = heightMaps[count].height / zoomScale;
+						xStart = heightMapsX[count] * xLength;
+						yStart = heightMapsY[count] * yLength;
+console.log( count, xStart, yStart, xLength, yLength );
+						context.drawImage( heightMap, xStart, yStart, xLength, yLength, 0, 0, 256, 256);
+					}
+
+
+					var imgd = context.getImageData( 0, 0, 256, 256 );
+					var pix = imgd.data;
+					var verts = terrains.children[count].geometry.vertices;
+					for ( var i = 0, j = 0, len = pix.length; i < len; i += 4 ) {
+						verts[j++].y = 0.08 * ( pix[i] + pix[i + 1] + pix[i + 2] );
+					}
+
+					terrains.children[count].geometry.verticesNeedUpdate = true;
+					terrains.children[count].geometry.computeFaceNormals();
+					terrains.children[count].geometry.computeVertexNormals();
+// terrains.children[count].geometry.computeTangents();
+//	terrains.children[count].geometry.computeMorphNormals();
+//	terrains.children[count].geometry.__dirtyVertices = true;
+//	terrains.children[count].geometry.__dirtyNormals = true;
+
+					context.lineWidth = 8;
+					context.strokeStyle = '#aa0000';
+					context.strokeRect( 0, 0, 256, 256 );
+
+					if ( mapType < 4  ) {
+						mapTexture = THREE.ImageUtils.loadTexture( mapTypes[ mapType ][1] + x + "&y="+ y + "&z=" + zoom );
+						terrains.children[count].material = new THREE.MeshPhongMaterial( { map: mapTexture } );
+					} else if ( mapType < 11 ) {
+						mapTexture = THREE.ImageUtils.loadTexture( mapTypes[ mapType ][1] + tileZoom + "/" + x + "/" + y + ".png" );
+						//terrains.children[count].material = new THREE.MeshPhongMaterial( { map: mapTexture } );
+						terrains.children[count].material.map = mapTexture; 
+					} else {
+						terrains.children[count].material = new THREE.MeshBasicMaterial( { color: 0x000000, wireframe: true } );
+					}
+
+
+
+//	console.log( heightMap, heightMapsX[count], heightMapsY[count], length );
+				};
+	}
+
+	function animate() {
+		requestAnimationFrame( animate );
+		controls.update();
+		renderer.render( scene, camera );
+		stats.update();
+	}
+
+	function requestFile( fname ) {
+		var xmlHttp = new XMLHttpRequest();
+		xmlHttp.open( 'GET', fname, false );
+		xmlHttp.send( null );
+		return xmlHttp.responseText;
+	}
+
+	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
+
+	function cos( a ){ return Math.cos( a ); }
+	function sin( a ){ return Math.sin( a ); }
+	function pow( a, b ){ return Math.pow( a, b ); }
+
+// http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#Tile_servers
+	function lon2tile( lon, zoom ) {
+		return Math.floor( ( lon + 180 ) / 360 * pow( 2, zoom ) );
+	}
+
+	function lat2tile( lat, zoom ) {
+		return Math.floor(( 1 - Math.log( Math.tan( lat * pi / 180) + 1 / cos( lat * pi / 180)) / pi )/2 * pow(2, zoom) );
+	}
+
+	function tile2lon( x, z ) {
+		return ( x / pow( 2, z ) * 360 - 180 );
+	}
+
+	function tile2lat( y, z ) {
+		var n = pi - 2 * pi * y / pow( 2, z );
+		return 180 / pi * Math.atan( 0.5 * ( Math.exp( n ) - Math.exp( -n ) ));
+	}
+</script>
+</body>
+</html>
