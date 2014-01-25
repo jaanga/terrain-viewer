@@ -1,8 +1,8 @@
-Terrain Viewer ~ Hello World ~ 15 Second Data
-==============================================
+Terrain Viewer ~ Hello World ~ 500 Meter Resolution
+===================================================
 
 Demos:  
-[Hello World ~ default (San Francisco Bay Area)]( r1/hello-world.html )  
+[Hello World ~ default (San Francisco Bay Area)]( http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html )  
 [Hello World ~ the world]( http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html#0#0#0#5 )  
 [Hello World ~ Barcelona]( http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html#7+#64#47#10 )  
 [Hello World ~ Derwydd Wales]( http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html#7+#62#42#15 )  
