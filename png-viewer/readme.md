@@ -1,8 +1,8 @@
 PNG Viewer
 ==========
 
-[PNG Viewer ~ default (San Francisco Bay Area)]( r1/png-viewer.html )  
-* Not a great place to start because not much to see, there's a lot over to the right
+[PNG Viewer ~ default (San Francisco Bay Area)]( r1/png-viewer.html )   
+* Not a great place to start because not much to see, there's a lot over to the right  
 [PNG Viewer ~ Barcelona]( http://jaanga.github.io/terrain-viewer/png-viewer/r1/png-viewer.html#64#47 )  
 [PNG Viewer ~ Zurich]( http://jaanga.github.io/terrain-viewer/png-viewer/r1/png-viewer.html#67#44 )  
 
