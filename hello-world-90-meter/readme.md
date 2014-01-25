@@ -1,4 +1,4 @@
-Jaanga Terrain Viewer ~ Hell World 90 Meter
+Jaanga Terrain Viewer ~ Hello World 90 Meter
 ============================================
 
 Demo:
