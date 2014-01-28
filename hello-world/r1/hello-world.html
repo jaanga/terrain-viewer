@@ -53,7 +53,6 @@
 		canvas.height =  heightMap.height;
 		var context = canvas.getContext( '2d' );
 		context.drawImage( heightMap, 0, 0, canvas.width, canvas.height, 0, 0, 256, 256 );
-
 		var imgd = context.getImageData( 0, 0, 256, 256 );
 		var pix = imgd.data;
 
