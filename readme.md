@@ -1,7 +1,7 @@
 Jaanga Terrain Viewer Read Me
 =============================
 
-Live demo: [UnFlatland r5]( http://jaanga.github.io/terrain-viewer/un-flatland/r1/un-flatland-r5.html )  
+Live demo: [UnFlatland r5]( http://jaanga.github.io/terrain-viewer/un-flatland/r15/un-flatland-r5.html )  
 Source code: [UnFlatland r5]( https://github.com/jaanga/terrain-viewer/tree/gh-pages/un-flatland)
 
 * Loads Jonathan de Ferranti's 3 second data set

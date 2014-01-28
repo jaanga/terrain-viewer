@@ -40,7 +40,7 @@
 		camera.position.set( 0, 150, 200 );
 		controls = new THREE.TrackballControls( camera, renderer.domElement );
 
-		THREE.ImageUtils.crossOrigin = 'jaanga.github.io';
+		THREE.ImageUtils.crossOrigin = 'anonymous';
 
 		heightMap = document.createElement('img' )
 		heightMap.src =  'http://jaanga.github.io/' + zoom + x + '/' + y +'.png';
@@ -56,12 +56,12 @@
 
 		var imgd = context.getImageData( 0, 0, 256, 256 );
 		var pix = imgd.data;
-		var verts = geometry.vertices;
-		scale = 0.01 * scale;
 
 		var geometry = new THREE.PlaneGeometry( 200, 200, 255, 255);
 		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
+		var verts = geometry.vertices;
 		var material = new THREE.MeshNormalMaterial( { shading: THREE.SmoothShading } );
+		scale = 0.01 * scale;
 
 		for (var i = 0, j = 0, len = pix.length; i < len; i += 4) {
 			verts[j++].y = scale * ( pix[i] + pix[i + 1] + pix[i + 2] ) ;
