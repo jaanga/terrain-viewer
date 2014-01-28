@@ -6,7 +6,7 @@ Source code: [UnFlatland r5]( https://github.com/jaanga/terrain-viewer/tree/gh-p
 
 * Loads Jonathan de Ferranti's 3 second data set
 * About one data point about every 90 meters
-* Approx 2.85B
+* Access approximately 2.85 GB of Terrain data
 
 Live demo: [Hello World]( http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html )  
 Source code: [Hello World]( https://github.com/jaanga/terrain-viewer/tree/gh-pages/hello-world)
