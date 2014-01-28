@@ -3,12 +3,12 @@ Terrain Viewer ~ Hello World ~ 500 Meter Resolution
 
 Demos:  
 [Hello World ~ default (San Francisco Bay Area)]( http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html )  
-[Hello World ~ the world]( http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html#0#0#0#5 )  
-[Hello World ~ Barcelona]( http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html#7+#64#47#10 )  
-[Hello World ~ Derwydd Wales]( http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html#7+#62#42#15 )  
-[Hello World ~ Zurich Switzerland]( http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html#7+#67#44#10 )  
-[Hello World ~ Antony France (vertical scale = 1 because people there like it that way)]( http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html#7+#64#44#2 )  
-[Hello World ~ Iquique Chile]( http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html#7+#39#71#14 )  
+[Hello World ~ the world]( http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html#terrain/0#0#0#5 )  
+[Hello World ~ Barcelona]( http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html#terrain-de15#64#47#10 )  
+[Hello World ~ Derwydd Wales]( http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html#terrain-de15#62#42#15 )  
+[Hello World ~ Zurich Switzerland]( http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html#terrain-de15#67#44#10 )  
+[Hello World ~ Antony France (vertical scale = 1 because people there like it that way)]( http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html#terrain-de15#64#44#2 )  
+[Hello World ~ Iquique Chile]( http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html#terrain-de15#39#71#14 )  
 
 
 ## Concept
