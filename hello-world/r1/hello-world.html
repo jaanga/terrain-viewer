@@ -9,7 +9,7 @@
 <script src = http://mrdoob.github.io/three.js/examples/js/controls/TrackballControls.js ></script>
 <script>
 
-	var zoom = 'terrain-de15/'; // 'terrain/0/' 'terrain/7/' etc
+	var zoom = 'terrain-de15'; // 'terrain/0/' 'terrain/7/' etc
 	var x = 20;
 	var y = 49;
 	scale = 15;
@@ -39,10 +39,8 @@
 		camera.position.set( 0, 150, 200 );
 		controls = new THREE.TrackballControls( camera, renderer.domElement );
 
-		// THREE.ImageUtils.crossOrigin = 'anonymous';
-
 		heightMap = document.createElement('img' )
-		heightMap.src =  'http://jaanga.github.io/' + zoom + x + '/' + y +'.png';
+		heightMap.src =  'http://jaanga.github.io/' + zoom + '/' + x + '/' + y +'.png';
 		heightMap.onload = initCanvas;
 	}
 
