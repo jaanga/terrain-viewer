@@ -26,8 +26,8 @@ Provide a basic viewer of Jaanga Terrain 15 Second data that can be used as the 
 
 You have two ways of viewing the FGx files:
 
-* Code hosted on GitHub: [fgx.github.io]( http://jaanga.github.io/terrain-viewer/hello-world/ "view the files as apps." ) <input value="<< You are now probably here." size=28 style="font:bold 12pt monospace;border-width:0;" >  
-* Source code on GitHub: [github.com/fgx]( https://github.com/jaanga/terrain-viewer/tree/gh-pages/hello-world/ "View the files as source code." ) <scan style=display:none ><< You are now probably here.</scan>
+* Code hosted on GitHub: [jaanga.github.io]( http://jaanga.github.io/terrain-viewer/hello-world/ "view the files as apps." ) <input value="<< You are now probably here." size=28 style="font:bold 12pt monospace;border-width:0;" >  
+* Source code on GitHub: [github.com/jaanga]( https://github.com/jaanga/terrain-viewer/tree/gh-pages/hello-world/ "View the files as source code." ) <scan style=display:none ><< You are now probably here.</scan>
 
 
 
