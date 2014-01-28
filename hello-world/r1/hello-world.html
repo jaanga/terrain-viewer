@@ -27,7 +27,6 @@
 		x = ( hashes[2] !== undefined ) ? hashes[2] : x;
 		y = ( hashes[3] !== undefined ) ? hashes[3] : y;
 		scale = ( hashes[4] !== undefined ) ? hashes[4] : scale;
-//	console.log( hashes );
 
 		document.body.style.cssText = 'margin: 0; overflow: hidden; }';
 
@@ -40,7 +39,7 @@
 		camera.position.set( 0, 150, 200 );
 		controls = new THREE.TrackballControls( camera, renderer.domElement );
 
-		THREE.ImageUtils.crossOrigin = 'anonymous';
+		// THREE.ImageUtils.crossOrigin = 'anonymous';
 
 		heightMap = document.createElement('img' )
 		heightMap.src =  'http://jaanga.github.io/' + zoom + x + '/' + y +'.png';
