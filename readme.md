@@ -5,11 +5,11 @@ Jaanga Terrain Viewer Read Me
 
 An annotated table of contents with links for all the Terrain repositories on GitHub:
 
-[Jaanga Terrain Contents]( http://jaanga.github.io/terrain/contents.html )
+[Jaanga Terrain Contents]( ../terrain/contents.html )
 
 The primary read me file for this project:
 
-[Jaanga Terrain]( http://jaanga.github.io/terrain/index.html )
+[Jaanga Terrain]( ../terrain/index.html )
 
 ## Demos
 
