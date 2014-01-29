@@ -1,6 +1,18 @@
 Jaanga Terrain Viewer Read Me
 =============================
 
+## Contents and More
+
+An annotated table of contents with links for all the Terrain repositories on GitHub:
+
+[Jaanga Terrain Contents]( http://jaanga.github.io/terrain/contents.html )
+
+The primary read me file for this project:
+
+[Jaanga Terrain]( http://jaanga.github.io/terrain/index.html )
+
+## Demos
+
 Live demo: [UnFlatland r5]( http://jaanga.github.io/terrain-viewer/un-flatland/r5/un-flatland-r5.html )  
 Source code: [UnFlatland r5]( https://github.com/jaanga/terrain-viewer/tree/gh-pages/un-flatland)
 
@@ -31,22 +43,26 @@ Source code: [PNG Viewer]( https://github.com/jaanga/terrain-viewer/tree/gh-page
 In particular, in zoom levels or above, if you happen to land on the edges of a tile then funny boxes appear. Please ignore and go somewhere else.
 -->
 
-For an amusing applied use ( older version ) of this technology see: [FGx Plane Spotter]( http://fgx.github.io/fgx-plane-spotter/inde.html )
+For an amusing applied use ( older version ) of this technology see: [FGx Plane Spotter]( http://fgx.github.io/fgx-plane-spotter/index.html )
 
 For [Leap Motion]( https://www.leapmotion.com/ ) device enabled and earlier versions see: [Flying Leap 3D]( https://github.com/jaanga/gestification/tree/gh-pages/projects/flying-leap-3d )
+
+<hr>
+
+2014-01-28 ~ Following text is out of date and/or a work in progress 
 
 ## Concept
 The fastest, smallest, sweetest 3D Map code you ever did see.
 
 ## Project Links
 
-You have two ways of viewing the FGx Plane Spotter files:
+You have two ways of viewing the Jaanga Terrain Viewer files:
 
 * Code hosted on GitHub: [jaanga.github.io]( http://jaanga.github.io/cookbook/un-flatland/ "view the files as apps." ) <input value="<< You are now probably here." size=28 style="font:bold 12pt monospace;border-width:0;" >  
 * Source code on GitHub: [github.com/jaanga]( https://github.com/jaanga/cookbook/tree/gh-pages/un-flatland/ "View the files as source code." ) <scan style=display:none ><< You are now probably here.</scan>
 
 
-2014-01-15 ~ Following text is out of data 
+
 
 ## <a name="features"></a>Features
 
@@ -182,7 +198,7 @@ Bugs on browsers other than Chrome need not be reported until such as the work s
 
 
 ## Copyright and License
-copyright &copy; 2013 Jaanga authors ~ All work herein is under the [MIT License](http://jaanga.github.io/libs/jaanga-copyright-and-mit-license.md)
+copyright &copy; 2014 Jaanga authors ~ All work herein is under the [MIT License](http://jaanga.github.io/libs/jaanga-copyright-and-mit-license.md)
 
 
 ## Credits
