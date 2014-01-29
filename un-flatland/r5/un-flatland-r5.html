@@ -78,9 +78,9 @@
 			'<a href=# title="Get help and info" onclick=help.style.display="block"; ><large>&#x24D8;</large></a></h1>' +
 			'<div id=help onclick=help.style.display="none";></div>' +
 			'<div>' +
-				'Zoom: &nbsp;  &nbsp;<input type=number min=0 max=18 value=' + zoom + ' onchange="zoom=this.value; setLocation();" ><br>' +
-				'Scale:  &nbsp; <input type=number min=1 max=50 value=' + scaleVert + ' onchange="scaleVert=this.value; setLocation();" ><br>' +
-				'Overlay: <select title="Select the 2D overlay" id=selMapType onchange="mapType=this.selectedIndex;setLocation();"><select><hr>' +
+				'Zoom: &nbsp;  &nbsp;<input type=number min=0 max=18 value=' + zoom + ' onchange="zoom=this.value; setLocation(zoom);" ><br>' +
+				'Scale:  &nbsp; <input type=number min=1 max=50 value=' + scaleVert + ' onchange="scaleVert=this.value; setLocation(scaleVert);" ><br>' +
+				'Overlay: <select title="Select the 2D overlay" id=selMapType onchange="mapType=this.selectedIndex;setLocation(mapType);"><select><hr>' +
 				'Location<br>Lat: <input type="text" id="inpLat" value="' + lat +'" size=8 /><br>' +
 				'Lon: <input type="text" id="inpLon" value="' + lon +'" size=8 /> ' +
 				'<button onclick="lat = inpLat.value;  lon = inpLon.value; setLocation();" title="Click Go to update camera longitude and latitude" >Go</button><br>' +
