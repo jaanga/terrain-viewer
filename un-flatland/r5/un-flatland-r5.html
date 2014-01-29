@@ -13,11 +13,12 @@
 <script>
 
 	var zoom = '7';
-	scaleVert = 10;
-	fileName = '../../gazetteer/places-2000.csv';
-	startPlace =  1623; // San Francisco ~ but see below  // barcelona 154;
-	mapType = 0;
-	mapTypes = [
+	var scaleVert = 10;
+	var fileName = '../../gazetteer/places-2000.csv';
+	var places;
+	var startPlace =  1623; // San Francisco ~ but see below  // barcelona 154;
+	var mapType = 0;
+	var mapTypes = [
 		['Colorful',''],
 		['Google Maps','http://mt1.google.com/vt/x='],
 		['Google Maps Terrain','http://mt1.google.com/vt/lyrs=t&x='],
@@ -261,8 +262,8 @@
 	}
 
 	function initCanvas() {
+//	var start = new Date();
 		if ( terrain ) scene.remove( terrain );
-
 		var canvas = document.createElement( 'canvas' );
 		canvas.width = heightMap.width;
 		canvas.height =  heightMap.height;
@@ -306,6 +307,7 @@
 		terrain.castShadow = true;
 
 		scene.add( terrain );
+// console.log( new Date() - start);
 	}
 
 	function getTile( direction ) {
