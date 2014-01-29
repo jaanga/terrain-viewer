@@ -13,9 +13,9 @@
 <script>
 
 	var zoom = '7';
-	scale = 10;
+	scaleVert = 10;
 	fileName = '../../gazetteer/places-2000.csv';
-	startPlace =  1622; // San Francisco ~ but see below  // barcelona 154;
+	startPlace =  1623; // San Francisco ~ but see below  // barcelona 154;
 	mapType = 0;
 	mapTypes = [
 		['Colorful',''],
@@ -66,7 +66,7 @@
 		zoom = ( hashes[1] !== undefined ) ? hashes[1] : zoom;
 		lat = ( hashes[2] !== undefined ) ? hashes[2] : lat;
 		lon = ( hashes[3] !== undefined ) ? hashes[3] : lon;
-		scale = ( hashes[4] !== undefined ) ? hashes[4] : scale;
+		scaleVert = ( hashes[4] !== undefined ) ? hashes[4] : scaleVert;
 		mapType = ( hashes[5] !== undefined ) ? hashes[5] : mapType;
 
 		xTile = (lon2tile( parseFloat( lon ), 7 ));
@@ -78,8 +78,8 @@
 			'<a href=# title="Get help and info" onclick=help.style.display="block"; ><large>&#x24D8;</large></a></h1>' +
 			'<div id=help onclick=help.style.display="none";></div>' +
 			'<div>' +
-				'Zoom: &nbsp;  &nbsp;<input type=number min=0 max=18 value=' + zoom + ' onchange=zoom=this.value;setLocation(); ><br>' +
-				'Scale:  &nbsp; <input type=number min=1 max=50 value=' + scale + ' onchange=scale=this.value;setLocation(); ><br>' +
+				'Zoom: &nbsp;  &nbsp;<input type=number min=0 max=18 value=' + zoom + ' onchange="zoom=this.value; setLocation();" ><br>' +
+				'Scale:  &nbsp; <input type=number min=1 max=50 value=' + scaleVert + ' onchange="scaleVert=this.value; setLocation();" ><br>' +
 				'Overlay: <select title="Select the 2D overlay" id=selMapType onchange="mapType=this.selectedIndex;setLocation();"><select><hr>' +
 				'Location<br>Lat: <input type="text" id="inpLat" value="' + lat +'" size=8 /><br>' +
 				'Lon: <input type="text" id="inpLon" value="' + lon +'" size=8 /> ' +
@@ -202,6 +202,9 @@
 		xTile = lon2tile( lon, zoom );
 		yTile = lat2tile( lat, zoom );
 
+		txt += 'zoom ' + zoom + br;
+		txt += 'scale ' + scaleVert + br2;
+
 		txt += 'xTile ' + xTile + br;
 		txt += 'yTile ' + yTile + br2;
 
@@ -273,7 +276,7 @@
 
 		geometry = new THREE.PlaneGeometry( 200, 200, 255, 255);
 		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
-		var verts = geometry.vertices, all, scl = 0.002 * parseInt(scale, 10) * ( parseInt(zoom, 10) + 1);
+		var verts = geometry.vertices, all, scl = 0.002 * parseInt( scaleVert, 10) * ( parseInt( zoom, 10) + 1);
 		for (var i = 0, j = 0, len = pix.length; i < len; i += 4) {
 			all = pix[i] + pix[i + 1] + pix[i + 2];
 			verts[j++].y = scl  * all;
