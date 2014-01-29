@@ -80,7 +80,7 @@
 			'<div>' +
 				'Zoom: &nbsp;  &nbsp;<input type=number min=0 max=18 value=' + zoom + ' onchange="zoom=this.value; setLocation(zoom);" ><br>' +
 				'Scale:  &nbsp; <input type=number min=1 max=50 value=' + scaleVert + ' onchange="scaleVert=this.value; setLocation(scaleVert);" ><br>' +
-				'Overlay: <select title="Select the 2D overlay" id=selMapType onchange="mapType=this.selectedIndex;setLocation(mapType);"><select><hr>' +
+				'Overlay: <select title="Select the 2D overlay" id=selMapType onchange="mapType=this.selectedIndex; setLocation(mapType);"><select><hr>' +
 				'Location<br>Lat: <input type="text" id="inpLat" value="' + lat +'" size=8 /><br>' +
 				'Lon: <input type="text" id="inpLon" value="' + lon +'" size=8 /> ' +
 				'<button onclick="lat = inpLat.value;  lon = inpLon.value; setLocation();" title="Click Go to update camera longitude and latitude" >Go</button><br>' +
@@ -209,6 +209,7 @@
 		txt += 'xTile ' + xTile + br;
 		txt += 'yTile ' + yTile + br2;
 
+		var prev = heightMap.src;
 		if ( zoom < 8) {
 			heightMap.src =  '../../../terrain/' + zoom + '/' + xTile + '/' + yTile +'.png';
 		} else {
@@ -252,7 +253,12 @@
 		'</h1>';
 
 		menu1.innerHTML = txt;
-		heightMap.onload = initCanvas;
+
+		if ( heightMap.src !== prev ) {
+			heightMap.onload = initCanvas;
+		} else {
+			initCanvas();
+		}
 	}
 
 	function initCanvas() {
