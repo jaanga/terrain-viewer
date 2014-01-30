@@ -1,5 +1,8 @@
-Jaanga unFlatland
-=================
+unFlatland Read Me
+==================
+
+Cropped iframe view of unFlatland r5:
+<iframe src=http://jaanga.github.io/terrain-viewer/un-flatland/r5/un-flatland-r5.html width=96% height=600px  ></iframe>
 
 Live demo:
 [unFlatland r5]( http://jaanga.github.io/terrain-viewer/un-flatland/r5/un-flatland-r5.html )
@@ -8,43 +11,54 @@ For an amusing applied use of this technology see: [FGx Plane Spotter]( http://f
 
 For [Leap Motion]( https://www.leapmotion.com/ ) device enabled and earlier versions see: [Flying Leap 3D]( https://github.com/jaanga/gestification/tree/gh-pages/projects/flying-leap-3d )
 
+
 ## Concept
 
-Mission
+### Mission
 To supply the fastest, smallest, sweetest 3D map code you ever saw.
-
 
 
 ## Project Links
 
-You have two ways of viewing the Jaanga Terrain Viewer nuFlatland files:
+You have two ways of viewing the Jaanga Terrain Viewer unFlatland files:
 
 * Code hosted on GitHub: [jaanga.github.io]( http://jaanga.github.io/terrain-viewer/un-flatland/ "view the files as apps." ) <input value="<< You are now probably here." size=28 style="font:bold 12pt monospace;border-width:0;" >  
 * Source code on GitHub: [github.com/jaanga]( https://github.com/jaanga/terrain-viewer/tree/gh-pages/un-flatland "View the files as source code." ) <scan style=display:none ><< You are now probably here.</scan>
 
 
-## <a name="features"></a>Features
+See also
 
-* Covers every part of the world that [OSM]( http://www.openstreetmap.org/ ) covers - matches [Slippy Map]( http://wiki.openstreetmap.org/wiki/Slippy_Map )
+* [Jaanga Terrain](  http://jaanga.github.io/terrain/ )
+* [Janga Terrain Viewer](  http://jaanga.github.io/terrain-viewer/ )
+
+## Features
+
+* Covers every part of the world that Jaabga Terrain covers - sames as [OSM]( http://www.openstreetmap.org/ ) covers - matches [Slippy Map]( http://wiki.openstreetmap.org/wiki/Slippy_Map )
 * Works in your browser  - no plugin required
 * Runs files locally or sourced from a static file server - such as [GitHub Pages]( http://pages.github.com/ )
+* Carries out all the interpolation necessary to view zoom levels 8 and higher
 * Supports real-time zoom, pan and rotate
-
+* Creates and reads permalinks for zoom, latitude, longitude, vertical scale and map type
 * Easy to build your own place lists
 * Supports large user-defined gazetteer
-
 * Supports many 2D map overlays
+* Provides a variety of navigation audes
 * Generic 3D library - can be used with other apps and libraries
 * FOSS, built with less than 500 lines of code
 * Very small file size ~ you can easily open up and start hacking
-* Fast enough to be usable
+* Fast enough to be usable. Display Frames per second
 
 
 ## Road Map
 
 * Toggle between two types of camera controllers: first person or trackball
+* Toggle display of menu and stat
+* Add skybox? Add fog?
+* load four 128 x 128 meshes 
+* Add diagonal navigation buttons
 * Toggle 3D placards that show place names
-* Add and remove tiles as needed
+* Add and remove adjacent 3D tiles as needed
+* Display adjacent tiles in 2D
 * Can we get this down to 30 metre detail?  
 
 
@@ -52,15 +66,11 @@ You have two ways of viewing the Jaanga Terrain Viewer nuFlatland files:
 
 2014-01-28  
 
-If you go to some high altitude location such as Mount Everest or Machu Pichu - and see nothing - the map may be above you and you will need to drag it into view.
+If you go to some high altitude location such as Mount Everest or Machu Pichu - and see nothing - the map may be above you and you will need to drag it into view. 
+This is a Jaanga Terrain issue. 
 
 Vertical scale is is set quite high by default. This is to help provide a game-like experience. Feel free to change the scale.
 
-
-## To Be Done
-
-* Bring over source code for Releases 1-4
-* Bring over existing unFlantland Read Me
 
 ## Links
 
@@ -99,6 +109,8 @@ copyright &copy; 2014 Jaanga authors ~ All work herein is under the [MIT License
 ## Change Log
 
 2014-01-29 ~ Theo
+
+* Read me updated, iframe added
 
 Fixed or dealt with:  
 The current big issue is that - often but not always - nothing happens wnen you change the zoom, scale, overlay, latitude or longitude  
@@ -146,5 +158,4 @@ From R4 and before:
 * Code clean up
 * Select zoom levels
 * Help screen added
-
 

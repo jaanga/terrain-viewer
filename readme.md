@@ -64,38 +64,6 @@ You have two ways of viewing the Jaanga Terrain Viewer files:
 
 
 
-## <a name="features"></a>Features
-
-* Covers every part of the world that [OSM]( http://www.openstreetmap.org/ ) covers - matches [Slippy Map]( http://wiki.openstreetmap.org/wiki/Slippy_Map )
-* Works in your browser  - no plugin required
-* Runs files locally or sourced from a static file server - such as [GitHub Pages]( http://pages.github.com/ )
-* Supports real-time zoom, pan and rotate
-* Toggle between two types of camera controllers: first person or trackball
-* Easy to build your own place lists
-* Supports large user-defined gazette
-* Toggle 3D placards that show place names
-* Supports many 2D map overlays
-* Generic 3D library - can be used with other apps and libraries
-* FOSS, built with less than 500 lines of code
-* Very small file size ~ you can easily open up and start hacking
-* Fast enough to be usable
-
-
-## Issues and Bugs
-
-* <s>~~Works only in Chrome~~</s> fixed
-* <s>~~Dropdown list items only update when you change city~~</s> fixed
-* <s>~~First person controller: Mouse actions only work when initiated from top of screen. Should work from anywhere.~~</s> Fixed
-* <s>~~Trackball controller: after you return from first person controller drop downs no longer work. Must reload page to make changes.~~</s> Fixed stupidly: reload page
-* Elevation drops to naught on one side
-* Go to lat/long then change scale: goes to previous location
-
-
-## Road Map
-
-* Add and remove tiles as needed
-* Can we get this down to 50 metre detail?  
-
 
 ## <a name="terrain"></a>Terrain Elevation Bitmaps
 Mission: to develop the database of online 3D terrain elevation bitmaps so that you can zoom in and out of OSM-style maps while the state-of-the-art resolution of the terrain in 3D.
