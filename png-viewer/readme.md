@@ -5,11 +5,11 @@ Cropped iframe view of PNG Viewer with default image
 <iframe src=http://jaanga.github.io/terrain-viewer/png-viewer/r2/png-viewer-r2.html width=96% height=600px >
 visible here: http://jaanga.github.io/terrain-viewer/png-viewer/ </iframe>
 
-[PNG Viewer r2 ~ default (San Francisco Bay Area)]( http://jaanga.github.io/terrain-viewer/png-viewer/r2/png-viewer.html )   
+[PNG Viewer r2 ~ default (San Francisco Bay Area)]( http://jaanga.github.io/terrain-viewer/png-viewer/r2/png-viewer-r2.html )   
 - Not a great place to start because not much to see, though there is a lot to see over to the right and down  
 
-[PNG Viewer r2 ~ Barcelona]( http://jaanga.github.io/terrain-viewer/png-viewer/r2/png-viewer.html#64#47 )  
-[PNG Viewer r2 ~ Zurich]( http://jaanga.github.io/terrain-viewer/png-viewer/r2/png-viewer.html#67#44 )  
+[PNG Viewer r2 ~ Barcelona]( http://jaanga.github.io/terrain-viewer/png-viewer/r2/png-viewer-r2.html#64#47 )  
+[PNG Viewer r2 ~ Zurich]( http://jaanga.github.io/terrain-viewer/png-viewer/r2/png-viewer-r2.html#67#44 )  
 
 ## Concept
 
