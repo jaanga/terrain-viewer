@@ -7,6 +7,7 @@
 <body>
 <script>
 
+	var info;
 	var x = 20;
 	var y = 49;
 
@@ -30,16 +31,16 @@
 			'h1 a {text-decoration: none; }' +
 		'';
 
-		var info = document.body.appendChild( document.createElement( 'div' ) );
+		info = document.body.appendChild( document.createElement( 'div' ) );
 		info.style.cssText = ' background-color: #ccc; left: 20px; opacity:0.8; padding: 10px; position: absolute; top: 20px;';
-		info.innerHTML = '<h1><a href="" >PNG Viewer r2</a> ' +
+		info.innerHTML = '<div onclick=info.style.display="none"; >[x]</div>' +
+			'<h1><a href="" >PNG Viewer r2</a> ' +
 			'<a href=# title="Get help and info" onclick=help.style.display="block"; ><large>&#x24D8;</large></a></h1>' +
 			'<div id=help onclick=help.style.display="none";></div>' +
-			'<span id=menu></span></h1>' +
+			'<span id=menu></span>' +
 		'';
 
-
-		help.style.cssText = 'display: none; background-color: #ccc; left: 350px; opacity:0.9; padding: 20px; ' +
+		help.style.cssText = 'display: none; background-color: #ccc; left: 350px; opacity: 0.9; padding: 20px; ' +
 			'position: absolute; top: 50px; width: 500px; ';
 		help.innerHTML =  '<div onclick=help.style.display="none"; >' +
 				'<b>PNG Viewer r2</b><br><br>' +
@@ -92,8 +93,8 @@
 		canvas.width = image.width;
 		canvas.height =  image.height;
 		context = canvas.getContext( '2d' );
-		context.drawImage( image, 0, 0, 256, 256, 0, 0, 256, 256);
-		var imgd = context.getImageData( 0, 0, 256, 256 );
+		context.drawImage( image, 0, 0, canvas.width , canvas.height, 0, 0, canvas.width , canvas.height);
+		var imgd = context.getImageData( 0, 0, canvas.width , canvas.height );
 		var pix = imgd.data;
 
 		var all;
@@ -104,7 +105,7 @@
 				colors.push( all);
 			}
 		}
-console.log( colors );
+console.log( colors.sort( function(a,b){return a-b} ) );
 
 		var br = '<br>', br2 = br + br;
 		var txt = 'Folder: ' + br +
@@ -130,7 +131,7 @@ console.log( colors );
 			'Min: ' + Array.min( colors ) + br +
 			'Max: ' + Array.max( colors ) + br2 +
 
-			'<a href=JavaScript:link(); >permalink</a>' + br +
+			'<a href=JavaScript:link(); >Permalink</a>' + br +
 			'<a href="http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html#terrain-de15#' + x + '#' + y + '" >Hello Word</a>' +
 
 			'<h1>' +
