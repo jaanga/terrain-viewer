@@ -243,6 +243,12 @@ See also and in particular <a href="http://fgx.github.io" target="_blank">FGx on
 
 ## Change Log
 
+2014-01-29 ~ Theo
+
+* R5 is out
+* Updating now is OK
+* Var statements added
+
 2014-01-15 ~ Theo
 
 * R5 light is up
