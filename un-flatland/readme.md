@@ -2,7 +2,8 @@ unFlatland Read Me
 ==================
 
 Cropped iframe view of unFlatland r5:
-<iframe src=http://jaanga.github.io/terrain-viewer/un-flatland/r5/un-flatland-r5.html width=96% height=600px  ></iframe>
+<iframe src=http://jaanga.github.io/terrain-viewer/un-flatland/r5/un-flatland-r5.html width=96% height=600px >
+(visible here [unFlatland]( http://jaanga.github.io/terrain-viewer/un-flatland/) )</iframe>
 
 Live demo:
 [unFlatland r5]( http://jaanga.github.io/terrain-viewer/un-flatland/r5/un-flatland-r5.html )
