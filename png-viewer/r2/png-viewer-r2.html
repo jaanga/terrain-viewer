@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang=en>
+<head>
+<title>Jaanga Terrain Viewer ~ PNG Viewer r2</title>
+<meta charset=utf-8>
+</head>
+<body>
+<script>
+
+	var x = 20;
+	var y = 49;
+
+	var image;
+	var canvas, context;
+	var colors;
+
+	var pi = Math.PI;
+
+	init();
+
+
+
+	function init() {
+		var hashes = location.hash.split('#');
+		x = ( hashes[1] !== undefined ) ? hashes[1] : x;
+		y = ( hashes[2] !== undefined ) ? hashes[2] : y;
+
+		var css = document.body.appendChild( document.createElement('style') );
+		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; }' +
+			'h1 a {text-decoration: none; }' +
+		'';
+
+		var info = document.body.appendChild( document.createElement( 'div' ) );
+		info.style.cssText = ' background-color: #ccc; left: 20px; opacity:0.8; padding: 10px; position: absolute; top: 20px;';
+		info.innerHTML = '<h1><a href="" >PNG Viewer r2</a> ' +
+			'<a href=# title="Get help and info" onclick=help.style.display="block"; ><large>&#x24D8;</large></a></h1>' +
+			'<div id=help onclick=help.style.display="none";></div>' +
+			'<span id=menu></span></h1>' +
+		'';
+
+
+		help.style.cssText = 'display: none; background-color: #ccc; left: 350px; opacity:0.9; padding: 20px; ' +
+			'position: absolute; top: 50px; width: 500px; ';
+		help.innerHTML =  '<div onclick=help.style.display="none"; >' +
+				'<b>PNG Viewer r2</b><br><br>' +
+				'<p>View the Jaanga Terrain 3 second heightmaps</p>' +
+
+				'<a href="https://github.com/jaanga/terrain-viewer/tree/gh-pages/png-viewer" target="_blank">Source code</a><br>' +
+				'<small>credits: <a href="http://threejs.org" target="_blank">three.js</a> - ' +
+				'<a href="http://khronos.org/webgl/" target="_blank">webgl</a> - ' +
+				'<a href="http://jaanga.github.io" target="_blank">jaanga</a><br>' +
+				'copyright &copy; 2014 jaanga authors ~ MIT license</small><br><br>' +
+				'<i>Click anywhere in this message to hide...</i>' +
+		'</div>';
+
+		image = document.body.appendChild( document.createElement( 'img' ) );
+		getImage();
+	}
+
+	function getImage( direction) {
+		if ( direction === 'left' ) {
+			x--;
+			if ( x < 0 ) x = 127;
+		} else if ( direction === 'right' ) {
+			x++;
+			if ( x > 127 ) x = 0;
+		} else if ( direction === 'up' ) {
+			y--;
+			if ( y < 0 ) y = 127;
+		} else if ( direction === 'down' ) {
+			y++;
+			if ( y > 127 ) y = 0;
+		}
+
+		if ( x < 32 ) {
+			xDir = 'terrain-de3-0-31/';
+		} else if ( x < 64 ) {
+			xDir = 'terrain-de3-32-63/';
+		} else if ( x < 96 ) {
+			xDir = 'terrain-de3-64-95/';
+		} else {
+			xDir = 'terrain-de3-96-127/';
+		}
+
+		//image.src = 'http://jaanga.github.com/' + xDir + x + '/' + y + '.png';
+		image.src = '../../../' + xDir + x + '/' + y + '.png';
+		image.onload = setText;
+	}
+
+	function setText() {
+		canvas = document.createElement( 'canvas' );
+		canvas.width = image.width;
+		canvas.height =  image.height;
+		context = canvas.getContext( '2d' );
+		context.drawImage( image, 0, 0, 256, 256, 0, 0, 256, 256);
+		var imgd = context.getImageData( 0, 0, 256, 256 );
+		var pix = imgd.data;
+
+		var all;
+		colors = [];
+		for (var i = 0, j = 0, len = pix.length; i < len; i += 4) {
+			all = pix[i] + pix[i + 1] + pix[i + 2];
+			if ( colors.indexOf( all ) < 0 ) {
+				colors.push( all);
+			}
+		}
+console.log( colors );
+
+		var br = '<br>', br2 = br + br;
+		var txt = 'Folder: ' + br +
+			xDir + br2 +
+
+			'Tile' + br +
+			' x: ' + x + br +
+			' y: ' + y + br2 +
+
+			'UL lon: ' + tile2lon( x, 7 ).toFixed(3) + br +
+			'LR lon: ' + tile2lon( x + 1, 7 ).toFixed(3) + br +
+			'delta x: ' + Math.abs(tile2lon( x, 7 ) - tile2lon( x + 1, 7 )).toFixed(3) + br2 +
+
+			'UL lat: ' + tile2lat( y, 7).toFixed(3) + br +
+			'LR lat: ' + tile2lat( y + 1, 7).toFixed(3) + br +
+			'delta y: ' + Math.abs(tile2lat( y, 7 ) - tile2lat( y + 1, 7 )).toFixed(3) + br2 +
+
+			'PNG:' + br +
+			'width: ' + image.width + br +
+			'height: ' + image.height + br +
+			'pixels: ' + ( image.width * image.height) + br2 +
+			'Number of shades: ' + colors.length + br +
+			'Min: ' + Array.min( colors ) + br +
+			'Max: ' + Array.max( colors ) + br2 +
+
+			'<a href=JavaScript:link(); >permalink</a>' + br +
+			'<a href="http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html#terrain-de15#' + x + '#' + y + '" >Hello Word</a>' +
+
+			'<h1>' +
+				'<a href=JavaScript:getImage("left"); >&#8678;</a> ' +
+				'<a href=JavaScript:getImage("right"); >&#8680;</a> ' +
+				'<a href=JavaScript:getImage("up"); >&#8679;</a> ' +
+				'<a href=JavaScript:getImage("down"); >&#8681;</a>' +
+			'</h1>';
+		menu.innerHTML = txt;
+	}
+
+	function link() {
+		window.location.hash = '#' + x + '#' + y;
+	}
+
+	function pow( a, b ){ return Math.pow( a, b ); }
+
+	function tile2lon( x, z ) {
+		return ( x / pow( 2, z ) * 360 - 180 );
+	}
+
+	function tile2lat( y, z ) {
+		var n = pi - 2 * pi * y / pow( 2, z );
+		return 180 / pi * Math.atan( 0.5 * ( Math.exp( n ) - Math.exp( -n ) ));
+	}
+
+	Array.max = function( array ){
+		return Math.max.apply( Math, array );
+	};
+	 
+	Array.min = function( array ){
+		return Math.min.apply( Math, array );
+	};
+</script>
+</body>
+</html>
