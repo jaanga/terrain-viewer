@@ -109,6 +109,11 @@ copyright &copy; 2014 Jaanga authors ~ All work herein is under the [MIT License
 
 ## Change Log
 
+2014-01-30 ~ Theo
+
+* Toggle display of place name placards added
+* Toble display of menu and stats
+
 2014-01-29 ~ Theo
 
 * Read me updated, iframe added

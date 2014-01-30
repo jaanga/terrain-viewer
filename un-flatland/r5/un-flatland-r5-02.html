@@ -1,7 +1,7 @@
 ﻿<!doctype html>
 <html lang=en>
 <head>
-<title>unFlatland r5.1 ~ Jaanga Terrain Viewer ~ 90 Meter Resolution</title>
+<title>unFlatland r5 ~ Jaanga Terrain Viewer ~ 90 Meter Resolution</title>
 <meta charset=utf-8>
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 </head>
@@ -16,7 +16,7 @@
 	var scaleVert = 10;
 	var fileName = '../../gazetteer/places-2000.csv';
 	var places;
-	var startPlace =  1624; // San Francisco ~ but see below  // barcelona 154;
+	var startPlace =  1623; // San Francisco ~ but see below  // barcelona 154;
 	var mapType = 0;
 	var mapTypes = [
 		['Colorful',''],
@@ -36,12 +36,10 @@
 	var renderer, scene, camera, controls, heightMap;
 	var geometry, material, terrain;
 
-	var info;
 	var lat, lon;
 	var xTile, yTile;
 	var xDelta, yDelta;
 	var heightMap;
-	var placards;
 
 	var pi = Math.PI;
 
@@ -56,7 +54,7 @@
 
 		var data = requestFile( fileName );
 		var lines = data.split(/\r\n|\n/);
-		places = [ ['Select a location','','']];
+		places = [];
 		for ( var i = 1, length = lines.length - 1; i < length; i++ ) {
 			places.push( lines[i].split( ';' ) );
 		}
@@ -75,37 +73,31 @@
 		xTile = (lon2tile( parseFloat( lon ), 7 ));
 		yTile = (lat2tile( parseFloat( lat ), 7 ));
 
-		info = document.body.appendChild( document.createElement( 'div' ) );
+		var info = document.body.appendChild( document.createElement( 'div' ) );
 		info.style.cssText = ' background-color: #ccc; left: 20px; opacity:0.8; padding: 10px; position: absolute; top: 20px;';
-		info.innerHTML =  '<div onclick=info.style.display="none";stats.domElement.style.display="none"; >[x]</div>' +
-			'<h1><a href="" >unFlatland r5.1</a> ' +
+		info.innerHTML = '<h1><a href="" >unFlatland r5</a> ' +
 			'<a href=# title="Get help and info" onclick=help.style.display="block"; ><large>&#x24D8;</large></a></h1>' +
 			'<div id=help onclick=help.style.display="none";></div>' +
 			'<div>' +
 				'Zoom: &nbsp;  &nbsp;<input type=number min=0 max=18 value=' + zoom + ' onchange=zoom=this.value;setLocation(); ><br>' +
 				'Scale:  &nbsp; <input type=number min=1 max=50 value=' + scaleVert + ' onchange=scaleVert=this.value;setLocation(); ><br>' +
 				'Overlay: <select title="Select the 2D overlay" id=selMapType onchange=mapType=this.selectedIndex;setLocation(); ><select><hr>' +
-
-				'Location<br>' +
-				'Lat: <input type="text" id="inpLat" value="' + lat +'" size=8 /><br>' +
+				'Location<br>Lat: <input type="text" id="inpLat" value="' + lat +'" size=8 /><br>' +
 				'Lon: <input type="text" id="inpLon" value="' + lon +'" size=8 /> ' +
 				'<button onclick="lat = inpLat.value;  lon = inpLon.value; setLocation();" title="Click Go to update camera longitude and latitude" >Go</button><br>' +
 				'<select title="Choose one of ' + places.length + ' places" id=selPlace ' + 
 					'onchange="inpLat.value = lat = places[this.selectedIndex][1]; inpLon.value = lon = places[this.selectedIndex][2]; setLocation();" >' +
-				'</select>' +
-
-				'<p><input id=chkPlacards type="checkbox" onchange=updatePlacards(); >Placards </p>' +
+				'</select><br><br>' +
 				'<a href=JavaScript:link(); >permalink</a> &nbsp;' +
 				'<a href=JavaScript:viewPNG(); >View PNG</a><hr>' +
-
-			'</div>' +
+			'</div><br>' +
 			'<div id=menu1></div>' +
 			'<span id=menu ></span>';
 
 		help.style.cssText = 'display: none; background-color: #ccc; left: 350px; opacity:0.9; padding: 20px; ' +
 			'position: absolute; top: 50px; width: 500px; ';
 		help.innerHTML =  '<div onclick=help.style.display="none"; >' +
-				'<b>unFlatland r5.1</b><br><br>' +
+				'<b>unFlatland r5</b><br><br>' +
 				'<p>View any location on earth in 3D at 90 meter resolution.</p>' +
 
 				'<p>Trackball General Controls:<br>' +
@@ -211,16 +203,12 @@
 		xTile = lon2tile( lon, zoom );
 		yTile = lat2tile( lat, zoom );
 
-		inpLon.value = lon;
-		inpLat.value = lat;
-
-
 		txt += 'zoom ' + zoom + br;
 		txt += 'scale ' + scaleVert + br;
 		txt += 'mapType ' + mapType + br2;
 
 		txt += 'xTile ' + xTile + br;
-		txt += 'yTile ' + yTile + br;
+		txt += 'yTile ' + yTile + br2;
 
 		var prev = heightMap.src;
 		if ( zoom < 8) {
@@ -233,7 +221,7 @@
 			var yHeightMapTile = lat2tile( lat, 7 );
 
 			txt += 'xHeightMapTile ' + xHeightMapTile + br;
-			txt += 'yHeightMapTile ' + yHeightMapTile ;
+			txt += 'yHeightMapTile ' + yHeightMapTile + br2;
 
 			var xHeightMapTileZoom = zoomScale * xHeightMapTile;
 			var yHeightMapTileZoom = zoomScale * yHeightMapTile;
@@ -319,8 +307,6 @@
 		terrain.castShadow = true;
 
 		scene.add( terrain );
-
-		updatePlacards();
 // console.log( new Date() - start);
 	}
 
@@ -331,19 +317,16 @@
 			if ( xTile < 0 ) xTile = max;
 		} else if ( direction === 'right' ) {
 			xTile++;
-			if ( xTile > max ) xTile = 0;
+			if ( xTile > max ) x = 0;
 		} else if ( direction === 'up' ) {
 			yTile--;
 			if ( yTile < 0 ) y = max;
 		} else if ( direction === 'down' ) {
 			yTile++;
-			if ( yTile > max ) yTile = 0;
+			if ( yTile > max ) y = 0;
 		}
 		lon = tile2lon( xTile, zoom);
 		lat = tile2lat( yTile, zoom);
-
-		selPlace.selectedIndex = 0;
-
 		setLocation();
 	}
 
@@ -354,71 +337,12 @@
 		stats.update();
 	}
 
-	function updatePlacards() {
-		if ( placards && placards.children.length > 0) {
-			scene.remove( placards );
-			placards.children.length = 0;
-		}
-
-		if ( !chkPlacards.checked ) return;
-
-		var p, mesh, x, y, z;
-		var ulLat = tile2lat( yTile, zoom );
-		var lrLat = tile2lat( yTile + 1, zoom );
-		var ulLng = tile2lon( xTile, zoom );
-		var lrLng = tile2lon( xTile + 1, zoom );
-
-		var deltaLats = Math.abs( ulLat - lrLat );
-		var deltaLngs = Math.abs( ulLng - lrLng );
-		terrain.geometry.computeBoundingBox();
-
-		placards = new THREE.Object3D;
-		scene.add( placards );
-		geometry = new THREE.CubeGeometry( 0.1, 1, 0.1 );
-		material = new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.5, transparent: true });
-		for ( var i = 0, iLen = places.length; i < iLen; i++ ) {
-			p = places[i];
-			if ( parseFloat( p[1] ) < ulLat && parseFloat( p[1] ) > lrLat && parseFloat(  p[2] ) > ulLng  && parseFloat( p[2] ) < lrLng ) {
-				mesh = new THREE.Mesh( geometry, material );
-				x = 100 + 200 * ( parseFloat( p[2] ) - lrLng  ) / deltaLngs;
-				z = -100 + 200 * ( ulLat - parseFloat( p[1] ) ) / deltaLats;
-				y = 0.5 * terrain.geometry.boundingBox.max.y;
-				mesh.position.set( x, y, z );
-				mesh.scale.y = 1.5 * y;
-				placards.add( mesh );
-// console.log( terrain.geometry.boundingBox.max.y );
-				var texture = canvasText ( p[0] );
-				var spriteMaterial = new THREE.SpriteMaterial( { map: texture, useScreenCoordinates: false, opacity: 1 } );
-				sprite = new THREE.Sprite( spriteMaterial );
-				sprite.position.set(  x, terrain.geometry.boundingBox.max.y + 3, z );
-				sprite.scale.set( 15, 3, 1 );
-				placards.add( sprite );
-			}
-		}
-	}
-
-// please add calculate the text width
-	function canvasText( text ) {
-		var image = document.createElement( 'canvas' );
-		image.width = 100; // 480
-		image.height = 20; //204
-		var imageContext = image.getContext( '2d' );
-		imageContext.lineWidth = 1 ;
-		imageContext.strokeStyle = '#000000';
-		imageContext.strokeRect(0, 0, 100, 20);
-		imageContext.font = '12px sans-serif';
-		imageContext.fillText( text, 5, 15 );
-		var texture = new THREE.Texture( image );
-		texture.needsUpdate = true;
-		return texture;
-	}
-
 	function link() {
 		window.location.hash = '#' + zoom + '#' + lat + '#' + lon + '#' + scaleVert + '#' + mapType;
 	}
 
 	function viewPNG() {
-		window.location = 'http://jaanga.github.io/terrain-viewer/png-viewer/r2/png-viewer.html#' + 
+		window.location = 'http://jaanga.github.io/terrain-viewer/png-viewer/r1/png-viewer.html#' + 
 			lon2tile( parseFloat( lon), 7 ) + '#' + lat2tile( parseFloat(lat), 7 );
 	}
 
