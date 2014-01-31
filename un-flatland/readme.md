@@ -3,7 +3,7 @@ unFlatland Read Me
 
 Cropped iframe view of unFlatland r5:
 <iframe src=http://jaanga.github.io/terrain-viewer/un-flatland/r5/un-flatland-r5.html width=96% height=600px >
-visible here: http://jaanga.github.io/terrain-viewer/un-flatland/ </iframe>
+Visible only in HTML view here: http://jaanga.github.io/terrain-viewer/un-flatland/ </iframe>
 
 Live demo:
 [unFlatland r5]( http://jaanga.github.io/terrain-viewer/un-flatland/r5/un-flatland-r5.html )
@@ -40,10 +40,12 @@ See also
 * Carries out all the interpolation necessary to view zoom levels 8 and higher
 * Supports real-time zoom, pan and rotate
 * Creates and reads permalinks for zoom, latitude, longitude, vertical scale and map type
+* Toggle 3D placards that show place names
+* Toggle display of menu and stats
 * Easy to build your own place lists
 * Supports large user-defined gazetteer
 * Supports many 2D map overlays
-* Provides a variety of navigation audes
+* Provides a variety of navigation aides
 * Generic 3D library - can be used with other apps and libraries
 * FOSS, built with less than 500 lines of code
 * Very small file size ~ you can easily open up and start hacking
@@ -52,12 +54,11 @@ See also
 
 ## Road Map
 
+* Place cameras at designated locations
 * Toggle between two types of camera controllers: first person or trackball
-* Toggle display of menu and stat
 * Add skybox? Add fog?
 * load four 128 x 128 meshes 
 * Add diagonal navigation buttons
-* Toggle 3D placards that show place names
 * Add and remove adjacent 3D tiles as needed
 * Display adjacent tiles in 2D
 * Can we get this down to 30 metre detail?  
@@ -111,8 +112,8 @@ copyright &copy; 2014 Jaanga authors ~ All work herein is under the [MIT License
 
 2014-01-30 ~ Theo
 
-* Toggle display of place name placards added
-* Toble display of menu and stats
+* Added toggle display of place name placards
+* Addle toggle display of menu and stats
 
 2014-01-29 ~ Theo
 

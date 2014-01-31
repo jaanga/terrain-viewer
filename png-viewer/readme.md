@@ -61,8 +61,9 @@ This repository is at an early and volatile stage. Not all licensing requirement
 
 * r2.1
 * Select lat and lon
-* fix lat lon number display errors
-* display place names in area
+* Fix lat lon number display errors
+* Display place names in resizable textarea
+* Shade swatch with mouse move updates
 
 2014-01-29 ~ Theo
 
