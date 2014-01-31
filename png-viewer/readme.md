@@ -57,6 +57,13 @@ This repository is at an early and volatile stage. Not all licensing requirement
 
 ### Change Log
 
+2014-01-30 ~ Theo
+
+* r2.1
+* Select lat and lon
+* fix lat lon number display errors
+* display place names in area
+
 2014-01-29 ~ Theo
 
 * R2 with many new features

@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang=en>
 <head>
-<title>PNG Viewer r2.1 ~ Jaanga Terrain Viewer</title>
+<title>Jaanga Terrain Viewer ~ PNG Viewer r2</title>
 <meta charset=utf-8>
 </head>
 <body>
@@ -10,9 +10,6 @@
 	var info;
 	var x = 20;
 	var y = 49;
-
-	var fileName = '../../gazetteer/places-2000.csv';
-	var gazetteer;
 
 	var image;
 	var canvas, context;
@@ -27,13 +24,6 @@
 		x = ( hashes[1] !== undefined ) ? hashes[1] : x;
 		y = ( hashes[2] !== undefined ) ? hashes[2] : y;
 
-		var data = requestFile( fileName );
-		var lines = data.split(/\r\n|\n/);
-		gazetteer = [];
-		for ( var i = 1, length = lines.length - 1; i < length; i++ ) {
-			gazetteer.push( lines[i].split( ';' ) );
-		}
-
 		var css = document.body.appendChild( document.createElement('style') );
 		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; }' +
 			'h1 a {text-decoration: none; }' +
@@ -42,15 +32,11 @@
 		info = document.body.appendChild( document.createElement( 'div' ) );
 		info.style.cssText = ' background-color: #ccc; left: 20px; opacity:0.8; padding: 10px; position: absolute; top: 20px;';
 		info.innerHTML = '<div onclick=info.style.display="none"; >[x]</div>' +
-			'<h1><a href="" >PNG Viewer r2.1</a> ' +
+			'<h1><a href="" >PNG Viewer r2</a> ' +
 			'<a href=# title="Get help and info" onclick=help.style.display="block"; ><large>&#x24D8;</large></a></h1>' +
-			'<div>' +
-				'X tile: <input type=number min=0 max=127 value=' + x + ' onchange=x=parseInt(this.value,10);getImage(); ><br>' +
-				'Y tile: <input type=number min=0 max=127 value=' + y + ' onchange=y=parseInt(this.value,10);getImage(); ><br>' +
-			'</div>' +
-			'<hr>' +
+			'<div id=menu></div' +
 			'<div id=help onclick=help.style.display="none";></div>' +
-			'<div id=menu></div>' +
+
 		'';
 
 		help.style.cssText = 'display: none; background-color: #ccc; left: 350px; opacity: 0.9; padding: 20px; ' +
@@ -67,12 +53,7 @@
 				'<i>Click anywhere in this message to hide...</i>' +
 		'</div>';
 
-		//image = document.body.appendChild( document.createElement( 'img' ) );
-		image = document.createElement( 'img' ) ;
-		canvas = document.body.appendChild( document.createElement( 'canvas' ) );
-		canvas.onmousemove = onMMove;
-		context = canvas.getContext( '2d' );
-
+		image = document.body.appendChild( document.createElement( 'img' ) );
 		getImage();
 	}
 
@@ -107,10 +88,10 @@
 	}
 
 	function setText() {
-		
+		canvas = document.createElement( 'canvas' );
 		canvas.width = image.width;
 		canvas.height =  image.height;
-
+		context = canvas.getContext( '2d' );
 		context.drawImage( image, 0, 0, canvas.width , canvas.height, 0, 0, canvas.width , canvas.height);
 		var imgd = context.getImageData( 0, 0, canvas.width , canvas.height );
 		var pix = imgd.data;
@@ -118,21 +99,13 @@
 		var all;
 		colors = [];
 		for (var i = 0, j = 0, len = pix.length; i < len; i += 4) {
-//			all = pix[i] + pix[i + 1] + pix[i + 2];  // no need. because gray shades all three are the same value
-			all = pix[i];
+			all = pix[i] + pix[i + 1] + pix[i + 2];
 			if ( colors.indexOf( all ) < 0 ) {
 				colors.push( all);
 			}
 		}
 console.log( colors.sort( function(a,b){return a-b} ) );
-		var places = [];
-		for (var i = 0, len = gazetteer.length; i < len; i++) {
-			placeX = lon2tile( parseFloat(gazetteer[i][2]), 7 );
-			placeY = lat2tile( parseFloat(gazetteer[i][1]), 7);
-			if ( x === placeX && y === placeY ) {
-				places.push( gazetteer[i][0] );
-			}
-		} 
+
 		var br = '<br>', br2 = br + br;
 		var txt = 'Folder: ' + br +
 			xDir + br2 +
@@ -157,11 +130,6 @@ console.log( colors.sort( function(a,b){return a-b} ) );
 			'Min: ' + Array.min( colors ) + br +
 			'Max: ' + Array.max( colors ) + br2 +
 
-			'Places: <br>' +
-			'<textarea cols=40>' + places + '</textarea>' + br +
-			'Colors/heights:<br>' +
-			'<div id=swatch style=color:white; ></div>' +
-
 			'<a href=JavaScript:link(); >Permalink</a>' + br +
 			'<a href="http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html#terrain-de15#' + x + '#' + y + '" >Hello Word</a>' +
 
@@ -178,19 +146,7 @@ console.log( colors.sort( function(a,b){return a-b} ) );
 		window.location.hash = '#' + x + '#' + y;
 	}
 
-	function cos( a ){ return Math.cos( a ); }
-	function sin( a ){ return Math.sin( a ); }
 	function pow( a, b ){ return Math.pow( a, b ); }
-
-// http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#Tile_servers
-	function lon2tile( lon, zoom ) {
-		return Math.floor( ( lon + 180 ) / 360 * pow( 2, zoom ) );
-	}
-
-	function lat2tile( lat, zoom ) {
-		return Math.floor(( 1 - Math.log( Math.tan( lat * pi / 180) + 1 / cos( lat * pi / 180)) / pi )/2 * pow(2, zoom) );
-	}
-
 
 	function tile2lon( x, z ) {
 		return ( x / pow( 2, z ) * 360 - 180 );
@@ -208,30 +164,6 @@ console.log( colors.sort( function(a,b){return a-b} ) );
 	Array.min = function( array ){
 		return Math.min.apply( Math, array );
 	};
-
-	function requestFile( fname ) {
-		var xmlHttp = new XMLHttpRequest();
-		xmlHttp.open( 'GET', fname, false );
-		xmlHttp.send( null );
-		return xmlHttp.responseText;
-	}
-
-	function onMMove( e ) {
-		if ( e.pageX != undefined && e.pageY != undefined) {
-			var x = e.offsetX;
-			var y = e.offsetY;
-			var p = context.getImageData( x, y, 1, 1).data;
-			var hex = '#' + rgbToHex( p[0], p[1], p[2] ).toUpperCase();
-			swatch.innerHTML =  'x:' + x + ' y:' + y + '<br>rgb:' + p[0] + ' ' +  p[1] + ' ' + p[2]  + '<br>hex: ' + hex;
-			swatch.style.backgroundColor = hex;
-		}
-	}
-
-	function rgbToHex(r, g, b) {
-		if ( r > 255 || g > 255 || b > 255) throw "Invalid color component";
-		return ( (r << 16) | (g << 8) | b ).toString(16);
-	}
-
 </script>
 </body>
 </html>
