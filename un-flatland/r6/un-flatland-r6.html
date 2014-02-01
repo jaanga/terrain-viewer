@@ -10,8 +10,8 @@
 <script src = http://mrdoob.github.io/three.js/examples/js/libs/stats.min.js ></script>
 <script>
 
-	// var zoom = '7';
-	var scaleVert = 10;
+	var zoom = 13;
+	var scaleVert = zoom - 3;
 	var fileName = '../../gazetteer/places-2000.csv';
 	var places;
 	var startPlace =  1624; // San Francisco ~ but see below  // barcelona 154;
@@ -39,16 +39,11 @@
 	var terrain;
 	var placards;
 
-	var pi = Math.PI;
-
 	var renderer, scene, camera, controls, stats;
 	var canvas, context;
-	var density = 32;
+	var vertsPerTile = 32;
 	var tilesPerSide = 8;
-
-	var zoom = 13;
-	var x = 1308;
-	var y = 3165;
+	var pi = Math.PI;
 
 	init();
 	animate();
@@ -87,10 +82,14 @@
 			'<a href=# title="Get help and info" onclick=help.style.display="block"; ><large>&#x24D8;</large></a></h1>' +
 			'<div id=help onclick=help.style.display="none";></div>' +
 			'<div>' +
-				'Zoom: &nbsp;  &nbsp;<input type=number min=0 max=18 step=1 value=' + zoom + ' onchange=zoom=this.value;setLocation(); ><br>' +
-				'Scale:  &nbsp; <input type=number min=1 max=50 value=' + scaleVert + ' onchange=scaleVert=this.value;setLocation(); ><br>' +
+				'Zoom: &nbsp;  &nbsp;<input title="9 to 15: OK" id=setZoom type=number min=8 max=18 step=1 value=' + zoom + 
+					' onchange=zoom=this.value;scaleVert=setScale.value=this.value-3;setLocation(); ><br>' +
+				'Scale:  &nbsp; <input id=setScale type=number min=1 max=50 value=' + scaleVert + ' onchange=scaleVert=this.value;setLocation(); ><br>' +
 				'Overlay: <select title="Select the 2D overlay" id=selMapType onchange=mapType=this.selectedIndex;setLocation(); ><select><hr>' +
 
+				'Tiles/side: <input title="2 to 8: normal. 16+: pushing" id=setTiles type=number min=1 max=32 value=' + tilesPerSide + ' onchange=tilesPerSide=this.value;setLocation(); ><br>' +
+				'Vertex/tile: <input title="16 to 32: OK. 64+: pushing" id=setVerts type=number min=16 max=128 value=' + vertsPerTile + ' onchange=vertsPerTile=this.value;setLocation(); ><br>' +
+				'<hr>' +
 				'Location<br>' +
 				'Lat: <input type="text" id="inpLat" value="' + lat +'" size=8 /><br>' +
 				'Lon: <input type="text" id="inpLon" value="' + lon +'" size=8 /> ' +
@@ -172,6 +171,11 @@
 	}
 
 	function setLocation() {
+		zoom = zoom < 8 ? 8 : zoom;
+		setZoom.value = zoom;
+
+		setScale.value = scaleVert;
+
 		var br = '<br>', br2 = '<br><br>';
 		var txt = '';
 
@@ -183,7 +187,6 @@
 
 		inpLon.value = lon;
 		inpLat.value = lat;
-
 
 		txt += 'zoom ' + zoom + br;
 		txt += 'scale ' + scaleVert + br;
@@ -264,38 +267,19 @@
 		xLength = heightMap.width / zoomScale;
 		yLength = heightMap.height / zoomScale;
 
-		// xHeightMapTile = 20;
-		//yHeightMapTile = 49;
-
 		xHeightMapTileZoom = zoomScale * xHeightMapTile;
 		yHeightMapTileZoom = zoomScale * yHeightMapTile;
 
 		var xDelta = xTile - xHeightMapTileZoom;
 		var yDelta = yTile - yHeightMapTileZoom;
-// console.log( zoomScale, xLength, yLength );
 		var xStart = xDelta * xLength;
 		var yStart = yDelta * yLength;
 
-		if ( zoom < 8 ) {
-			return;
-			//context.drawImage( heightMap, 0, 0, 256, 256, 0, 0, 256, 256);
-		} else {
+		context.drawImage( heightMap, xStart - 2, yStart - 2, xLength + 2, yLength + 2, 0, 0, vertsPerTile, vertsPerTile);
+		var imgd = context.getImageData( 0, 0, vertsPerTile, vertsPerTile ).data;
 
-			var zoomScale = pow( 2, zoom - 7);
-			var xLength = heightMap.width / zoomScale;
-			var yLength = heightMap.height / zoomScale;
-			var xStart = xDelta * xLength;
-			var yStart = yDelta * yLength;
-			// context.drawImage( heightMap, xStart, yStart, xLength, yLength, 0, 0, 256, 256);
-			context.drawImage( heightMap, xStart - 2, yStart - 2, xLength + 2, yLength + 2, 0, 0, density, density);
-		}
-
-
-		context.drawImage( heightMap, xStart - 2, yStart - 2, xLength + 2, yLength + 2, 0, 0, density, density);
-		var imgd = context.getImageData( 0, 0, density, density ).data;
-
-		var geometry = new THREE.PlaneGeometry( 256, 256, density - 1, density - 1);
-		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -Math.PI / 2 ) );
+		var geometry = new THREE.PlaneGeometry( 256, 256, vertsPerTile - 1, vertsPerTile - 1);
+		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -0.5 * pi ) );
 
 		if ( mapType < 1 ) {
 			geometry.computeFaceNormals();
@@ -311,7 +295,6 @@
 			material = new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true } );
 		}
 
-// material = new THREE.MeshNormalMaterial();
 		var verts = geometry.vertices;
 
 		var scl = 0.035 * scaleVert * ( parseInt( zoom, 10) + 1);

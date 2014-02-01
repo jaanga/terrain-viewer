@@ -6,7 +6,9 @@ Cropped iframe view of unFlatland r5:
 Visible only in HTML view here: http://jaanga.github.io/terrain-viewer/un-flatland/ </iframe>
 
 Live demo:
-[unFlatland r5]( http://jaanga.github.io/terrain-viewer/un-flatland/r5/un-flatland-r5.html )
+[unFlatland r6 Dev!]( http://jaanga.github.io/terrain-viewer/un-flatland/r6/un-flatland-r6.html )  
+
+[unFlatland r5.1]( http://jaanga.github.io/terrain-viewer/un-flatland/r5/un-flatland-r5.html )
 
 For an amusing applied use of this technology see: [FGx Plane Spotter]( http://fgx.github.io/fgx-plane-spotter/inde.html )
 
