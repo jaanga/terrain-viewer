@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang=en>
 <head>
-<title>Hello San Francisco</title>
+<title>unFlatLand r6</title>
 <meta charset=utf-8>
 </head>
 <body>
@@ -9,36 +9,42 @@
 <script src = http://mrdoob.github.io/three.js/examples/js/controls/TrackballControls.js ></script>
 <script src = http://mrdoob.github.io/three.js/examples/js/libs/stats.min.js ></script>
 <script>
+
+	// var zoom = '7';
+	var scaleVert = 10;
+	var fileName = '../../gazetteer/places-2000.csv';
+	var places;
+	var startPlace =  1624; // San Francisco ~ but see below  // barcelona 154;
+	var mapType = 3;
+	var mapTypes = [
+		['Colorful',''],
+		['Google Maps','http://mt1.google.com/vt/x='],
+		['Google Maps Terrain','http://mt1.google.com/vt/lyrs=t&x='],
+		['Google Maps Satellite','http://mt1.google.com/vt/lyrs=s&x='],
+		['Google Maps Hybrid','http://mt1.google.com/vt/lyrs=y&x='],
+		['Open Street Map','http://b.tile.openstreetmap.org/'],
+		['Open Cycle Map', 'http://c.tile.opencyclemap.org/cycle/'],
+		['MapQuest OSM', 'http://otile3.mqcdn.com/tiles/1.0.0/osm/'],
+		['MapQuest Satellite', 'http://otile3.mqcdn.com/tiles/1.0.0/sat/'],
+		['Stamen terrain background','http://tile.stamen.com/terrain-background/'],
+		['HeightMap','../../../terrain/'],
+		['Wireframe','']
+	];
+
+	var info;
+	var lat, lon;
+	var xTile, yTile;
+	var xDelta, yDelta;
+	var heightMap;
+	var terrain;
+	var placards;
+
+	var pi = Math.PI;
+
 	var renderer, scene, camera, controls, stats;
 	var canvas, context;
 	var density = 32;
 	var tilesPerSide = 8;
-	var tiles = [];
-/*
-		var zoom = 7;
-		var x = 20;
-		var y = 49;
-
-		var zoom = 8;
-		var x = 40;
-		var y = 98;
-
-		var zoom = 9;
-		var x = 81;
-		var y = 197;
-
-		var zoom = 10;
-		var x = 163;
-		var y = 395;
-
-		var zoom = 11;
-		var x = 327;
-		var y = 791;
-
-		var zoom = 12;
-		var x = 654;
-		var y = 1582;
-*/
 
 	var zoom = 13;
 	var x = 1308;
@@ -48,13 +54,98 @@
 	animate();
 
 	function init() {
-		var geometry, material, mesh;
 		var css = document.body.appendChild( document.createElement('style') );
-		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden; }';
+		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden; }' +
+			'h1 a {text-decoration: none; }' +
+		'';
 
-		var info = document.body.appendChild( document.createElement( 'div' ) );
-		info.style.cssText = 'left: 20px; position: absolute; top: 0px; width: 100% ';
-		info.innerHTML = '<h1>Hello San Francisco<h1><div id=dataDiv></div>';
+		var data = requestFile( fileName );
+		var lines = data.split(/\r\n|\n/);
+		places = [ ['Select a location','','']];
+		for ( var i = 1, length = lines.length - 1; i < length; i++ ) {
+			places.push( lines[i].split( ';' ) );
+		}
+
+//		startPlace = parseInt( Math.random() * places.length, 10 );
+		lat = places[ startPlace][1];
+		lon = places[ startPlace][2];
+
+		var hashes = location.hash.split('#');
+		zoom = ( hashes[1] !== undefined ) ? hashes[1] : zoom;
+		lat = ( hashes[2] !== undefined ) ? hashes[2] : lat;
+		lon = ( hashes[3] !== undefined ) ? hashes[3] : lon;
+		scaleVert = ( hashes[4] !== undefined ) ? hashes[4] : scaleVert;
+		mapType = ( hashes[5] !== undefined ) ? hashes[5] : mapType;
+
+		xTile = (lon2tile( parseFloat( lon ), 7 ));
+		yTile = (lat2tile( parseFloat( lat ), 7 ));
+
+		info = document.body.appendChild( document.createElement( 'div' ) );
+		info.style.cssText = ' background-color: #ccc; left: 20px; opacity:0.8; padding: 10px; position: absolute; top: 20px;';
+		info.innerHTML =  '<div onclick=info.style.display="none";stats.domElement.style.display="none"; >[x]</div>' +
+			'<h1><a href="" >unFlatland r6</a> ' +
+			'<a href=# title="Get help and info" onclick=help.style.display="block"; ><large>&#x24D8;</large></a></h1>' +
+			'<div id=help onclick=help.style.display="none";></div>' +
+			'<div>' +
+				'Zoom: &nbsp;  &nbsp;<input type=number min=0 max=18 step=1 value=' + zoom + ' onchange=zoom=this.value;setLocation(); ><br>' +
+				'Scale:  &nbsp; <input type=number min=1 max=50 value=' + scaleVert + ' onchange=scaleVert=this.value;setLocation(); ><br>' +
+				'Overlay: <select title="Select the 2D overlay" id=selMapType onchange=mapType=this.selectedIndex;setLocation(); ><select><hr>' +
+
+				'Location<br>' +
+				'Lat: <input type="text" id="inpLat" value="' + lat +'" size=8 /><br>' +
+				'Lon: <input type="text" id="inpLon" value="' + lon +'" size=8 /> ' +
+				'<button onclick="lat = inpLat.value;  lon = inpLon.value; setLocation();" title="Click Go to update camera longitude and latitude" >Go</button><br>' +
+				'<select title="Choose one of ' + places.length + ' places" id=selPlace ' + 
+					'onchange="inpLat.value = lat = places[this.selectedIndex][1]; inpLon.value = lon = places[this.selectedIndex][2]; setLocation();" >' +
+				'</select>' +
+
+				'<p><input id=chkPlacards type="checkbox" onchange=updatePlacards(); >Placards </p>' +
+				'<a href=JavaScript:link(); >permalink</a> &nbsp;' +
+				'<a href=JavaScript:viewPNG(); >View PNG</a><hr>' +
+
+			'</div>' +
+			'<div id=menu1></div>' +
+			'<span id=menu ></span>';
+
+		help.style.cssText = 'display: none; background-color: #ccc; left: 350px; opacity:0.9; padding: 20px; ' +
+			'position: absolute; top: 50px; width: 500px; ';
+		help.innerHTML =  '<div onclick=help.style.display="none"; >' +
+				'<b>unFlatland r6</b><br><br>' +
+				'<p>View any location on earth in 3D at 90 meter resolution.</p>' +
+
+				'<p>Trackball General Controls:<br>' +
+					'&bull; Rotate globe: Left mouse / press 1 finger<br>' +
+					'&bull; Zoom in current level: Mousewheel / two fingers<br>' +
+					'&bull; Drag globe: Right mouse / press 2 fingers<br>' +
+				'</p>' +
+//				'&#10070; ' +
+//				'<p>First Person General Controls:<br>' +
+//					'&bull; WASD/cursor keys: four directions<br>' +
+//					'&bull; RF/Page Up PageDn: move up / down<br>' +
+//					'&bull; Mouse wheel only: speed up/slow down / down<br>' +
+//					'&bull; Spacebar/mousewheel click: pause<br>' +
+//					'&bull; Mouse/trackpad: update heading<br>' +
+//				'</p>' +
+
+				'<a href="https://github.com/jaanga/terrain-viewer/tree/gh-pages/un-flatland" target="_blank">Source code</a><br>' +
+				'<small>credits: <a href="http://threejs.org" target="_blank">three.js</a> - ' +
+				'<a href="http://khronos.org/webgl/" target="_blank">webgl</a> - ' +
+				'<a href="http://jaanga.github.io" target="_blank">jaanga</a><br>' +
+				'copyright &copy; 2014 jaanga authors ~ MIT license</small><br><br>' +
+				'<i>Click anywhere in this message to hide...</i>' +
+		'</div>';
+
+		for ( var i = 0, len = places.length; i < len; i++ ) {
+			selPlace.appendChild( document.createElement( 'option' ) );
+			selPlace.children[i].text = places[i][0];
+		}
+		selPlace.selectedIndex = startPlace;
+
+		for ( var option, i = 0, len = mapTypes.length; i < len; i++ ) {
+			selMapType.appendChild( option = document.createElement( 'option' ) );
+			selMapType.children[i].text = mapTypes[i][0];
+		}
+		selMapType.selectedIndex = mapType;
 
 		stats = new Stats();
 		stats.domElement.style.cssText = 'position: absolute; right: 0; top: 0; zIndex: 100; ';
@@ -62,101 +153,180 @@
 
 		renderer = new THREE.WebGLRenderer( { antialias: true }  );
 		renderer.setSize( window.innerWidth, window.innerHeight );
-		renderer.shadowMapEnabled = true;
+		// renderer.shadowMapEnabled = true;
 		document.body.appendChild( renderer.domElement );
 		scene = new THREE.Scene();
 
 		camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
-		camera.position.set( 0, 400, 800 );
+		camera.position.set( 0, 400, 1800 );
 		controls = new THREE.TrackballControls( camera, renderer.domElement );
 
 		THREE.ImageUtils.crossOrigin = 'anonymous';
 
-// axes
-		scene.add( new THREE.ArrowHelper( v(1, 0, 0), v(0, 0, 0), 30, 0xcc0000) );
-		scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 30, 0x00cc00) );
-		scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 30, 0x0000cc) );
+		heightMap = new Image();
 
-		for (var i = 0; i < tilesPerSide; i++) {
-			for (var j = 0; j < tilesPerSide; j++) {
-				// doIt( zoom, x + i, y + j, -384 + i * 256, -384 + j * 256 );
+		canvas = document.createElement( 'canvas' );
+		context = canvas.getContext( '2d' );
+
+		setLocation();
+	}
+
+	function setLocation() {
+		var br = '<br>', br2 = '<br><br>';
+		var txt = '';
+
+		lat = parseFloat( lat );
+		lon = parseFloat( lon );
+
+		xTile = lon2tile( lon, zoom );
+		yTile = lat2tile( lat, zoom );
+
+		inpLon.value = lon;
+		inpLat.value = lat;
+
+
+		txt += 'zoom ' + zoom + br;
+		txt += 'scale ' + scaleVert + br;
+		txt += 'mapType ' + mapType + br2;
+
+		txt += 'xTile ' + xTile + br;
+		txt += 'yTile ' + yTile + br;
+
+		var prev = heightMap.src;
+		if ( zoom < 8) {
+			heightMap.src =  '../../../terrain/' + zoom + '/' + xTile + '/' + yTile +'.png';
+		} else {
+
+			var zoomScale = pow( 2, zoom - 7);
+
+			xHeightMapTile = lon2tile( lon, 7 );
+			yHeightMapTile = lat2tile( lat, 7 );
+
+			txt += 'xHeightMapTile ' + xHeightMapTile + br;
+			txt += 'yHeightMapTile ' + yHeightMapTile ;
+
+			var xHeightMapTileZoom = zoomScale * xHeightMapTile;
+			var yHeightMapTileZoom = zoomScale * yHeightMapTile;
+
+			xDelta = xTile - xHeightMapTileZoom;
+			yDelta = yTile - yHeightMapTileZoom;
+
+//			txt += 'xDelta ' + xDelta + br;
+//			txt += 'yDelta ' + yDelta + br2;
+
+			var xDir;
+			if ( xHeightMapTile < 32 ) {
+				xDir = 'terrain-de3-0-31/';
+			} else if ( xHeightMapTile < 64 ) {
+				xDir = 'terrain-de3-32-63/';
+			} else if ( xHeightMapTile < 96 ) {
+				xDir = 'terrain-de3-64-95/';
+			} else {
+				xDir = 'terrain-de3-96-127/';
 			}
+			heightMap.src =  '../../../' + xDir + xHeightMapTile + '/' + yHeightMapTile +'.png';
 		}
 
-		heightMap = new Image();
-		// heightMap.src =  '../../../git-repos/jaanga.github.io/projects/terrain-de3-0-31' + '/' + 20 + '/' + 49 +'.png';
-		heightMap.src =  'http://jaanga.github.io/terrain-de3-0-31' + '/' + 20 + '/' + 49 +'.png';
-		heightMap.onload = initCanvas;
+		txt += '<h1>' +
+			'<a href=JavaScript:getTile("left"); >&#8678;</a> ' +
+			'<a href=JavaScript:getTile("right"); >&#8680;</a> ' +
+			'<a href=JavaScript:getTile("up"); >&#8679;</a> ' +
+			'<a href=JavaScript:getTile("down"); >&#8681;</a>' +
+		'</h1>';
+
+		menu1.innerHTML = txt;
+
+		if ( heightMap.src !== prev ) {
+			heightMap.onload = initCanvas;
+		} else {
+			initCanvas();
+		}
 	}
 
-	function doIt( zoom, xTile, yTile, xPos, yPos) {
-		//texture = THREE.ImageUtils.loadTexture( 'http://b.tile.openstreetmap.org/' + zoom + '/' + xTile +  '/' + yTile + '.png' );
-		texture = THREE.ImageUtils.loadTexture( 'http://mt1.google.com/vt/lyrs=s&x=' + xTile + "&y=" + yTile + "&z=" + zoom );
-		geometry = new THREE.PlaneGeometry( 256, 256, density - 1, density - 1);
-		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -Math.PI / 2 ) );
-		material = new THREE.MeshBasicMaterial( { map: texture, shading: THREE.SmoothShading } );
-		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( xPos, 0, yPos );
-		scene.add( mesh );
-		tiles.push( mesh );
-	}
 
 	function initCanvas() {
+		if ( terrain ) scene.remove( terrain );
+		terrain = new THREE.Object3D();
+
+		canvas.width = heightMap.width;
+		canvas.height =  heightMap.height;
+
 		for (var cnt = 0, i = 0; i < tilesPerSide; i++) {
 			for (var j = 0; j < tilesPerSide; j++) {
-				updateVertices( cnt++, x + i, y + j, -384 + i * 256, -384 + j * 256 );
+				updateVertices( cnt++, xTile + i - 2, yTile + j - 2, -384 + i * 256, -384 + j * 256 );
 			}
 		}
-
+		scene.add( terrain );
 	}
 
 	function updateVertices( i, xTile, yTile, xPos, yPos ) {
-
-		var canvas = document.createElement( 'canvas' );
-		canvas.width = heightMap.width;
-		canvas.height =  heightMap.height;
-		var imgd, verts ;
 		var zoomScale = pow( 2, zoom - 7);
-		var xLength = heightMap.width / zoomScale;
-		var yLength = heightMap.height / zoomScale;
+		xLength = heightMap.width / zoomScale;
+		yLength = heightMap.height / zoomScale;
 
-		var xHeightMapTile = 20;
-		var yHeightMapTile = 49;
+		// xHeightMapTile = 20;
+		//yHeightMapTile = 49;
 
-		var xHeightMapTileZoom = zoomScale * xHeightMapTile;
-		var yHeightMapTileZoom = zoomScale * yHeightMapTile;
+		xHeightMapTileZoom = zoomScale * xHeightMapTile;
+		yHeightMapTileZoom = zoomScale * yHeightMapTile;
 
-		xDelta = xTile - xHeightMapTileZoom;
-		yDelta = yTile - yHeightMapTileZoom;
-
+		var xDelta = xTile - xHeightMapTileZoom;
+		var yDelta = yTile - yHeightMapTileZoom;
+// console.log( zoomScale, xLength, yLength );
 		var xStart = xDelta * xLength;
 		var yStart = yDelta * yLength;
 
-		var context = canvas.getContext( '2d' );
-		context.drawImage( heightMap, xStart - 2, yStart - 2, xLength + 2, yLength + 2, 0, 0, density, density);
-		imgd = context.getImageData( 0, 0, density, density );
-		var pix = imgd.data;
+		if ( zoom < 8 ) {
+			return;
+			//context.drawImage( heightMap, 0, 0, 256, 256, 0, 0, 256, 256);
+		} else {
 
-		//texture = THREE.ImageUtils.loadTexture( 'http://b.tile.openstreetmap.org/' + zoom + '/' + xTile +  '/' + yTile + '.png' );
-		texture = THREE.ImageUtils.loadTexture( 'http://mt1.google.com/vt/lyrs=s&x=' + xTile + "&y=" + yTile + "&z=" + zoom );
-		geometry = new THREE.PlaneGeometry( 256, 256, density - 1, density - 1);
-		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -Math.PI / 2 ) );
-		geometry.computeFaceNormals();
-		geometry.computeVertexNormals();
-
-		material = new THREE.MeshBasicMaterial( { map: texture, shading: THREE.SmoothShading } );
-//		material = new THREE.MeshNormalMaterial();
-		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( xPos, 0, yPos );
-		scene.add( mesh );
-
-		verts = mesh.geometry.vertices;
-		var scl = 0.35 * ( parseInt( zoom, 10) + 1);
-		for (var i = 0, j = 0, len = pix.length; i < len; i += 4) {
-			verts[j++].y = scl * pix[i];;
+			var zoomScale = pow( 2, zoom - 7);
+			var xLength = heightMap.width / zoomScale;
+			var yLength = heightMap.height / zoomScale;
+			var xStart = xDelta * xLength;
+			var yStart = yDelta * yLength;
+			// context.drawImage( heightMap, xStart, yStart, xLength, yLength, 0, 0, 256, 256);
+			context.drawImage( heightMap, xStart - 2, yStart - 2, xLength + 2, yLength + 2, 0, 0, density, density);
 		}
-		geometry.verticesNeedUpdate = true;
 
+
+		context.drawImage( heightMap, xStart - 2, yStart - 2, xLength + 2, yLength + 2, 0, 0, density, density);
+		var imgd = context.getImageData( 0, 0, density, density ).data;
+
+		var geometry = new THREE.PlaneGeometry( 256, 256, density - 1, density - 1);
+		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -Math.PI / 2 ) );
+
+		if ( mapType < 1 ) {
+			geometry.computeFaceNormals();
+			geometry.computeVertexNormals();
+			material = new THREE.MeshNormalMaterial( { shading: THREE.SmoothShading } );
+		} else if ( mapType < 5  ) {
+			mapTexture = THREE.ImageUtils.loadTexture( mapTypes[ mapType ][1] + xTile + "&y=" + yTile + "&z=" + zoom );
+			material = new THREE.MeshBasicMaterial( { map: mapTexture } );
+		} else if ( mapType < 11) {
+			mapTexture = THREE.ImageUtils.loadTexture( mapTypes[ mapType ][1] + zoom + "/" + xTile + "/" + yTile + ".png" );
+			material = new THREE.MeshBasicMaterial( { map: mapTexture } );
+		} else if ( mapType < 12 ) {
+			material = new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true } );
+		}
+
+// material = new THREE.MeshNormalMaterial();
+		var verts = geometry.vertices;
+
+		var scl = 0.035 * scaleVert * ( parseInt( zoom, 10) + 1);
+		for (var i = 0, j = 0, len = imgd.length; i < len; i += 4) {
+			verts[j++].y = scl * imgd[i];;
+		}
+		var mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( xPos, 0, yPos );
+		if ( mapType < 1 ) {
+			mesh.geometry.computeFaceNormals();
+			mesh.geometry.computeVertexNormals();
+		}
+		terrain.add( mesh );
+
+		updatePlacards();
 	}
 
 	function animate() {
@@ -166,10 +336,127 @@
 		stats.update();
 	}
 
-	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
+	function getTile( direction ) {
+		var max = pow( 2, zoom) - 1;
+		var jump = tilesPerSide / 2;
+		if ( direction === 'left' ) {
+			xTile -= jump;
+			if ( xTile < 0 ) xTile = max;
+		} else if ( direction === 'right' ) {
+			xTile += jump;
+			if ( xTile > max ) xTile = 0;
+		} else if ( direction === 'up' ) {
+			yTile -=jump;
+			if ( yTile < 0 ) y = max;
+		} else if ( direction === 'down' ) {
+			yTile += jump;
+			if ( yTile > max ) yTile = 0;
+		}
+		lon = tile2lon( xTile, zoom);
+		lat = tile2lat( yTile, zoom);
+
+		selPlace.selectedIndex = 0;
+
+		setLocation();
+	}
+
+	function updatePlacards() {
+		if ( placards && placards.children.length > 0) {
+			scene.remove( placards );
+			placards.children.length = 0;
+		}
+
+		if ( !chkPlacards.checked ) return;
+
+		var p, mesh, x, y, z;
+		var ulLat = tile2lat( yTile, zoom );
+		var lrLat = tile2lat( yTile + 1, zoom );
+		var ulLng = tile2lon( xTile, zoom );
+		var lrLng = tile2lon( xTile + 1, zoom );
+
+		var deltaLats = Math.abs( ulLat - lrLat );
+		var deltaLngs = Math.abs( ulLng - lrLng );
+		// terrain.geometry.computeBoundingBox();
+
+		placards = new THREE.Object3D;
+		scene.add( placards );
+		geometry = new THREE.CubeGeometry( 1, 1, 1 );
+		material = new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.5, transparent: true });
+		for ( var i = 0, iLen = places.length; i < iLen; i++ ) {
+			p = places[i];
+			if ( parseFloat( p[1] ) < ulLat && parseFloat( p[1] ) > lrLat && parseFloat(  p[2] ) > ulLng  && parseFloat( p[2] ) < lrLng ) {
+				mesh = new THREE.Mesh( geometry, material );
+				x = 100 + 200 * ( parseFloat( p[2] ) - lrLng  ) / deltaLngs;
+				z = -100 + 200 * ( ulLat - parseFloat( p[1] ) ) / deltaLats;
+				y = 150;
+				mesh.position.set( x, y, z );
+				mesh.scale.y = 1.5 * y;
+				placards.add( mesh );
+// console.log( terrain.geometry.boundingBox.max.y );
+				var texture = canvasText ( p[0] );
+				var spriteMaterial = new THREE.SpriteMaterial( { map: texture, useScreenCoordinates: false, opacity: 1 } );
+				sprite = new THREE.Sprite( spriteMaterial );
+				sprite.position.set(  x, 250, z );
+				sprite.scale.set( 500, 100, 1 );
+				placards.add( sprite );
+			}
+		}
+	}
+
+// please add calculate the text width
+	function canvasText( text ) {
+		var image = document.createElement( 'canvas' );
+		image.width = 100; // 480
+		image.height = 20; //204
+		var imageContext = image.getContext( '2d' );
+		imageContext.lineWidth = 1 ;
+		imageContext.strokeStyle = '#ff0000';
+		imageContext.fillStyle = '#ff0000';
+		imageContext.strokeRect(0, 0, 100, 20);
+		imageContext.font = '12px sans-serif';
+		imageContext.fillText( text, 5, 15 );
+		var texture = new THREE.Texture( image );
+		texture.needsUpdate = true;
+		return texture;
+	}
+
+	function link() {
+		window.location.hash = '#' + zoom + '#' + lat + '#' + lon + '#' + scaleVert + '#' + mapType;
+	}
+
+	function viewPNG() {
+		window.location = 'http://jaanga.github.io/terrain-viewer/png-viewer/r2/png-viewer-r2.html#' + 
+			lon2tile( parseFloat( lon), 7 ) + '#' + lat2tile( parseFloat(lat), 7 );
+	}
+
+	function requestFile( fname ) {
+		var xmlHttp = new XMLHttpRequest();
+		xmlHttp.open( 'GET', fname, false );
+		xmlHttp.send( null );
+		return xmlHttp.responseText;
+	}
+
 	function cos( a ){ return Math.cos( a ); }
 	function sin( a ){ return Math.sin( a ); }
 	function pow( a, b ){ return Math.pow( a, b ); }
+
+// http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#Tile_servers
+	function lon2tile( lon, zoom ) {
+		return Math.floor( ( lon + 180 ) / 360 * pow( 2, zoom ) );
+	}
+
+	function lat2tile( lat, zoom ) {
+		return Math.floor(( 1 - Math.log( Math.tan( lat * pi / 180) + 1 / cos( lat * pi / 180)) / pi )/2 * pow(2, zoom) );
+	}
+
+	function tile2lon( x, z ) {
+		return ( x / pow( 2, z ) * 360 - 180 );
+	}
+
+	function tile2lat( y, z ) {
+		var n = pi - 2 * pi * y / pow( 2, z );
+		return 180 / pi * Math.atan( 0.5 * ( Math.exp( n ) - Math.exp( -n ) ));
+	}
 </script>
 </body>
 </html>
