@@ -112,6 +112,11 @@
 				'<b>unFlatland r6</b><br><br>' +
 				'<p>View any location on earth in 3D at 90 meter resolution.</p>' +
 
+				'<p>The main issue is the app only reads one data tile at a time. ' +
+				'When you get an edge of a data tile, stuff on the other side gets very funny.</p>' +
+
+				'<p>And, as the English say, mind the gaps...</p>' +
+
 				'<p>Trackball General Controls:<br>' +
 					'&bull; Rotate globe: Left mouse / press 1 finger<br>' +
 					'&bull; Zoom in current level: Mousewheel / two fingers<br>' +
@@ -352,10 +357,10 @@
 		if ( !chkPlacards.checked ) return;
 
 		var p, mesh, x, y, z;
-		var ulLat = tile2lat( yTile, zoom );
-		var lrLat = tile2lat( yTile + 1, zoom );
-		var ulLng = tile2lon( xTile, zoom );
-		var lrLng = tile2lon( xTile + 1, zoom );
+		var ulLat = tile2lat( yTile - 2, zoom );
+		var lrLat = tile2lat( yTile + tilesPerSide - 2, zoom );
+		var ulLng = tile2lon( xTile -2, zoom );
+		var lrLng = tile2lon( xTile + tilesPerSide - 2, zoom );
 
 		var deltaLats = Math.abs( ulLat - lrLat );
 		var deltaLngs = Math.abs( ulLng - lrLng );
@@ -369,17 +374,21 @@
 			p = places[i];
 			if ( parseFloat( p[1] ) < ulLat && parseFloat( p[1] ) > lrLat && parseFloat(  p[2] ) > ulLng  && parseFloat( p[2] ) < lrLng ) {
 				mesh = new THREE.Mesh( geometry, material );
-				x = 100 + 200 * ( parseFloat( p[2] ) - lrLng  ) / deltaLngs;
-				z = -100 + 200 * ( ulLat - parseFloat( p[1] ) ) / deltaLats;
+				x = 256 * tilesPerSide * ( parseFloat( p[2] ) - lrLng  ) / deltaLngs;
+				z = 256 * tilesPerSide * ( ulLat - parseFloat( p[1] ) ) / deltaLats;
 				y = 150;
-				mesh.position.set( x, y, z );
+
+//var dd = context.getImageData( 0, 0, 1, 1).data;
+//console.log( x, z, dd, p[0] );
+
+				mesh.position.set( x + 1536, y, z - 512);
 				mesh.scale.y = 1.5 * y;
 				placards.add( mesh );
 // console.log( terrain.geometry.boundingBox.max.y );
 				var texture = canvasText ( p[0] );
 				var spriteMaterial = new THREE.SpriteMaterial( { map: texture, useScreenCoordinates: false, opacity: 1 } );
 				sprite = new THREE.Sprite( spriteMaterial );
-				sprite.position.set(  x, 250, z );
+				sprite.position.set(  x + 1536, 250, z - 512 );
 				sprite.scale.set( 500, 100, 1 );
 				placards.add( sprite );
 			}
