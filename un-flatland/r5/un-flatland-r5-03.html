@@ -1,7 +1,7 @@
 ﻿<!doctype html>
 <html lang=en>
 <head>
-<title>unFlatland r5.2 ~ Jaanga Terrain Viewer ~ 90 Meter Resolution</title>
+<title>unFlatland r5.1 ~ Jaanga Terrain Viewer ~ 90 Meter Resolution</title>
 <meta charset=utf-8>
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 </head>
@@ -196,8 +196,7 @@
 //	light2.shadowCameraVisible = true;
 		scene.add( light2 );
 
-		// heightMap = document.createElement('img' );
-		heightMap = new Image();
+		heightMap = document.createElement('img' );
 
 		setLocation();
 	}
@@ -310,8 +309,6 @@
 			mapTexture = THREE.ImageUtils.loadTexture( mapTypes[ mapType ][1] + xTile + "&y=" + yTile + "&z=" + zoom );
 			material = new THREE.MeshPhongMaterial( { map: mapTexture } );
 		} else if ( mapType < 11) {
-
-
 			mapTexture = THREE.ImageUtils.loadTexture( mapTypes[ mapType ][1] + zoom + "/" + xTile + "/" + yTile + ".png" );
 			material = new THREE.MeshPhongMaterial( { map: mapTexture } );
 		} else if ( mapType < 12 ) {

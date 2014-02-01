@@ -54,14 +54,13 @@ For [Leap Motion]( https://www.leapmotion.com/ ) device enabled and earlier vers
 ## Concept
 The fastest, smallest, sweetest 3D Map code you ever did see.
 
+
 ## Project Links
 
 You have two ways of viewing the Jaanga Terrain Viewer files:
 
-* Code hosted on GitHub: [jaanga.github.io]( http://jaanga.github.io/cookbook/un-flatland/ "view the files as apps." ) <input value="<< You are now probably here." size=28 style="font:bold 12pt monospace;border-width:0;" >  
-* Source code on GitHub: [github.com/jaanga]( https://github.com/jaanga/cookbook/tree/gh-pages/un-flatland/ "View the files as source code." ) <scan style=display:none ><< You are now probably here.</scan>
-
-
+* Code hosted on GitHub: [jaanga.github.io]( http://jaanga.github.io/terrain-viewer/ "view the files as apps." ) <input value="<< You are now probably here." size=28 style="font:bold 12pt monospace;border-width:0;" >  
+* Source code on GitHub: [github.com/jaanga]( https://github.com/jaanga/terrain-viewer/ "View the files as source code." ) <scan style=display:none ><< You are now probably here.</scan>
 
 
 

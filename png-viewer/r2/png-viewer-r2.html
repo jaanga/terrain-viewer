@@ -68,7 +68,8 @@
 		'</div>';
 
 		//image = document.body.appendChild( document.createElement( 'img' ) );
-		image = document.createElement( 'img' ) ;
+		// image = document.createElement( 'img' ) ;
+		image = new Image();
 		canvas = document.body.appendChild( document.createElement( 'canvas' ) );
 		canvas.onmousemove = onMMove;
 		context = canvas.getContext( '2d' );
