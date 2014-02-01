@@ -70,7 +70,7 @@
 		camera.position.set( 0, 400, 800 );
 		controls = new THREE.TrackballControls( camera, renderer.domElement );
 
-		// THREE.ImageUtils.crossOrigin = 'anonymous';
+		THREE.ImageUtils.crossOrigin = 'anonymous';
 
 // axes
 		scene.add( new THREE.ArrowHelper( v(1, 0, 0), v(0, 0, 0), 30, 0xcc0000) );
@@ -141,6 +141,9 @@
 		texture = THREE.ImageUtils.loadTexture( 'http://mt1.google.com/vt/lyrs=s&x=' + xTile + "&y=" + yTile + "&z=" + zoom );
 		geometry = new THREE.PlaneGeometry( 256, 256, density - 1, density - 1);
 		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -Math.PI / 2 ) );
+		geometry.computeFaceNormals();
+		geometry.computeVertexNormals();
+
 		material = new THREE.MeshBasicMaterial( { map: texture, shading: THREE.SmoothShading } );
 //		material = new THREE.MeshNormalMaterial();
 		mesh = new THREE.Mesh( geometry, material );
@@ -153,8 +156,7 @@
 			verts[j++].y = scl * pix[i];;
 		}
 		geometry.verticesNeedUpdate = true;
-		geometry.computeFaceNormals();
-		geometry.computeVertexNormals();
+
 	}
 
 	function animate() {
