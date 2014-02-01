@@ -141,8 +141,8 @@
 		texture = THREE.ImageUtils.loadTexture( 'http://mt1.google.com/vt/lyrs=s&x=' + xTile + "&y=" + yTile + "&z=" + zoom );
 		geometry = new THREE.PlaneGeometry( 256, 256, density - 1, density - 1);
 		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -Math.PI / 2 ) );
-		// material = new THREE.MeshBasicMaterial( { map: texture, shading: THREE.SmoothShading } );
-material = new THREE.MeshNormalMaterial();
+		material = new THREE.MeshBasicMaterial( { map: texture, shading: THREE.SmoothShading } );
+//		material = new THREE.MeshNormalMaterial();
 		mesh = new THREE.Mesh( geometry, material );
 		mesh.position.set( xPos, 0, yPos );
 		scene.add( mesh );
