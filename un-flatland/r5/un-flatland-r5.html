@@ -310,8 +310,6 @@
 			mapTexture = THREE.ImageUtils.loadTexture( mapTypes[ mapType ][1] + xTile + "&y=" + yTile + "&z=" + zoom );
 			material = new THREE.MeshPhongMaterial( { map: mapTexture } );
 		} else if ( mapType < 11) {
-
-
 			mapTexture = THREE.ImageUtils.loadTexture( mapTypes[ mapType ][1] + zoom + "/" + xTile + "/" + yTile + ".png" );
 			material = new THREE.MeshPhongMaterial( { map: mapTexture } );
 		} else if ( mapType < 12 ) {
