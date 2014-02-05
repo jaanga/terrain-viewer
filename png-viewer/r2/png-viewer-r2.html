@@ -192,7 +192,6 @@
 		return Math.floor(( 1 - Math.log( Math.tan( lat * pi / 180) + 1 / cos( lat * pi / 180)) / pi )/2 * pow(2, zoom) );
 	}
 
-
 	function tile2lon( x, z ) {
 		return ( x / pow( 2, z ) * 360 - 180 );
 	}
@@ -218,14 +217,14 @@
 	}
 
 	function onMMove( e ) {
-		if ( e.pageX != undefined && e.pageY != undefined) {
+		//if ( e.pageX != undefined && e.pageY != undefined) {
 			var x = e.offsetX;
 			var y = e.offsetY;
 			var p = context.getImageData( x, y, 1, 1).data;
 			var hex = '#' + rgbToHex( p[0], p[1], p[2] ).toUpperCase();
 			swatch.innerHTML =  'x:' + x + ' y:' + y + '<br>rgb:' + p[0] + ' ' +  p[1] + ' ' + p[2]  + '<br>hex: ' + hex;
 			swatch.style.backgroundColor = hex;
-		}
+		//}
 	}
 
 	function rgbToHex(r, g, b) {
