@@ -12,7 +12,7 @@ The primary read me file for this project:
 [Jaanga Terrain]( http://jaanga.github.io/terrain/index.html )
 
 ## Demos
-Alpha version: [unFlatland r6 Dev!]( http://jaanga.github.io/terrain-viewer/un-flatland/r6/un-flatland-r6.html )  
+Alpha version: [unFlatland r6]( http://jaanga.github.io/terrain-viewer/un-flatland/r6/un-flatland-r6.html )  << under development  
 
 Live demo: [UnFlatland r5]( http://jaanga.github.io/terrain-viewer/un-flatland/r5/un-flatland-r5.html )  
 Source code: [UnFlatland r5]( https://github.com/jaanga/terrain-viewer/tree/gh-pages/un-flatland)
@@ -31,11 +31,12 @@ Source code: [Hello World]( https://github.com/jaanga/terrain-viewer/tree/gh-pag
 * Very simple code - can be used as boileeplate
 * Set location, zoom and scale using window.location.hash. Source code page has sample links
 
-Live Demo: [PNG Viewer]( http://jaanga.github.io/terrain-viewer/png-viewer/r1/png-viewer.html )  
+Live Demo: [PNG Viewer]( http://jaanga.github.io/terrain-viewer/png-viewer/r3/png-viewer-r3.html )  
 Source code: [PNG Viewer]( https://github.com/jaanga/terrain-viewer/tree/gh-pages/png-viewer )
 
 * View the PNG files used as heightmaps
-* Set location, zoom and scale using window.location.hash. Source code page has sample links
+* Set location, zoom and scale using window.location.hash.
+* Source code page has sample links
 
 
 
