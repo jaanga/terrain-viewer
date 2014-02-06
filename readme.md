@@ -5,11 +5,11 @@ Jaanga Terrain Viewer Read Me
 
 An annotated table of contents with links for all the Terrain repositories on GitHub:
 
-[Jaanga Terrain Contents]( ../terrain/readme-reader.html#contents.md )
+[Jaanga Terrain Contents]( http://jaanga.github.io/terrain/readme-reader.html#contents.md )
 
 The primary read me file for this project:
 
-[Jaanga Terrain]( ../terrain/index.html )
+[Jaanga Terrain]( http://jaanga.github.io/terrain/index.html )
 
 ## Demos
 Alpha version: [unFlatland r6 Dev!]( http://jaanga.github.io/terrain-viewer/un-flatland/r6/un-flatland-r6.html )  
