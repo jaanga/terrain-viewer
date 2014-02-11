@@ -17,8 +17,9 @@
 	<a href=JavaScript:displayPage("png-viewer/readme.md",pv); >PNG Viewer</a>
 </p>
 
-
 ****
+
+[Fgx Plane Spotter](../fgx-plane-spotter/index.html )
 
 [Terrain]( ../terrain/index.html )
 
