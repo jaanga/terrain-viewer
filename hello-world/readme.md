@@ -1,5 +1,8 @@
-Terrain Viewer ~ Hello World ~ 500 Meter Resolution
+Hello World ~ 500 Meter Resolution
 ===================================================
+<iframe src=http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html width=96% height=600px >
+Visible only in HTML view here: http://jaanga.github.io/terrain-viewer/hello-world/ </iframe>  
+_Cropped iframe view of Hello World_
 
 Demos:  
 [Hello World ~ default (San Francisco Bay Area)]( http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html )  
@@ -51,7 +54,12 @@ copyright &copy; 2014 Jaanga authors ~ All work herein is under the [MIT License
 
 This repository is at an early and volatile stage. Not all licensing requirements may have been fully met let alone identified. It is the intension of the authors to play fair and all such requirements will either be met or the feature in question will turned off.
 
+
 ### Change Log
+
+2014-02-20 ~ Theo
+
+* Update menu and read me files
 
 2014-01-23 ~ Theo
 

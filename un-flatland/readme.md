@@ -3,14 +3,24 @@ unFlatland Read Me
 
 <iframe src=http://jaanga.github.io/terrain-viewer/un-flatland/latest/index.html width=96% height=600px >
 Visible only in HTML view here: http://jaanga.github.io/terrain-viewer/un-flatland/ </iframe>  
-_Cropped iframe view of unFlatland_
+_Cropped iframe view of unFlatland latest revision_
 
 Live demo:
-[unFlatland latest]( http://jaanga.github.io/terrain-viewer/un-flatland/latest/index.html )  
+[unFlatland latest revision]( http://jaanga.github.io/terrain-viewer/un-flatland/latest/index.html )  
+
+* Currently r6
+
+_2014-02-20 ~ Please note that all current activity is happening in this fork of unFlatland: 
+**[FGx Plane Spotter]( http://jaanga.github.io/fgx-plane-spotter/index.html )**.
+This fork is under heavy development. New features are baing added every day.
+All new features in FGx Plane Spotter will be added to unFlatland and work will resume here when things calm down.
+Your comments and suggesions are welcome._ 
+
 
 [unFlatland r5.1]( http://jaanga.github.io/terrain-viewer/un-flatland/r5/un-flatland-r5.html )
 
-2014-02-20 ~ All current development is heppening in this fork: [FGx Plane Spotter]( http://jaanga.github.io/fgx-plane-spotter/index.html )
+* Version with lights and shadows. These features will make their way back into the latest revision
+
 
 For [Leap Motion]( https://www.leapmotion.com/ ) device enabled and earlier versions see: [Flying Leap 3D]( https://github.com/jaanga/gestification/tree/gh-pages/projects/flying-leap-3d )
 
@@ -20,6 +30,15 @@ For [Leap Motion]( https://www.leapmotion.com/ ) device enabled and earlier vers
 ### Mission
 To supply the fastest, smallest, sweetest 3D map code you ever saw.
 
+Currently there are three streams - all in various stages of development.
+
+* unFlatland ~ a generic 3D map
+* FGx Plane Spotter ~ a map application for flight simulation
+* A Leap Motion device enabled version
+
+### Vision
+
+Maps that change the world.
 
 ## Project Links
 
@@ -32,11 +51,11 @@ You have two ways of viewing the Jaanga Terrain Viewer unFlatland files:
 See also
 
 * [Jaanga Terrain](  http://jaanga.github.io/terrain/ )
-* [Janga Terrain Viewer](  http://jaanga.github.io/terrain-viewer/ )
+* [Jaanga Terrain Viewer](  http://jaanga.github.io/terrain-viewer/ )
 
 ## Features
 
-* Covers every part of the world that Jaabga Terrain covers - sames as [OSM]( http://www.openstreetmap.org/ ) covers - matches [Slippy Map]( http://wiki.openstreetmap.org/wiki/Slippy_Map )
+* Covers every part of the world that Jaanga Terrain covers - sames as [OSM]( http://www.openstreetmap.org/ ) covers - matches [Slippy Map]( http://wiki.openstreetmap.org/wiki/Slippy_Map )
 * Works in your browser  - no plugin required
 * Runs files locally or sourced from a static file server - such as [GitHub Pages]( http://pages.github.com/ )
 * Carries out all the interpolation necessary to view zoom levels 8 and higher
@@ -111,6 +130,10 @@ copyright &copy; 2014 Jaanga authors ~ All work herein is under the [MIT License
 
 
 ## Change Log
+
+2014-02-20 ~ Theo
+
+* Update menu and read me files
 
 2014-01-30 ~ Theo
 

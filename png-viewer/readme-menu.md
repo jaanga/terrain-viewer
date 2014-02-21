@@ -1,4 +1,4 @@
-[Jaanga](../../index.html ) &raquo; [Terrain Viewer]( ../index.html ) &raquo; [unFlatland]( ./index.html )
+[Jaanga](../../index.html ) &raquo; [Terrain Viewer]( ../index.html ) &raquo; [PNG Viewer]( ./index.html )
 ================================================================================================
 
 <p id=rm >
@@ -18,5 +18,5 @@ All recent updates are happening here:
 
 ****
 
-[Source Code on GitHub]( https://github.com/jaanga/terrain-viewer/tree/gh-pages/un-flatland/ )  
+[Source Code on GitHub]( https://github.com/jaanga/terrain-viewer/tree/gh-pages/png-viewer/ )  
 [Copyright and License]( https://github.com/jaanga/jaanga.github.io/blob/master/jaanga-copyright-and-mit-license.md )
