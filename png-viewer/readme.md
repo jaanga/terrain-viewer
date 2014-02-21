@@ -2,7 +2,7 @@ PNG Viewer Read Me
 ==================
 
 <iframe src=http://jaanga.github.io/terrain-viewer/png-viewer/r3/png-viewer-r3.html width=96% height=600px >
-visible here: http://jaanga.github.io/terrain-viewer/png-viewer/ </iframe>
+Visible only in HTML view here: http://jaanga.github.io/terrain-viewer/png-viewer/ </iframe>
 _Cropped iframe view of PNG Viewer with default image_
 
 [PNG Viewer ~ default (San Francisco Bay Area)]( http://jaanga.github.io/terrain-viewer/png-viewer/latest/index.html )   
