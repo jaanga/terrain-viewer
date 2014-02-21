@@ -87,6 +87,11 @@ See also
 
 ## Issues and Bugs
 
+2014-02-20 ~ Theo
+
+* Update menus and read me
+
+
 2014-01-28  
 
 If you go to some high altitude location such as Mount Everest or Machu Pichu - and see nothing - the map may be above you and you will need to drag it into view. 

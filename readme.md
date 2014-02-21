@@ -1,26 +1,24 @@
 Jaanga Terrain Viewer Read Me
 =============================
-
 ## Contents and More
+Annotated table of contents with links for all the Terrain repositories on GitHub: [Jaanga Terrain Contents]( http://jaanga.github.io/terrain/readme-reader.html#contents.md )   
+Primary read me file for this project: [Jaanga Terrain]( http://jaanga.github.io/terrain/index.html )
 
-An annotated table of contents with links for all the Terrain repositories on GitHub:
+## Three Demos
 
-[Jaanga Terrain Contents]( http://jaanga.github.io/terrain/readme-reader.html#contents.md )
+For an applied use ( newest version ) of this technology see: [FGx Plane Spotter]( http://fgx.github.io/fgx-plane-spotter/index.html )
 
-The primary read me file for this project:
+Three more quite different ways of viewing the Terrain data:
 
-[Jaanga Terrain]( http://jaanga.github.io/terrain/index.html )
-
-## Demos
-Alpha version: [unFlatland r6]( http://jaanga.github.io/terrain-viewer/un-flatland/r6/un-flatland-r6.html )  << under development  
-
-Live demo: [UnFlatland r5]( http://jaanga.github.io/terrain-viewer/un-flatland/r5/un-flatland-r5.html )  
-Source code: [UnFlatland r5]( https://github.com/jaanga/terrain-viewer/tree/gh-pages/un-flatland)
+#### 1. unFlatland
+Live Demo: [unFlatland (latest)]( http://jaanga.github.io/terrain-viewer/un-flatland/latest/index.html )  << under development  
+Source code: [unFlatland]( https://github.com/jaanga/terrain-viewer/tree/gh-pages/un-flatland )
 
 * Loads Jonathan de Ferranti's 3 second data set
 * About one data point about every 90 meters
 * Access approximately 2.85 GB of Terrain data
 
+#### 2. Hello World
 Live demo: [Hello World]( http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html )  
 Source code: [Hello World]( https://github.com/jaanga/terrain-viewer/tree/gh-pages/hello-world)
 
@@ -31,6 +29,7 @@ Source code: [Hello World]( https://github.com/jaanga/terrain-viewer/tree/gh-pag
 * Very simple code - can be used as boileeplate
 * Set location, zoom and scale using window.location.hash. Source code page has sample links
 
+#### 3. PNG Viewer
 Live Demo: [PNG Viewer]( http://jaanga.github.io/terrain-viewer/png-viewer/r3/png-viewer-r3.html )  
 Source code: [PNG Viewer]( https://github.com/jaanga/terrain-viewer/tree/gh-pages/png-viewer )
 
@@ -39,13 +38,10 @@ Source code: [PNG Viewer]( https://github.com/jaanga/terrain-viewer/tree/gh-page
 * Source code page has sample links
 
 
-
 <!--
 2014-01-15 ~ These are very interim, developer versions just to get going. There's no 'skinning', some serious bugs and unkempt code.
 In particular, in zoom levels or above, if you happen to land on the edges of a tile then funny boxes appear. Please ignore and go somewhere else.
 -->
-
-For an amusing applied use ( older version ) of this technology see: [FGx Plane Spotter]( http://fgx.github.io/fgx-plane-spotter/index.html )
 
 For [Leap Motion]( https://www.leapmotion.com/ ) device enabled and earlier versions see: [Flying Leap 3D]( https://github.com/jaanga/gestification/tree/gh-pages/projects/flying-leap-3d )
 
