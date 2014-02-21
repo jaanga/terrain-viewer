@@ -6,7 +6,7 @@ Primary read me file for this project: [Jaanga Terrain]( http://jaanga.github.io
 
 ## Three Demos
 
-For an applied use ( newest version ) of this technology see: [FGx Plane Spotter]( http://fgx.github.io/fgx-plane-spotter/index.html )
+For an applied use ( and newest versions ) of this technology see: [FGx Plane Spotter]( http://jaanga.github.io/fgx-plane-spotter/index.html )
 
 Three more quite different ways of viewing the Terrain data:
 
