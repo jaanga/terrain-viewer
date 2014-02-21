@@ -18,12 +18,14 @@
 </p>
 
 ****
-
+All the action is currently here:  
 [Fgx Plane Spotter](../fgx-plane-spotter/index.html )
 
+The source of the 3D data:  
 [Terrain]( ../terrain/index.html )
 
 
 ****
 
-[Source Code on GitHub]( https://github.com/jaanga/terrain-viewer/ )
+[Source Code on GitHub]( https://github.com/jaanga/terrain-viewer/ )  
+[Copyright and License]( https://github.com/jaanga/jaanga.github.io/blob/master/jaanga-copyright-and-mit-license.md )

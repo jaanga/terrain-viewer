@@ -1,16 +1,16 @@
 unFlatland Read Me
 ==================
 
-Cropped iframe view of unFlatland r5:
-<iframe src=http://jaanga.github.io/terrain-viewer/un-flatland/r5/un-flatland-r5.html width=96% height=600px >
-Visible only in HTML view here: http://jaanga.github.io/terrain-viewer/un-flatland/ </iframe>
+<iframe src=http://jaanga.github.io/terrain-viewer/un-flatland/latest/index.html width=96% height=600px >
+Visible only in HTML view here: http://jaanga.github.io/terrain-viewer/un-flatland/ </iframe>  
+_Cropped iframe view of unFlatland_
 
 Live demo:
-[unFlatland r6 Dev!]( http://jaanga.github.io/terrain-viewer/un-flatland/r6/un-flatland-r6.html )  
+[unFlatland latest]( http://jaanga.github.io/terrain-viewer/un-flatland/latest/index.html )  
 
 [unFlatland r5.1]( http://jaanga.github.io/terrain-viewer/un-flatland/r5/un-flatland-r5.html )
 
-For an amusing applied use of this technology see: [FGx Plane Spotter]( http://fgx.github.io/fgx-plane-spotter/inde.html )
+2014-02-20 ~ All current development is heppening in this fork: [FGx Plane Spotter]( http://jaanga.github.io/fgx-plane-spotter/index.html )
 
 For [Leap Motion]( https://www.leapmotion.com/ ) device enabled and earlier versions see: [Flying Leap 3D]( https://github.com/jaanga/gestification/tree/gh-pages/projects/flying-leap-3d )
 
