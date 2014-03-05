@@ -19,7 +19,7 @@
 
 ****
 All the action is currently here:  
-[Fgx Plane Spotter](../fgx-plane-spotter/index.html )
+[Jaanga unFlatland r9](../terrain-viewer/un-flatland/latest/index.html )
 
 The source of the 3D data:  
 [Terrain]( ../terrain/index.html )
