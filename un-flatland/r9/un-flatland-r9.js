@@ -147,7 +147,7 @@
 				}
 				uf.images[count] = document.createElement( 'img' );
 				uf.images[count].onload = uf.drawCanvasImage( uf.images, count, pointLevel, latCurrent, lonCurrent, i, j );
-				uf.images[count].src = '../../../../projects/' + xDir + pointLevel.tileX + '/' + pointLevel.tileY + '.png' ;
+				uf.images[count].src = '../../../../' + xDir + pointLevel.tileX + '/' + pointLevel.tileY + '.png' ;
 				count++;
 			}
 		}
