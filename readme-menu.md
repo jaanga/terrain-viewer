@@ -1,4 +1,4 @@
-[Jaanga](../index.html ) &raquo; Terrain Viewer
+[Jaanga](../index.html ) &raquo; [Terrain Viewer]( ./index.html )
 ===============================================
 
 <p id=rm >

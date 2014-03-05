@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang=en >
+<head>
+<title>unFlatLand R9</title>
+<meta charset=utf-8 >
+</head>
+<body>
+<script src = http://mrdoob.github.io/three.js/build/three.min.js ></script>
+<script src = http://mrdoob.github.io/three.js/examples/js/controls/TrackballControls.js ></script>
+<script src = http://mrdoob.github.io/three.js/examples/js/libs/stats.min.js ></script>
+<script src = un-flatland-r9.js ></script>
+<script src = un-flatland-r9-menu.js ></script>
+<script>
+	var b = '<br>';
+	var pointStart;
+
+	document.body.style.cssText = ' background-color:#fff; font: bold 12pt monospace; margin: 0; overflow: hidden; ';
+
+	stats = new Stats();
+	stats.domElement.style.cssText = 'position: absolute; right: 0; top: 0; zIndex: 100; ';
+	document.body.appendChild( stats.domElement );
+
+	uf.clearColor = uf.defaults.clearColor = 0xffffff;
+	uf.tilesPerSide = uf.defaults.tiles = 2;
+
+	uf.init();
+
+	addMenu();  // un-flatland-r9-menu.js
+ 	addHelp(); 
+	addConsole();
+
+	animate();
+
+	function addConsole() {
+		cons = document.body.appendChild( document.createElement( 'div' ) );
+		cons.style.cssText = 'background-color: #ccc; opacity: 0.9; overflow: auto; padding: 10px; ' +
+			'height: 500px; position: absolute; right: 20px; top: 20px; width: 400px; ';
+		cons.innerHTML = 'console' +
+			'<p>' +
+				'<a href=JavaScript:clearObjects() >clearObjects</a>' +
+			'<br>' +
+				'<a href=JavaScript:addHomePlus() >addHomePlus</a> ' +
+				'<a href=JavaScript:showUlLrOrigin(); >showUlLrOrigin</a> ' +
+				'<a href=JavaScript:addFloater(); >add floater</a>' +
+			'</p><p>' +
+				'<a href=JavaScript:insertValues(); >insertValues</a> ' +
+				'<a href=JavaScript:updateInputs(); >updateInputs</a> ' +
+				'<a href=JavaScript:moveCamera(); >moveCamera</a> ' +
+				'<a href=JavaScript:updateCameraTarget(); >updateCameraTarget</a> ' +
+			'<br>' +
+				'<a href=JavaScript:fidiToAngelIsland(); >fidiToAngelIsland</a> ' +
+				'<a href=JavaScript:benNevis(); >benNevis</a> ' +
+
+				
+			'<p>' +
+			'1-1<input type=text id=inp11 value=37.700 size=8 /> ' +
+			'2-1<input type=text id=inp21 value=-122.300 size=8 /> ' +
+			'3-1<input type=text id=inp31 value=140 size=8 /> ' +
+			'<br>' +
+			'1-2<input type=text id=inp12 value=00 size=8 /> ' +
+			'2-2<input type=text id=inp22 value=00 size=8 /> ' +
+			'3-2<input type=text id=inp32 value=00 size=8 /> ' +
+			'</p>' +
+			'<p id=msg></p>' +
+		'';
+	}
+
+
+	function moveCamera() {
+		uf.placards = new THREE.Object3D;
+
+		var off = uf.tilesPerSide % 2 > 0 ? -128 : -256;
+		var pointStart = uf.getPoint( uf.lat, uf.lon, uf.zoom );
+
+		uf.camLat = parseFloat( inpCamLat.value);
+		uf.camLon = parseFloat( inpCamLon.value );
+		uf.camAlt = parseFloat( inpCamAlt.value );
+
+		uf.tarLat = parseFloat( inpTarLat.value );
+		uf.tarLon = parseFloat( inpTarLon.value );
+		uf.tarAlt = parseFloat( inpTarAlt.value );
+
+		var point = uf.getPoint( uf.camLat, uf.camLon, uf.zoom );
+		point.ptX += off + uf.tileSize * ( point.tileX - pointStart.tileX );
+		point.ptY += off + uf.tileSize * ( point.tileY - pointStart.tileY );
+
+		mesh = drawObject( point.ptX, uf.camAlt, point.ptY);
+		mesh.scale.set( 5, 5, 5 );
+		uf.placards.add( mesh );
+
+		uf.camX = point.ptX;
+		uf.camY = uf.camAlt;
+		uf.camZ = point.ptY;
+
+		point = uf.getPoint( uf.tarLat, uf.tarLon, uf.zoom );
+		point.ptX += off + uf.tileSize * ( point.tileX - pointStart.tileX );
+		point.ptY += off + uf.tileSize * ( point.tileY - pointStart.tileY );
+
+		mesh = drawObject( point.ptX, uf.tarAlt, point.ptY);
+		mesh.scale.set( 5, 5, 5 );
+		uf.placards.add( mesh );
+
+		uf.tarX = point.ptX;
+		uf.tarY = uf.camAlt;
+		uf.tarZ = point.ptY;
+
+		uf.scene.add( uf.placards );
+
+		uf.setCamera();
+
+console.log( point, mesh );
+	}
+
+	function insertValues() {
+		inp11.value = 37.7;
+		inp21.value = -122.39;
+		inp31.value = 100;
+
+		inp12.value = 37.78805;
+		inp22.value = -122.34375;
+		inp32.value = 0;
+	}
+
+
+	function fidiToAngelIsland() {
+		inpCamLat.value = 37.796;
+		inpCamLon.value = -122.398;
+		inpCamAlt.value = 15;
+
+		inpTarLat.value = 37.86;
+		inpTarLon.value = -122.43;
+		inpTarAlt.value = 8;
+	}
+
+	function benNevis() {
+		inpTille = uf.tilesPerSide = 8;
+		inpLat.value = uf.lat = 56.7968;
+		inpLon.value = uf.lon = -5.0035;
+
+		inpCamLat.value = 56.75;
+		inpCamLon.value = -5.0035;
+		inpCamAlt.value = 300;
+
+		inpTarLat.value = 56.7968;
+		inpTarLon.value = -5.0035;
+		inpTarAlt.value = 300;
+
+		uf.drawTerrain();
+	}
+
+	function updateInputs() {
+		inpCamLat.value = inp11.value;
+		inpCamLon.value = inp21.value;
+		inpCamAlt.value = inp31.value;
+
+		inpTarLat.value = inp12.value;
+		inpTarLon.value = inp22.value;
+		inpTarAlt.value = inp32.value;
+	}
+
+	function updateCameraTarget() {
+		inp11.value = uf.camera.position.x;
+		inp21.value = uf.camera.position.y;
+		inp31.value = uf.camera.position.z;
+
+		inp12.value = uf.controls.target.x;
+		inp22.value = uf.controls.target.y;
+		inp32.value = uf.controls.target.z;
+	}
+
+	function showUlLrOrigin() {
+
+		pointStart = uf.getPoint( uf.lat, uf.lon, uf.zoom );
+
+		var point = uf.getPoint( uf.ulLat, uf.ulLon, uf.zoom );
+		point.title = 'UL Terrain:';
+		msg.innerHTML +=  displayData( pointStart, point, uf.ulLat, uf.ulLon );
+
+		point = uf.getPoint( uf.lrLat, uf.lrLon, uf.zoom );
+		point.title = 'LR Terrain:';
+		msg.innerHTML +=  displayData( pointStart, point, uf.lrLat, uf.lrLon);
+
+		var lat = uf.ulLat - 0.5 * (uf.ulLat - uf.lrLat);
+		var lon = uf.ulLon - 0.5 * ( uf.ulLon - uf.lrLon)
+		point = uf.getPoint( lat, lon, uf.zoom );
+		point.title = 'Origin';
+		msg.innerHTML +=  displayData( pointStart, point, lat, lon );
+
+		uf.scene.add( uf.placards );
+	}
+
+	function addFloater() {
+
+		pointStart = uf.getPoint( uf.lat, uf.lon, uf.zoom );
+
+		var latF = parseFloat( inp11.value );
+		var lonF = parseFloat( inp21.value );
+		pointFloat = uf.getPoint( latF, lonF, uf.zoom );
+		pointFloat.title = 'Point float:';
+		msg.innerHTML += displayData( pointStart, pointFloat, latF, lonF );
+
+		uf.scene.add( uf.placards );
+	}
+
+	function addHomePlus() {
+		pointStart = uf.getPoint( uf.lat, uf.lon, uf.zoom );
+
+		var lat = 37.796;
+		var lon = -122.398;
+
+		pointStart.offsetX = -256; //-128; 
+		pointStart.offsetY = -256; // -128;
+		pointStart.title = 'Point Start';
+		msg.innerHTML = displayData( pointStart, pointStart, lat, lon );
+
+		var latKoak = 37.7283509633333;
+		var lonKoak = -122.215348049167;
+		pointKoak = uf.getPoint( latKoak, lonKoak, uf.zoom );
+		pointKoak.title = 'Point koak';
+		msg.innerHTML += displayData( pointStart, pointKoak, latKoak, lonKoak );
+
+		var lat2 = lat - pointStart.deltaLat;
+		var lon2 = lon + pointStart.deltaLon;
+		var point2 = uf.getPoint( lat2, lon2, uf.zoom ); 
+		point2.title = 'Point 2';
+		msg.innerHTML +=  displayData( pointStart, point2, lat2, lon2 );
+
+		var lat3 = lat2 - point2.deltaLat;
+		var lon3 = lon2 + point2.deltaLon;
+		var point3 = uf.getPoint( lat3, lon3, uf.zoom ); 
+		point3.title = 'Point 3';
+		msg.innerHTML += displayData( pointStart, point3, lat2, lon3 );
+
+		uf.scene.add( uf.placards );
+	}
+
+	function clearObjects() {
+		if ( uf.placards && uf.placards.children.length > 0) {
+			uf.scene.remove( uf.placards );
+			uf.placards.children.length = 0;
+		}
+		uf.placards = new THREE.Object3D;
+		uf.scene.add( uf.placards );
+	}
+
+	function displayData( pointStart, point, lat, lon ) {
+		point.lat = lat;
+		point.lon = lon;
+
+		var off = uf.tilesPerSide % 2 > 0 ? -128 : -256;
+		point.offsetX = off + uf.tileSize * ( point.tileX - pointStart.tileX );
+		point.offsetY = off + uf.tileSize * ( point.tileY - pointStart.tileY );
+
+		mesh = drawObject( point.ptX + point.offsetX, 50, point.ptY + point.offsetY);
+		mesh.scale.set( 5, 150, 5 );
+		uf.placards.add( mesh );
+
+		return point.title + ' lat:' + point.lat.toFixed(5) + ' lon:' + point.lon.toFixed(5) + b +
+		'Tiles x:' + point.tileX + ' y:' + point.tileY + b +
+		'Tile ul lat:' + point.ulTileLat.toFixed(5) + ' lon:' + point.ulTileLon.toFixed(5) + b +
+		'Tile delta lat:' + point.deltaLat.toFixed(5) + ' lon:' + point.deltaLon.toFixed(5) + b +
+		'Point x: ' + point.ptX.toFixed(5) + ' y:' + point.ptY.toFixed(5) + b +
+		'Offset x:' + point.offsetX + ' y:' + point.offsetY + b +
+		b;
+	}
+
+// axes
+	uf.scene.add( new THREE.ArrowHelper( v(1, 0, 0), v(0, 0, 0), 200, 0xcc0000) );
+	uf.scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 500, 0x00cc00) );
+	uf.scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 200, 0x0000cc) );
+
+	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
+
+	function animate() {
+		requestAnimationFrame( animate );
+		uf.controls.update();
+		uf.renderer.render( uf.scene, uf.camera );
+		stats.update();
+		if ( uf.update ) {
+			// clearObjects()
+//			updatePlacards();
+/*
+		inp11.value = uf.camX;
+		inp21.value = uf.camY;
+		inp31.value = uf.camZ;
+
+		inp12.value = uf.tarX;
+		inp22.value = uf.tarY;
+		inp32.value = uf.tarZ;
+*/
+
+			uf.update = false
+		}
+	}
+
+</script>
+</body>
+</html>

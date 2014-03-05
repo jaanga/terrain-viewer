@@ -1,0 +1,444 @@
+// Theo Armour ~ 2014-03-05 ~ MIT License
+
+	uf.ref = 'r9';
+
+	uf.startPlace = uf.defaults.start = 1624;
+	uf.displayPlacards = uf.defaults.placards = 0;
+
+	var offsetX;
+	var offsetY;
+
+	function addHelp() {
+		help = document.body.appendChild( document.createElement( 'div' ) );
+		help.style.cssText = 'display: none; background-color: #ccc; left: 50px; opacity: 0.9; padding: 20px; ' +
+			'bottom: 0; left: 0; height: 350px; margin: auto; position: absolute; right: 0; top: 0; width: 500px; zIndex:10; ';
+		help.innerHTML =
+			'<div onclick=help.style.display="none"; >' +
+				'<h3>Jaanga unFlatland ' + uf.ref + '</h3>' +
+				'<h4>Major Issues</h4>' +
+				'<ul>' +
+					'<li>Gaps betwen tiles</li>' +
+					'<li>High elevations truncated</li>' +
+					'<li>Occasional repeating of rows or columns of tiles</li>' +
+					'<li>Zoom level 7 and lower: elevations not drawn properly & many other issues</li>' +
+				'</ul>' +
+				'<a href="https://github.com/jaanga/terrain-viewer/tree/gh-pages/un-flatland" target="_blank">Source code</a><br>' +
+				'<small>credits: <a href="http://threejs.org" target="_blank">three.js</a> - ' +
+				'<a href="http://khronos.org/webgl/" target="_blank">webgl</a> - ' +
+				'<a href="http://jaanga.github.io" target="_blank">jaanga</a><br>' +
+				'copyright &copy; 2014 Jaanga authors ~ MIT license</small><br><br>' +
+				'<i>Click anywhere in this message to hide...</i>' +
+		'</div>';
+	}
+
+	function addMenu() {
+		stats = new Stats();
+		stats.domElement.style.cssText = 'position: absolute; right: 0; top: 0; zIndex: 100; ';
+		document.body.appendChild( stats.domElement );
+
+		var data = requestFile( '../../../terrain-plus/gazetteer/places-2000.csv' );
+		var lines = data.split(/\r\n|\n/);
+		uf.gazetteer = [ ['Select a location','',''] ];
+		for ( var i = 1, length = lines.length; i < length; i++ ) {
+			pl = lines[i].split( ';' );
+			uf.gazetteer.push( [ pl[0], parseFloat( pl[1] ), parseFloat( pl[2] ) ] );
+		}
+
+		parsePermalink();
+
+		var css = document.body.appendChild( document.createElement('style') );
+		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden; }' +
+			'h1 { margin: 0; }' +
+			'h1 a {text-decoration: none; }' +
+			'td {font: 400 10pt monospace; }' +
+			'#closer { position: absolute; right: 5px; top: 5px; }' +
+			'#movable { overflow: autp; margin: 10px; padding: 10px 20px; position: absolute; }' +
+		'';
+
+		uf.info = document.body.appendChild( document.createElement( 'div' ) );
+		uf.info.id = 'movable';
+		uf.info.style.cssText = ' background-color: #ccc; left: 10px; opacity: 0.8; top: 10px; ';
+		uf.info.addEventListener( 'mousedown', mouseMove, false );
+		uf.info.innerHTML = '<div onclick=uf.info.style.display="none";stats.domElement.style.display="none"; >[x]</div>' +
+			'<h1>' +
+				'<a href="" >Jaanga unFlatland<br>' + uf.ref + '</a> ' +
+				'<a href=# title="Get help and info" onclick=help.style.display="block"; ><large>&#x24D8;</large></a>' +
+			'</h1>' +
+			'<p>' +
+				'Zoom: &nbsp;  &nbsp;<input id=setZoom title="0 to 18: OK"type=number min=0 max=18 step=1 ><br>' +
+				'Scale:  &nbsp; <input id=setScale type=number min=1 max=50 ><br>' +
+				'Overlay: <select id=selMapType title="Select the 2D overlay" ><select>' +
+			'</p>' +
+			'<hr>' +
+			'<p>' +
+				'Tiles/side: &nbsp;<input id=setTiles title="2 to 8: normal. 16+: pushing" type=number min=1 max=32 ><br>' +
+				'Vertices/tile: <input id=setVerts title="16 to 32: OK. 64+: pushing" type=number min=16 max=128 ><br>' +
+				'<hr>' +
+				'Location<br>' +
+				'Lat:<input id=inpLat type="text" size=4 />' +
+				'Lon:<input id=inpLon type="text" size=4 /> ' +
+				'<button id=butGo title="Click Go to update location longitude and latitude" >Go</button><br>' +
+				'<select id=selPlace ' +
+					'onchange="inpLat.value = lat = gazetteer[this.selectedIndex][1]; inpLon.value = lon = gazetteer[this.selectedIndex][2]; initMap();" >' +
+				'</select>' +
+			'</p>' +
+			'<hr>' +
+			'<p>' +
+				'Camera<br>' +
+				'Lat:<input id=inpCamLat type="text" size=4 />' +
+				'Lon:<input id=inpCamLon type="text" size=4 />' +
+				'Alt:<input id=inpCamAlt type="text" size=3 />' +
+				'</br>' +
+				'Camera Target<br>' +
+				'Lat:<input id=inpTarLat type="text" size=4 />' +
+				'Lon:<input id=inpTarLon type="text" size=4 />' +
+				'Alt:<input id=inpTarAlt type="text" size=3 /><br>' +
+				'<button id=butCam title="Click Go to update camera and target longitude and latitude" >Go</button>' +
+			'</p>' +
+			'<hr>' +
+			'<p>' +
+				'<input id=chkPlacards type="checkbox" >Display Placards' +
+			'</p>' +
+			'<p>' +
+				'<a href=JavaScript:setPermalink(); >Permalink</a> ' +
+				'<a href=JavaScript:clearPermalink(); >Clear Permalink</a><br>' +
+//				'<a href=JavaScript:cameraToPermalink(); >Link to View</a> ' +
+				'<a href=JavaScript:uf.setCamera(); style:float:right; >Reset Camera</a>' +
+			'</p>' +
+			'<p>' +
+				'<a href=JavaScript:viewPNG(); >View PNG</a></p>' +
+			'</p>' +
+			'<hr>' +
+			'<h1>' +
+				'<a href=JavaScript:getTile("left"); >&#8678;</a> ' +
+				'<a href=JavaScript:getTile("right"); >&#8680;</a> ' +
+				'<a href=JavaScript:getTile("up"); >&#8679;</a> ' +
+				'<a href=JavaScript:getTile("down"); >&#8681;</a>' +
+			'</h1>' +
+			'<div id=messages></div>' +
+		'';
+
+		setZoom.value = uf.zoom;
+		setZoom.onchange = function() { uf.zoom = this.value; uf.drawTerrain(); };
+
+		setScale.value = uf.scaleVertical;
+		setScale.onchange = function() { uf.scaleVertical = this.value; uf.drawTerrain(); };
+
+		for ( var option, i = 0, len = uf.mapTypes.length; i < len; i++ ) {
+			selMapType.appendChild( option = document.createElement( 'option' ) );
+			selMapType.children[i].text = uf.mapTypes[i][0];
+		}
+		selMapType.selectedIndex = uf.mapType;
+		selMapType.onchange = function() { uf.mapType = this.selectedIndex; uf.drawTerrain(); };
+
+		setTiles.value = uf.tilesPerSide;
+		setTiles.onchange = function() { uf.tilesPerSide = this.value; uf.drawTerrain(); };
+
+		setVerts.value = uf.vertsPerTile;
+		setVerts.onchange = function() { uf.vertsPerTile = this.value; uf.drawTerrain(); };
+
+		for ( var i = 1, length = lines.length; i < length; i++ ) {
+			selPlace.appendChild( document.createElement( 'option' ) );
+			selPlace.children[ i - 1].text = uf.gazetteer[i - 1][0];
+		}
+
+		inpLat.value = uf.lat;
+		inpLon.value = uf.lon;
+		butGo.onclick = function() { uf.lat = parseFloat(inpLat.value); uf.lon = parseFloat(inpLon.value); uf.drawTerrain(); };
+
+		selPlace.selectedIndex = uf.startPlace;
+		selPlace.onchange = function() {
+			uf.startPlace = this.selectedIndex;
+			inpLat.value = uf.lat = uf.gazetteer[ uf.startPlace ][1];
+			inpLon.value = uf.lon = uf.gazetteer[ uf.startPlace ][2];
+			uf.drawTerrain();
+		};
+
+		inpCamLat.value = uf.camLat;
+		inpCamLon.value = uf.camLon;
+		inpCamAlt.value = uf.camAlt;
+
+		inpTarLat.value = uf.tarLat;
+		inpTarLon.value = uf.tarLon;
+		inpTarAlt.value = uf.tarAlt;
+
+		butCam.onclick = cameraToLocation;
+		chkPlacards.checked = uf.displayPlacards > 0 ? true : false;
+		chkPlacards.onchange = function() { uf.displayPlacards = chkPlacards.checked ? 1 : 0; updatePlacards(); };
+	}
+
+	function cameraToLocation() {
+
+		var off = uf.tilesPerSide % 2 > 0 ? -128 : -256;
+		var pointStart = uf.getPoint( uf.lat, uf.lon, uf.zoom );
+
+		uf.camLat = parseFloat( inpCamLat.value);
+		uf.camLon = parseFloat( inpCamLon.value );
+		uf.camAlt = parseFloat( inpCamAlt.value );
+
+		uf.tarLat = parseFloat( inpTarLat.value );
+		uf.tarLon = parseFloat( inpTarLon.value );
+		uf.tarAlt = parseFloat( inpTarAlt.value );
+
+		var point = uf.getPoint( uf.camLat, uf.camLon, uf.zoom );
+		point.ptX += off + uf.tileSize * ( point.tileX - pointStart.tileX );
+		point.ptY += off + uf.tileSize * ( point.tileY - pointStart.tileY );
+
+		uf.camX = point.ptX;
+		uf.camY = uf.camAlt;
+		uf.camZ = point.ptY;
+
+		point = uf.getPoint( uf.tarLat, uf.tarLon, uf.zoom );
+		point.ptX += off + uf.tileSize * ( point.tileX - pointStart.tileX );
+		point.ptY += off + uf.tileSize * ( point.tileY - pointStart.tileY );
+
+		uf.tarX = point.ptX;
+		uf.tarY = uf.tarAlt;
+		uf.tarZ = point.ptY;
+
+		uf.setCamera();
+	}
+
+	function updatePlacards() {
+		if ( uf.placards && uf.placards.children.length > 0) {
+			uf.scene.remove( uf.placards );
+			uf.placards.children.length = 0;
+		}
+		if ( uf.displayPlacards === 0 ) return;
+
+		uf.placards = new THREE.Object3D();
+
+		var off = uf.tilesPerSide % 2 > 0 ? -128 : -256;
+		var pointStart = uf.getPoint( uf.lat, uf.lon, uf.zoom );
+//		messages.innerHTML = displayMessage( 'pointStart', pointStart, uf.lat, uf.lon )
+
+		var canvas = document.createElement( 'canvas' );
+		var context = canvas.getContext( '2d' );
+		var xStart, yStart, spot, point;
+		var scale = 0.2 * uf.scaleVertical * uf.zoomScales[ uf.zoom ][1];
+		for ( var i = 0, iLen = uf.gazetteer.length; i < iLen; i++ ) {
+			place = uf.gazetteer[i];
+			if ( place[1] < uf.ulLat && place[1] > uf.lrLat && place[2] > uf.ulLon  && place[2] < uf.lrLon ) {
+				point7 = uf.getPoint( place[1], place[2], 7);
+
+				xStart = uf.images[0].width * Math.abs( point7.ulTileLon - place[2] ) /  point7.deltaLon;
+				yStart = uf.images[0].height * ( point7.ulTileLat - place[1] ) /  point7.deltaLat;
+				canvas.width = uf.images[0].width;
+				canvas.height = uf.images[0].height;
+				context.drawImage( uf.images[0], 0, 0 );
+				spot = context.getImageData( xStart, yStart, 1, 1 ).data;
+
+				point = uf.getPoint( place[1], place[2], uf.zoom );
+				point.ptX += off + uf.tileSize * ( point.tileX - pointStart.tileX )
+				point.ptY += off + uf.tileSize * ( point.tileY - pointStart.tileY );
+				point.alt = uf.scaleVertical * parseInt( spot[0] );
+				mesh = drawObject( point.ptX, point.alt, point.ptY );
+				mesh.scale.set( 5, 100, 5 );
+				uf.placards.add( mesh );
+
+				mesh = drawSprite( place[0] + ' ' + spot[0] , '#0f0', point.ptX, 70 + point.alt , point.ptY );
+				uf.placards.add( mesh );
+			}
+		}
+
+		uf.scene.add( uf.placards );
+	}
+
+	function displayMessage( title, point, lat, lon ) {
+		var b = '<br>';
+		return title + ' lat:' + lat.toFixed(5) + ' lon:' + lon.toFixed(5) + b +
+		'Tiles x:' + point.tileX + ' y:' + point.tileY + b +
+		'Tile ul lat:' + point.ulTileLat.toFixed(5) + ' lon:' + point.ulTileLon.toFixed(5) + b +
+		'Tile delta lat:' + point.deltaLat.toFixed(5) + ' lon:' + point.deltaLon.toFixed(5) + b +
+		'Point x: ' + point.ptX.toFixed(5) + ' y:' + point.ptY.toFixed(5) + b +
+		//'Offset x:' + point.offsetX + ' y:' + point.offsetY + b +
+		b;
+	}
+
+	function parsePermalink() {
+		var item, index;
+		var hashes = location.hash.split('#');
+		for (var i = 1, len = hashes.length; i < len; i++) {
+			item = hashes[i].split('=');
+			index = item[0];
+			if ( uf.defaults[ index ] ){
+				uf.values[ index ] = item;
+			}
+		}
+
+		uf.startPlace = uf.values.start ? parseInt( uf.values.start[1], 10 ) : uf.defaults.start;
+		uf.displayPlacards = uf.values.placards ? uf.values.placards : uf.defaults.placards;
+	}
+
+	function setPermalink() {
+		var txt = '';
+// in alphabetical order
+		if ( uf.displayPlacards !== uf.defaults.placards ) txt += '#placards=' + uf.displayPlacards;
+		if ( uf.startPlace !== uf.defaults.start && uf.startPlace !== "" ) txt += '#start=' + uf.startPlace;
+
+		if ( uf.camAlt && uf.camAlt !== uf.defaults.camalt ) txt += '#camalt=' + parseInt( uf.camAlt, 10 );
+		if ( uf.camLat && uf.camLat !== uf.defaults.camlat ) txt += '#camlat=' + parseFloat( uf.camLat );
+		if ( uf.camLon && uf.camLon !== uf.defaults.camlon ) txt += '#camlon=' + parseFloat( uf.camLon );
+		if ( uf.camX && uf.camX !== uf.defaults.camx && uf.camLon === uf.defaults.camlon ) txt += '#camx=' + parseInt( uf.camX, 10 );
+		if ( uf.camY && uf.camY !== uf.defaults.camy && uf.camAlt === uf.defaults.camalt ) txt += '#camy=' + parseInt( uf.camY, 10 );
+		if ( uf.camZ && uf.camZ !== uf.defaults.camz && uf.camLat === uf.defaults.camlat ) txt += '#camz=' + parseInt( uf.camZ, 10 );
+		if ( uf.lat && uf.lat !== uf.defaults.lat ) txt += '#lat=' + uf.lat;
+		if ( uf.lon && uf.lon !== uf.defaults.lon ) txt += '#lon=' + uf.lon;
+		if ( uf.mapType !== uf.defaults.map ) txt += '#map=' + uf.mapType;
+		if ( uf.scaleVertical !== uf.defaults.scale ) txt += '#scale=' + uf.scaleVertical;
+		if ( uf.tilesPerSide !== uf.defaults.tiles ) txt += '#tiles=' + uf.tilesPerSide;
+		if ( uf.vertsPerTile !== uf.defaults.verts ) txt += '#verts=' + uf.vertsPerTile;
+		if ( uf.tarAlt && uf.tarAlt !== uf.defaults.taralt ) txt += '#taralt=' + parseInt( uf.tarAlt, 10 );
+		if ( uf.tarLat && uf.tarLat !== uf.defaults.tarlat ) txt += '#tarlat=' + parseFloat( uf.tarLat );
+		if ( uf.tarLon && uf.tarLon !== uf.defaults.tarlon ) txt += '#tarlon=' + parseFloat( uf.tarLon );
+		if ( uf.tarX && uf.tarX !== uf.defaults.tarx && uf.tarLon === uf.defaults.tarlon ) txt += '#tarx=' + parseInt( uf.tarX, 10 );
+		if ( uf.tarY && uf.tarY !== uf.defaults.tary && uf.tarAlt === uf.defaults.taralt ) txt += '#tary=' + parseInt( uf.tarY, 10 );
+		if ( uf.tarZ && uf.tarZ !== uf.defaults.tarz && uf.tarLat === uf.defaults.tarlat ) txt += '#tarz=' + parseInt( uf.tarZ, 10 );
+		if ( uf.zoom && uf.zoom !== uf.defaults.zoom) txt += '#zoom=' + uf.zoom;
+
+		window.location.hash = txt;
+	}
+
+	function cameraToPermalink() {
+		uf.camX = uf.camera.position.x;
+		uf.camY = uf.camera.position.y;
+		uf.camZ = uf.camera.position.z;
+
+		uf.tarX = uf.controls.target.x;
+		uf.tarY = uf.controls.target.y;
+		uf.tarZ = uf.controls.target.z;
+
+		setPermalink();
+	}
+
+	function clearPermalink() {
+		window.history.pushState( '', '', window.location.pathname);
+	}
+
+	function viewPNG() {
+		window.location = 'http://jaanga.github.io/terrain-viewer/png-viewer/r3/png-viewer-r3.html#' +
+			lon2tile( uf.lon, 7 ) + '#' + lat2tile( uf.lat, 7 );
+	}
+
+	function getTile( direction ) {
+		var max = Math.pow( 2, uf.zoom) - 1;
+		var jump = uf.tilesPerSide / 2;
+		var point = uf.getPoint( uf.lat, uf.lon, uf.zoom );
+		if ( direction === 'left' ) {
+			point.tileX -= jump;
+			if ( point.tileX < 0 ) point.tileX = max;
+		} else if ( direction === 'right' ) {
+			point.tileX += jump;
+			if ( point.tileX > max ) point.tileX = 0;
+		} else if ( direction === 'up' ) {
+			point.tileY -= jump;
+			if ( point.tileY < 0 ) point.tileY = max;
+		} else if ( direction === 'down' ) {
+			point.tileY += jump;
+			if ( point.tileY > max ) point.tileY = 0;
+		}
+		uf.lon = uf.tile2lon( point.tileX, uf.zoom);
+		uf.lat = uf.tile2lat( point.tileY, uf.zoom);
+
+		selPlace.selectedIndex = 0;
+		uf.drawTerrain();
+	}
+
+	function drawObject( x, y, z ) {
+		var geometry = new THREE.CubeGeometry( 1, 1, 1 );
+		var material = new THREE.MeshNormalMaterial( { opacity: 0.5, transparent: true });
+		var mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( x, y, z) ;
+		return mesh;
+	}
+
+	function drawSprite( text, color, x, y, z) {
+		var distance = uf.camera.position.distanceTo( uf.controls.target );
+		var scale = 0.0005 * distance;
+
+		texture = canvasText( text, color );
+		var spriteMaterial = new THREE.SpriteMaterial( { map: texture, useScreenCoordinates: false, opacity: 1 } );
+		var sprite = new THREE.Sprite( spriteMaterial );
+		sprite.position.set( x, y, z ) ;
+		sprite.scale.set( scale * texture.image.width, scale * texture.image.height );
+		return sprite;
+	}
+
+	function drawLine( vertices, color, linewidth) {
+		function convert( element ) {
+			return v( element[0], element[1], element[2] );
+		}
+
+		var geometry = new THREE.Geometry();
+		geometry.vertices = vertices.map( convert );
+		var material = new THREE.LineBasicMaterial( { color: color, linewidth: linewidth } );
+		var line = new THREE.Line( geometry, material );
+		return line;
+	}
+
+	function canvasText( text, color ) {
+		var canvas = document.createElement( 'canvas' );
+		var context = canvas.getContext( '2d' );
+
+		context.font = '18px sans-serif';
+		var width = context.measureText( text );
+
+		canvas.width = ( width.width + 10 ) ; // 480
+		canvas.height = 20;
+
+		context.fillStyle = color;
+		context.fillRect( 0, 0, canvas.width, canvas.height);
+
+		context.lineWidth = 1 ;
+		context.strokeStyle = '#000';
+		context.strokeRect( 0, 0, canvas.width, canvas.height);
+
+		context.fillStyle = '#000' ;
+		context.font = '18px sans-serif';
+		context.fillText( text, 5, 17 );
+
+		var texture = new THREE.Texture( canvas );
+		texture.needsUpdate = true;
+		return texture;
+	}
+
+// events
+	function mouseUp() {
+		window.removeEventListener('mousemove', divMove, true);
+	}
+
+	function mouseMove( event ){
+		if ( event.target.id === 'movable' ) {
+			event.preventDefault();
+
+			offsetX = event.clientX - event.target.offsetLeft;
+			offsetY = event.clientY - event.target.offsetTop;
+			window.addEventListener('mousemove', divMove, true);
+		}
+	}
+
+	function divMove( event ){
+		event.target.style.left = ( event.clientX - offsetX ) + 'px';
+		event.target.style.top = ( event.clientY - offsetY ) + 'px';
+	}
+
+	function requestFile( fname ) {
+		var xmlHttp = new XMLHttpRequest();
+		xmlHttp.crossOrigin = "Anonymous";
+		xmlHttp.open( 'GET', fname, false );
+		xmlHttp.send( null );
+		return xmlHttp.responseText;
+	}
+
+// custom animate
+// adds stata * placard support
+	function animate() {
+		requestAnimationFrame( animate );
+		uf.controls.update();
+		uf.renderer.render( uf.scene, uf.camera );
+		stats.update();
+		if ( uf.update ) {
+			updatePlacards();
+			uf.update = false
+		}
+	}

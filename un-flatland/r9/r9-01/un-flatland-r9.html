@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang=en >
+<head>
+<title>unFlatLand R9</title>
+<meta charset=utf-8 >
+</head>
+<body>
+<script src = http://mrdoob.github.io/three.js/build/three.min.js ></script>
+<script src = http://mrdoob.github.io/three.js/examples/js/controls/TrackballControls.js ></script>
+<script src = http://mrdoob.github.io/three.js/examples/js/libs/stats.min.js ></script>
+<script src = un-flatland-r9.js ></script>
+<script src = un-flatland-r9-menu.js ></script>
+<script>
+	var b = '<br>';
+
+	document.body.style.cssText = ' font: bold 12pt monospace; margin: 0; overflow: hidden; ';
+
+//	stats = new Stats();
+//	stats.domElement.style.cssText = 'position: absolute; right: 0; top: 0; zIndex: 100; ';
+//	document.body.appendChild( stats.domElement );
+
+//	addMenu();  // un-flatland-r9-menu.js
+// 	addHelp(); 
+//
+
+	uf.init();
+	uf.animate();
+
+
+	function addConsole() {
+		help = document.body.appendChild( document.createElement( 'div' ) );
+		help.style.cssText = 'background-color: #ccc; opacity: 0.9; overflow: auto; padding: 10px; ' +
+			'height: 500px; position: absolute; right: 20px; top: 20px; width: 400px; ';
+		help.innerHTML = 'console' +
+			'<p><a href=JavaScript:gp() >gp</a> <a href=JavaScript:addFloater(); >add floater</a></p>' +
+			'<p>' +
+			'<input type="text" id="inpLatF" value="37.000" size=10 /> ' +
+			'<input type="text" id="inpLonF" value="-122.000" size=10 /> ' +
+			'<input type="text" id=inpAlt value=140 size=10 /> ' +
+
+			'</p>' +
+			'<p id=msg></p>' +
+		'';
+
+	}
+
+	function addFloater() {
+		uf.placards = new THREE.Object3D;
+
+console.log( inpLat )
+		var lat = inpLatF.value;
+		var lon = inpLonF.value;
+		var alt = inpAlt.value;
+
+		msg.innerHTML = lat + ' ' + lon + ' ' + alt + b;
+
+		var pointFloat = uf.getPoint( lat, lon, uf.zoom );
+
+		var lat = 37.796;
+		var lon = -122.398;
+
+		var point1 = uf.getPoint( lat, lon, uf.zoom );
+
+		msg.innerHTML += 'Point floater:' + lat + ' ' + lon + b +
+			'Point koak tiles: ' + pointFloat.xTile + ' ' + pointFloat.yTile + b +
+			'Tile ul Lat: ' + pointFloat.ulLatTile.toFixed(5) + ' lon:' + pointFloat.ulLonTile.toFixed(5) + b +
+			'Tile delta lat: ' + pointFloat.deltaLat.toFixed(5) + ' lon:' + pointFloat.deltaLon.toFixed(5) + b + b +
+			'Point x: ' + pointFloat.xPt.toFixed(5) + ' y:' + pointFloat.yPt.toFixed(5) + b + b +
+		'';
+
+		var offsetX = -256 + uf.tileWidth * ( pointFloat.xTile - point1.xTile );
+		var offsetY = -256 + uf.tileWidth * ( pointFloat.yTile - point1.yTile );
+		var mesh = drawObject( pointFloat.xPt + offsetX, 50, pointFloat.yPt + offsetY);
+		mesh.scale.set( 20, 20, 20 );
+		uf.placards.add( mesh );
+
+		uf.scene.add( uf.placards );
+	}
+
+	function gp() {
+		if ( uf.placards && uf.placards.children.length > 0) {
+			uf.scene.remove( uf.placards );
+			uf.placards.children.length = 0;
+		}
+		uf.placards = new THREE.Object3D;
+
+
+		var lat = 37.796;
+		var lon = -122.398;
+
+		var point1 = uf.getPoint( lat, lon, uf.zoom );
+		msg.innerHTML = 'Point 1 ' + lat + ' ' + lon + b +
+			'Point 1 tiles: ' + point1.xTile + ' ' + point1.yTile + b +
+			'Tile ul Lat: ' + point1.ulLatTile.toFixed(5) + ' lon:' + point1.ulLonTile.toFixed(5) + b +
+			'Tile delta lat: ' + point1.deltaLat.toFixed(5) + ' lon:' + point1.deltaLon.toFixed(5) + b + b +
+			'Point x: ' + point1.xPt.toFixed(5) + ' y:' + point1.yPt.toFixed(5) + b + b +
+		'';
+
+		var offset = -256;
+		var mesh = drawObject( point1.xPt + offset, 50, point1.yPt + offset);
+		mesh.scale.set( 5, 150, 5 );
+		uf.placards.add( mesh );
+
+
+		var latKoak = 37.7283509633333;
+		var lonKoak = -122.215348049167;
+
+		var pointKoak = uf.getPoint( latKoak, lonKoak, uf.zoom );
+		msg.innerHTML += 'Point koak:' + lat + ' ' + lon + b +
+			'Point koak tiles: ' + pointKoak.xTile + ' ' + pointKoak.yTile + b +
+			'Tile ul Lat: ' + pointKoak.ulLatTile.toFixed(5) + ' lon:' + pointKoak.ulLonTile.toFixed(5) + b +
+			'Tile delta lat: ' + pointKoak.deltaLat.toFixed(5) + ' lon:' + pointKoak.deltaLon.toFixed(5) + b + b +
+			'Point x: ' + pointKoak.xPt.toFixed(5) + ' y:' + pointKoak.yPt.toFixed(5) + b + b +
+		'';
+
+		var offsetX = -256 + uf.tileWidth * ( pointKoak.xTile - point1.xTile );
+		var offsetY = -256 + uf.tileWidth * ( pointKoak.yTile - point1.yTile );
+		var mesh = drawObject( pointKoak.xPt + offsetX, 50, pointKoak.yPt + offsetY);
+		mesh.scale.set( 5, 150, 5 );
+		uf.placards.add( mesh );
+
+		offset = 0
+		var lat2 = lat - point1.deltaLat;
+		var lon2 = lon + point1.deltaLon;
+		var point2 = uf.getPoint( lat2, lon2, uf.zoom ); 
+		msg.innerHTML += 'Point 2 ' + lat2.toFixed(5) + ' ' + lon2.toFixed(5) + b +
+			'Tiles: ' + point2.xTile + ' ' + point2.yTile + b +
+			'Tile ul Lat: ' + point2.ulLatTile.toFixed(5) + ' lon:' + point2.ulLonTile.toFixed(5) + b +
+			'Tile delta lat: ' + point2.deltaLat.toFixed(5) + ' lon:' + point2.deltaLon.toFixed(5) + b + b +
+			'Point x: ' + point2.xPt.toFixed(5) + ' y:' + point2.yPt.toFixed(5) + b + b +
+		'';
+
+		offset = 0;
+		mesh = drawObject( point2.xPt + offset, 50, point2.yPt + offset);
+		mesh.scale.set( 5, 150, 5 );
+		uf.placards.add( mesh );
+
+		var lat3 = lat2 - point2.deltaLat;
+		var lon3 = lon2 + point2.deltaLon;
+		var point3 = uf.getPoint( lat3, lon3, uf.zoom ); 
+		msg.innerHTML += 'Point 3 ' + lat3.toFixed(5) + ' ' + lon3.toFixed(5) + b +
+			'Tiles: ' + point3.xTile + ' ' + point3.yTile + b +
+			'Tile ul Lat: ' + point3.ulLatTile.toFixed(5) + ' lon:' + point3.ulLonTile.toFixed(5) + b +
+			'Tile delta lat: ' + point3.deltaLat.toFixed(5) + ' lon:' + point3.deltaLon.toFixed(5) + b +
+			'Point x: ' + point3.xPt.toFixed(5) + ' y:' + point3.yPt.toFixed(5) + b + b +
+		'';
+
+		offset = 256;
+		mesh = drawObject( point3.xPt + offset, 50, point3.yPt + offset);
+		mesh.scale.set( 5, 150, 5 );
+		uf.placards.add( mesh );
+
+
+		uf.scene.add( uf.placards );
+	}
+/*
+// axes
+	uf.scene.add( new THREE.ArrowHelper( v(1, 0, 0), v(0, 0, 0), 200, 0xcc0000) );
+	uf.scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 500, 0x00cc00) );
+	uf.scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 200, 0x0000cc) );
+
+	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
+
+	function animate() {
+		requestAnimationFrame( animate );
+		uf.controls.update();
+		uf.renderer.render( uf.scene, uf.camera );
+//		stats.update();
+		if ( uf.update ) {
+			updatePlacards();
+			uf.update = false
+		}
+	}
+*/
+</script>
+</body>
+</html>

@@ -8,14 +8,20 @@ _Cropped iframe view of unFlatland latest revision_
 Live demo:
 [unFlatland latest revision]( http://jaanga.github.io/terrain-viewer/un-flatland/latest/index.html )  
 
-* Currently r6
+* Currently r9
 
+
+[unFlatland r6]( http://jaanga.github.io/terrain-viewer/un-flatland/r6/un-flatland-r6.html )
+
+* Perhaps faster than current, but more errors
+
+<!--
 _2014-02-20 ~ Please note that all current activity is happening in this fork of unFlatland: 
 **[FGx Plane Spotter]( http://jaanga.github.io/fgx-plane-spotter/index.html )**.
 This fork is under heavy development. New features are baing added every day.
 All new features in FGx Plane Spotter will be added to unFlatland and work will resume here when things calm down.
 Your comments and suggesions are welcome._ 
-
+-->
 
 [unFlatland r5.1]( http://jaanga.github.io/terrain-viewer/un-flatland/r5/un-flatland-r5.html )
 
@@ -60,8 +66,8 @@ See also
 * Runs files locally or sourced from a static file server - such as [GitHub Pages]( http://pages.github.com/ )
 * Carries out all the interpolation necessary to view zoom levels 8 and higher
 * Supports real-time zoom, pan and rotate
-* Creates and reads permalinks for zoom, latitude, longitude, vertical scale and map type
-* Toggle 3D placards that show place names
+* Creates and reads permalinks for zoom, latitude, longitude, vertical scale and map type and more
+* Toggle 3D placards that show place names, elevation and other data
 * Toggle display of menu and stats
 * Easy to build your own place lists
 * Supports large user-defined gazetteer
@@ -70,26 +76,30 @@ See also
 * Generic 3D library - can be used with other apps and libraries
 * FOSS, built with less than 500 lines of code
 * Very small file size ~ you can easily open up and start hacking
-* Fast enough to be usable. Display Frames per second
+* Fast enough to be usable. Displays Frames per second
 
 
 ## Road Map
 
-* Place cameras at designated locations
+* Fast, accurate way to go from XYZ to lat/ln/alt. Opposite of getPoint.
+* Add shade and shadows
+* Add fog
+* Reset view altitide with each redraw
+* Double click to zoom in to indicated location
+* Given lat/lon, find appropriate alt for camera and target
+* <s>Place cameras at designated locations</s> 2014-03-04 ~ Sdded
 * Toggle between two types of camera controllers: first person or trackball
 * Add skybox? Add fog?
-* load four 128 x 128 meshes 
+* <s>load four 128 x 128 meshes</s> 
 * Add diagonal navigation buttons
-* Add and remove adjacent 3D tiles as needed
+* <s>Add and remove adjacent 3D tiles as needed</s>
 * Display adjacent tiles in 2D
 * Can we get this down to 30 metre detail?  
 
 
 ## Issues and Bugs
 
-2014-02-20 ~ Theo
-
-* Update menus and read me
+2014-03-05 ~ Placard not display properly when permalink set
 
 
 2014-01-28  
@@ -135,6 +145,25 @@ copyright &copy; 2014 Jaanga authors ~ All work herein is under the [MIT License
 
 
 ## Change Log
+
+2014-03-05 ~ Theo
+
+* un-flatland-r9.js ~ clode clean-up, completed name-spacing, jsHint
+* un-flatland-r9.html & un-flatland-r9-menu.js: code clean-up
+
+2014-03-04 ~ Theo
+
+* Add embed demo
+* Add clearColor permalink setting
+* Work on debog console
+* Locate camera and target via Lat/Lon/Alt including permalinks
+
+
+_2014-02-21 ~ 2014-03-03 ~ continuous progress. too muvh to update_ 
+
+2014-02-20 ~ Theo
+
+* Update menus and read me
 
 2014-02-20 ~ Theo
 
