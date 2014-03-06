@@ -437,7 +437,6 @@
 		stats.update();
 		if ( uf.update ) {
 			updatePlacards();
-			updateMountains();
 			uf.update = false
 		}
 	}
