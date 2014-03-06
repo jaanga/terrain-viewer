@@ -2,17 +2,17 @@ Jaanga Terrain Viewer Read Me
 =============================
 ## Contents and More
 Annotated table of contents with links for all the Terrain repositories on GitHub: [Jaanga Terrain Contents]( http://jaanga.github.io/terrain/readme-reader.html#contents.md )   
-Primary read me file for this project: [Jaanga Terrain]( http://jaanga.github.io/terrain/index.html )
+Primary read me file for this project: [Jaanga Terrain]( http://jaanga.github.io/terrain/index.html )  
+
+For the latest viewer see: [**unFlatland Read me**]( http://jaanga.github.io/terrain-viewer/un-flatland/index.html )  
+For an applied use of this techmology see: [FGx Plane Spotter]( http://jaanga.github.io/fgx-plane-spotter/index.html )
 
 ## Three Demos
-
-For an applied use ( and newest versions ) of this technology see: [FGx Plane Spotter]( http://jaanga.github.io/fgx-plane-spotter/index.html )
-
-Three more quite different ways of viewing the Terrain data:
+Three quite different ways of viewing the Terrain data:
 
 #### 1. unFlatland
-Live Demo: [unFlatland (latest)]( http://jaanga.github.io/terrain-viewer/un-flatland/latest/index.html )  << under development  
-Web page: [unFlatland Read me]( http://jaanga.github.io/terrain-viewer/un-flatland/index.html)  
+Live Demo: [unFlatland (latest)]( http://jaanga.github.io/terrain-viewer/un-flatland/latest/index.html )  
+Web page: [unFlatland Read me]( http://jaanga.github.io/terrain-viewer/un-flatland/index.html )  
 Source code: [unFlatland]( https://github.com/jaanga/terrain-viewer/tree/gh-pages/un-flatland )  
 
 * Loads Jonathan de Ferranti's 3 second data set

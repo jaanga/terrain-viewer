@@ -9,7 +9,7 @@ Live demo:
 [unFlatland latest revision]( http://jaanga.github.io/terrain-viewer/un-flatland/latest/index.html )  
 
 * Currently r9
-* Embed in HTML: [Embedded map demo]( http://jaanga.github.io/terrain-viewer/un-flatland/r9/un-flatland-r9-embed.html )  
+* Embed in HTML: [Embedded map demo]( http://jaanga.github.io/terrain-viewer/un-flatland/r9/un-flatland-r9-embed-demo.html )  
 * Read geoJSON: [Mountains of Scotland Edition]( http://jaanga.github.io/terrain-viewer/un-flatland/r9/un-flatland-r9-scotland-mountains.html )  
 * Permalinks: [View from My Window]( http://jaanga.github.io/terrain-viewer/un-flatland/r9/un-flatland-r9-debug.html#camalt=15#camlat=37.796#camlon=-122.398#tiles=12#taralt=8#tarlat=37.86#tarlon=-122.43#zoom=13 ) 
 
@@ -148,12 +148,14 @@ copyright &copy; 2014 Jaanga authors ~ All work herein is under the [MIT License
 
 ## Change Log
 
+
+
 2014-03-05 ~ Theo
 
 * un-flatland-r9.js ~ clode clean-up, completed name-spacing, jsHint
 * un-flatland-r9.html & un-flatland-r9-menu.js: code clean-up
 * Added Mountains of Scotland demo
-
+* Added embed demo
 
 2014-03-04 ~ Theo
 

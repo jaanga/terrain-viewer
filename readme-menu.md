@@ -1,25 +1,25 @@
 [Jaanga](../index.html ) &raquo; [Terrain Viewer]( ./index.html )
-===============================================
+=================================================================
 
 <p id=rm >
 	<a href=JavaScript:displayPage("readme.md",rm); >Read Me</a>
 </p>
 
 <p id=uf >
-	<a href=JavaScript:displayPage("un-flatland/readme.md",uf); >unFlatland</a>
+	<a href=./un-flatland/index.html >unFlatland</a>
 </p>
 
 <p id=hw >
-	<a href=JavaScript:displayPage("hello-world/readme.md",hw); >Hello World</a>
+	<a href=./hello-world/index.html>Hello World</a>
 </p>
 
 <p id=pv >
-	<a href=JavaScript:displayPage("png-viewer/readme.md",pv); >PNG Viewer</a>
+	<a href=./png-viewer/index.html >PNG Viewer</a>
 </p>
 
 ****
 All the action is currently here:  
-[Jaanga unFlatland](../terrain-viewer/un-flatland/index.html )
+[Jaanga unFlatland]( ./un-flatland/index.html )
 
 The source of the 3D data:  
 [Terrain]( ../terrain/index.html )

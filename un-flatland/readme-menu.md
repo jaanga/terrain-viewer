@@ -6,7 +6,7 @@
 </p>
 
 
-All recent updates are happening here:  
+See also:  
 [FGx Plane Spotter]( ../../fgx-plane-spotter/index.html )  
   
 
