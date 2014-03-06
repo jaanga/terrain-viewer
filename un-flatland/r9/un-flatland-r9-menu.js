@@ -2,9 +2,6 @@
 
 	uf.ref = 'r9';
 
-	uf.startPlace = uf.defaults.start = 1624;
-	uf.displayPlacards = uf.defaults.placards = 0;
-
 	var offsetX;
 	var offsetY;
 
@@ -20,6 +17,7 @@
 					'<li>Gaps betwen tiles</li>' +
 					'<li>High elevations truncated</li>' +
 					'<li>Occasional repeating of rows or columns of tiles</li>' +
+					'<li>Altitudes occasionaly noted as 0 when they are not 0.</li>' +
 					'<li>Zoom level 7 and lower: elevations not drawn properly & many other issues</li>' +
 				'</ul>' +
 				'<a href="https://github.com/jaanga/terrain-viewer/tree/gh-pages/un-flatland" target="_blank">Source code</a><br>' +
@@ -220,7 +218,7 @@
 			place = uf.gazetteer[i];
 			if ( place[1] < uf.ulLat && place[1] > uf.lrLat && place[2] > uf.ulLon  && place[2] < uf.lrLon ) {
 				point7 = uf.getPoint( place[1], place[2], 7);
-
+// still stupid. picks first image. eek.
 				xStart = uf.images[0].width * Math.abs( point7.ulTileLon - place[2] ) /  point7.deltaLon;
 				yStart = uf.images[0].height * ( point7.ulTileLat - place[1] ) /  point7.deltaLat;
 				canvas.width = uf.images[0].width;
@@ -439,6 +437,7 @@
 		stats.update();
 		if ( uf.update ) {
 			updatePlacards();
+			updateMountains();
 			uf.update = false
 		}
 	}
