@@ -20,7 +20,7 @@
 	uf.defaults.tiles = 11;
 	uf.defaults.zoom = 9;
 
-	var scotlandMontains;
+	var scotlandMountains;
 	document.body.style.cssText = ' margin: 0; overflow: hidden; ';
 
 	uf.init();
@@ -32,24 +32,24 @@
 	scotlanimate(); // custom animate in un-flatland-r9-menu.js
 
 	function addScotlandMountains() {
-		scotlandMontainsDiv = document.body.appendChild( document.createElement( 'div' ) );
-		scotlandMontainsDiv.id = 'movable';
-		scotlandMontainsDiv.style.cssText = ' background-color: #ccc; height: 400px; left: ' + (window.innerWidth - 400) + 'px; opacity: 0.8; overflow:hidden; top: 400px; width: 300px; ';
-		scotlandMontainsDiv.addEventListener( 'mousedown', mouseMove, false );
-		scotlandMontainsDiv.innerHTML = scotlandMontainsText = 
-			'<div id=closer onclick=scotlandMontainsDiv.style.display="none";>[x]</div>' +
+		scotlandMountainsDiv = document.body.appendChild( document.createElement( 'div' ) );
+		scotlandMountainsDiv.id = 'movable';
+		scotlandMountainsDiv.style.cssText = ' background-color: #ccc; height: 400px; left: ' + (window.innerWidth - 400) + 'px; opacity: 0.8; overflow:hidden; top: 400px; width: 300px; ';
+		scotlandMountainsDiv.addEventListener( 'mousedown', mouseMove, false );
+		scotlandMountainsDiv.innerHTML = scotlandMountainsText = 
+			'<div id=closer onclick=scotlandMountainsDiv.style.display="none";>[x]</div>' +
 			'<h2 style=margin-bottom:0; >Mountains of Scotland</h2>' +
 			'<a href=JavaScript:uf.lat=56.7968;uf.lon=-5.0035;uf.startPlace=721;uf.zoom=9;uf.drawTerrain(); target="_blank">home</a><br>' +
 		'';
 
-		scotlandMontains = JSON.parse( requestFile( '../../../terrain-plus/gazetteer-geojson/horners.geojson' ) ); 
-		if ( !scotlandMontains ) return;
-console.log( scotlandMontains );
+		scotlandMountains = JSON.parse( requestFile( '../../../terrain-plus/gazetteer-geojson/horners.geojson' ) ); 
+		if ( !scotlandMountains ) return;
+// console.log( scotlandMountains );
 
 		var txt = '';
 		
-		for ( var i = 0, iLen = scotlandMontains.features.length; i < iLen; i++ ) {
-			f = scotlandMontains.features[i];
+		for ( var i = 0, iLen = scotlandMountains.features.length; i < iLen; i++ ) {
+			f = scotlandMountains.features[i];
 			lon = f.geometry.coordinates[0];
 			lat = f.geometry.coordinates[1];
 			fp = f.properties;
@@ -58,7 +58,7 @@ console.log( scotlandMontains );
 				fp.Metres + '</td><td>' + fp.Feet + '</td><td>' + fp.Number + '</td>' + 
 			'</tr>';
 		}
-		scotlandMontainsDiv.innerHTML = scotlandMontainsText + 	scotlandMontains.features.length + ' mountains listed' +
+		scotlandMountainsDiv.innerHTML = scotlandMountainsText + 	scotlandMountains.features.length + ' mountains listed' +
 			'<div style=height:300px;overflow:scroll; >' +
 			'<table >' +  
 			'<tr><td>name </td><td>metres</td><td>feet </td><td> number</td></tr>' + 
@@ -84,8 +84,8 @@ console.log( scotlandMontains );
 		var point7, xStart, yStart, spot, point;
 		var scale = 0.2 * uf.scaleVertical * uf.zoomScales[ uf.zoom ][1];
 
-		for ( var i = 0, iLen = scotlandMontains.features.length; i < iLen; i++ ) {
-			f = scotlandMontains.features[i];
+		for ( var i = 0, iLen = scotlandMountains.features.length; i < iLen; i++ ) {
+			f = scotlandMountains.features[i];
 			lon = f.geometry.coordinates[0];
 			lat = f.geometry.coordinates[1];
 			fp = f.properties;
