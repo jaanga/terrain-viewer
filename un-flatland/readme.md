@@ -9,9 +9,9 @@ Live demo:
 [unFlatland latest revision]( http://jaanga.github.io/terrain-viewer/un-flatland/latest/index.html )  
 
 * Currently r9
-* [Embedded map demo]( http://jaanga.github.io/terrain-viewer/un-flatland/r9/un-flatland-r9-embed-demo.html )  
-* [Mountains of Scotland Edition]( http://jaanga.github.io/terrain-viewer/un-flatland/r9/un-flatland-r9-scotland-mountains.html )  
-* [View from My Window]( http://jaanga.github.io/terrain-viewer/un-flatland/r9/un-flatland-r9-debug.html#camalt=15#camlat=37.796#camlon=-122.398#tiles=12#taralt=8#tarlat=37.86#tarlon=-122.43#zoom=13 ) 
+* Embed in HTML: [Embedded map demo]( http://jaanga.github.io/terrain-viewer/un-flatland/r9/un-flatland-r9-embed.html )  
+* Read geoJSON: [Mountains of Scotland Edition]( http://jaanga.github.io/terrain-viewer/un-flatland/r9/un-flatland-r9-scotland-mountains.html )  
+* Permalinks: [View from My Window]( http://jaanga.github.io/terrain-viewer/un-flatland/r9/un-flatland-r9-debug.html#camalt=15#camlat=37.796#camlon=-122.398#tiles=12#taralt=8#tarlat=37.86#tarlon=-122.43#zoom=13 ) 
 
 [unFlatland r6]( http://jaanga.github.io/terrain-viewer/un-flatland/r6/un-flatland-r6.html )
 

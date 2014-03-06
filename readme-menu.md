@@ -19,7 +19,7 @@
 
 ****
 All the action is currently here:  
-[Jaanga unFlatland r9](../terrain-viewer/un-flatland/latest/index.html )
+[Jaanga unFlatland](../terrain-viewer/un-flatland/index.html )
 
 The source of the 3D data:  
 [Terrain]( ../terrain/index.html )
