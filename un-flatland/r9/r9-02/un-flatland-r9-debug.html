@@ -11,9 +11,6 @@
 <script src = un-flatland-r9.js ></script>
 <script src = un-flatland-r9-menu.js ></script>
 <script>
-	uf.defaults.start = 1624;
-	uf.defaults.placards = 0;
-
 	var b = '<br>';
 	var pointStart;
 
@@ -267,18 +264,6 @@ console.log( point, mesh );
 		b;
 	}
 
-	function displayMessage( title, point, lat, lon ) {
-		var b = '<br>';
-		return title + ' lat:' + lat.toFixed(5) + ' lon:' + lon.toFixed(5) + b +
-		'Tiles x:' + point.tileX + ' y:' + point.tileY + b +
-		'Tile ul lat:' + point.ulTileLat.toFixed(5) + ' lon:' + point.ulTileLon.toFixed(5) + b +
-		'Tile delta lat:' + point.deltaLat.toFixed(5) + ' lon:' + point.deltaLon.toFixed(5) + b +
-		'Point x: ' + point.ptX.toFixed(5) + ' y:' + point.ptY.toFixed(5) + b +
-		//'Offset x:' + point.offsetX + ' y:' + point.offsetY + b +
-		b;
-	}
-
-
 // axes
 	uf.scene.add( new THREE.ArrowHelper( v(1, 0, 0), v(0, 0, 0), 200, 0xcc0000) );
 	uf.scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 500, 0x00cc00) );
@@ -286,7 +271,7 @@ console.log( point, mesh );
 
 	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
 
-	function xxanimate() {
+	function animate() {
 		requestAnimationFrame( animate );
 		uf.controls.update();
 		uf.renderer.render( uf.scene, uf.camera );

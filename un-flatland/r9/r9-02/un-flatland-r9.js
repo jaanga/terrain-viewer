@@ -1,4 +1,4 @@
-// Theo Armour ~ 2014-03-06 ~ MIT License
+// Theo Armour ~ 2014-03-05 ~ MIT License
 
 	var uf = uf || {};
 
@@ -108,20 +108,13 @@
 		uf.update = true;
 	};
 
-	uf.image = function( source, count, pointLevel, latCurrent, lonCurrent, i, j ) {
-		this.img = document.createElement( 'img' );
-		this.img.onload = uf.drawCanvasImage( this.img, count, pointLevel, latCurrent, lonCurrent, i, j );
-		this.img.src = source;
-	};
-
 	uf.drawTerrain = function() {
 		if ( uf.terrain ) uf.scene.remove( uf.terrain );
 		uf.terrain = new THREE.Object3D();
-		var pointLevel, name;
-		uf.images = {};
-		uf.count = 0;
+		var pointLevel, count = 0;
+		uf.images = [];
 		uf.start = Math.floor( 0.5 * ( uf.tilesPerSide - 1 ) );
-		uf.offset = -0.5 * uf.tileSize * uf.tilesPerSide; // Remember: Tiles are drawn from their centers
+		uf.offset =  -0.5 * uf.tileSize * uf.tilesPerSide; // Remember: Tiles are drawn from their centers
 
 		uf.pointZoomWin = uf.getPoint( uf.lat, uf.lon, uf.zoom );
 		uf.ulLat = uf.pointZoomWin.ulTileLat + uf.start * uf.pointZoomWin.deltaLat; // for add-ons
@@ -152,8 +145,10 @@
 						xDir = 'terrain-de3-96-127/';
 					}
 				}
-				name = pointLevel.tileX + '/' + pointLevel.tileY;
-				uf.images[ name ] = new uf.image( '../../../../projects/' + xDir + name + '.png', pointLevel, latCurrent, lonCurrent, i, j );
+				uf.images[count] = document.createElement( 'img' );
+				uf.images[count].onload = uf.drawCanvasImage( uf.images, count, pointLevel, latCurrent, lonCurrent, i, j );
+				uf.images[count].src = '../../../../projects/' + xDir + pointLevel.tileX + '/' + pointLevel.tileY + '.png' ;
+				count++;
 			}
 		}
 		pointLevel = uf.getPoint( latStart - j * uf.pointZoomWin.deltaLat, lonStart + i * uf.pointZoomWin.deltaLon, uf.zoom);
@@ -162,7 +157,7 @@
 		uf.scene.add( uf.terrain );
 	};
 
-	uf.drawCanvasImage = function( heightmap, point7, latCur, lonCur, ii, jj ) {
+	uf.drawCanvasImage = function( heightmaps, index, point7, latCur, lonCur, ii, jj ) {
 		return function() {
 
 			var mesh, geometry, material, texture;
@@ -172,8 +167,8 @@
 
 			var zoomWinScale = Math.pow( 2, uf.zoom - 7);
 
-			var cropSizeX = heightmap.width / zoomWinScale;
-			var cropSizeY = heightmap.height / zoomWinScale;
+			var cropSizeX = heightmaps[index].width / zoomWinScale;
+			var cropSizeY = heightmaps[index].height / zoomWinScale;
 
 			var deltaX = pointZoomWin.tileX - point7.tileX * zoomWinScale;
 			var deltaY = pointZoomWin.tileY - point7.tileY * zoomWinScale;
@@ -181,7 +176,7 @@
 			var cropStartX = cropSizeX * deltaX;
 			var cropStartY = cropSizeY * deltaY;
 
-			uf.context.drawImage( heightmap, cropStartX - 2, cropStartY - 2, cropSizeX + 2, cropSizeY + 2, 0, 0, uf.vertsPerTile, uf.vertsPerTile);
+			uf.context.drawImage( heightmaps[index], cropStartX - 2, cropStartY - 2, cropSizeX + 2, cropSizeY + 2, 0, 0, uf.vertsPerTile, uf.vertsPerTile);
 			var imgData = uf.context.getImageData( 0, 0, uf.vertsPerTile, uf.vertsPerTile ).data;
 
 			geometry = new THREE.PlaneGeometry( uf.tileSize + 2, uf.tileSize + 2, uf.vertsPerTile - 1, uf.vertsPerTile - 1);
@@ -212,7 +207,9 @@
 			mesh.position.set( ii * uf.tileSize + offset + 0.5 * uf.tileSize, 0, jj * uf.tileSize + offset + 0.5 * uf.tileSize );
 			uf.terrain.add( mesh );
 
-			if ( ++uf.count >= uf.tilesPerSide * uf.tilesPerSide ) { uf.update = true; }
+			if ( index >= uf.tilesPerSide * uf.tilesPerSide - 1 ) {
+				uf.update = true;
+			}
 		};
 	};
 

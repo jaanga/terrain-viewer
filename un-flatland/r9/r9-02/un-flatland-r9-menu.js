@@ -17,7 +17,7 @@
 					'<li>Gaps betwen tiles</li>' +
 					'<li>High elevations truncated</li>' +
 					'<li>Occasional repeating of rows or columns of tiles</li>' +
-					'<li>Altitudes indicate relative not actual positions</li>' +
+					'<li>Altitudes occasionaly noted as 0 when they are not 0.</li>' +
 					'<li>Zoom level 7 and lower: elevations not drawn properly & many other issues</li>' +
 				'</ul>' +
 				'<a href="https://github.com/jaanga/terrain-viewer/tree/gh-pages/un-flatland" target="_blank">Source code</a><br>' +
@@ -108,7 +108,6 @@
 			'</p>' +
 			'<hr>' +
 			'<h1>' +
-				'<a href=JavaScript:uf.setCamera(); >&#x2302;</a> ' +
 				'<a href=JavaScript:getTile("left"); >&#8678;</a> ' +
 				'<a href=JavaScript:getTile("right"); >&#8680;</a> ' +
 				'<a href=JavaScript:getTile("up"); >&#8679;</a> ' +
@@ -163,10 +162,11 @@
 
 		butCam.onclick = cameraToLocation;
 		chkPlacards.checked = uf.displayPlacards > 0 ? true : false;
-		chkPlacards.onchange = function() { uf.displayPlacards = chkPlacards.checked ? 1 : 0; uf.update = true; };
+		chkPlacards.onchange = function() { uf.displayPlacards = chkPlacards.checked ? 1 : 0; updatePlacards(); };
 	}
 
 	function cameraToLocation() {
+
 		var off = uf.tilesPerSide % 2 > 0 ? -128 : -256;
 		var pointStart = uf.getPoint( uf.lat, uf.lon, uf.zoom );
 
@@ -206,57 +206,66 @@
 
 		uf.placards = new THREE.Object3D();
 
-		var canvas = document.createElement( 'canvas' );
-		var context = canvas.getContext( '2d' );
 		var off = uf.tilesPerSide % 2 > 0 ? -128 : -256;
 		var pointStart = uf.getPoint( uf.lat, uf.lon, uf.zoom );
-		var point7, name, img, xStart, yStart, spot, point;
-		var scale = 0.5 * uf.scaleVertical * uf.zoomScales[ uf.zoom ][1];
+//		messages.innerHTML = displayMessage( 'pointStart', pointStart, uf.lat, uf.lon )
 
+		var canvas = document.createElement( 'canvas' );
+		var context = canvas.getContext( '2d' );
+		var xStart, yStart, spot, point;
+		var scale = 0.2 * uf.scaleVertical * uf.zoomScales[ uf.zoom ][1];
 		for ( var i = 0, iLen = uf.gazetteer.length; i < iLen; i++ ) {
 			place = uf.gazetteer[i];
 			if ( place[1] < uf.ulLat && place[1] > uf.lrLat && place[2] > uf.ulLon  && place[2] < uf.lrLon ) {
 				point7 = uf.getPoint( place[1], place[2], 7);
-				name = point7.tileX + '/' + point7.tileY;
-if ( !uf.images[name] ) {console.log( point7); break; }
-				img = uf.images[name].img;
-				xStart = img.width * Math.abs( point7.ulTileLon - place[2] ) /  point7.deltaLon;
-				yStart = img.height * ( point7.ulTileLat - place[1] ) /  point7.deltaLat;
-				canvas.width = img.width;
-				canvas.height = img.height;
-				context.drawImage( img, 0, 0 );
+// still stupid. picks first image. eek.
+				xStart = uf.images[0].width * Math.abs( point7.ulTileLon - place[2] ) /  point7.deltaLon;
+				yStart = uf.images[0].height * ( point7.ulTileLat - place[1] ) /  point7.deltaLat;
+				canvas.width = uf.images[0].width;
+				canvas.height = uf.images[0].height;
+				context.drawImage( uf.images[0], 0, 0 );
 				spot = context.getImageData( xStart, yStart, 1, 1 ).data;
 
 				point = uf.getPoint( place[1], place[2], uf.zoom );
 				point.ptX += off + uf.tileSize * ( point.tileX - pointStart.tileX )
 				point.ptY += off + uf.tileSize * ( point.tileY - pointStart.tileY );
-				point.alt = scale * spot[0];
-				mesh = drawObject( point.ptX, 0.5 * point.alt, point.ptY );
-				mesh.scale.set( 5, point.alt, 5 );
+				point.alt = uf.scaleVertical * parseInt( spot[0] );
+				mesh = drawObject( point.ptX, point.alt, point.ptY );
+				mesh.scale.set( 5, 100, 5 );
 				uf.placards.add( mesh );
 
-				mesh = drawSprite( place[0] + ' ' + point.alt , '#0f0', point.ptX, 50 + point.alt , point.ptY );
+				mesh = drawSprite( place[0] + ' ' + spot[0] , '#0f0', point.ptX, 70 + point.alt , point.ptY );
 				uf.placards.add( mesh );
 			}
 		}
+
 		uf.scene.add( uf.placards );
 	}
 
+	function displayMessage( title, point, lat, lon ) {
+		var b = '<br>';
+		return title + ' lat:' + lat.toFixed(5) + ' lon:' + lon.toFixed(5) + b +
+		'Tiles x:' + point.tileX + ' y:' + point.tileY + b +
+		'Tile ul lat:' + point.ulTileLat.toFixed(5) + ' lon:' + point.ulTileLon.toFixed(5) + b +
+		'Tile delta lat:' + point.deltaLat.toFixed(5) + ' lon:' + point.deltaLon.toFixed(5) + b +
+		'Point x: ' + point.ptX.toFixed(5) + ' y:' + point.ptY.toFixed(5) + b +
+		//'Offset x:' + point.offsetX + ' y:' + point.offsetY + b +
+		b;
+	}
 
 	function parsePermalink() {
 		var item, index;
 		var hashes = location.hash.split('#');
 		for (var i = 1, len = hashes.length; i < len; i++) {
 			item = hashes[i].split('=');
-
 			index = item[0];
-			if ( uf.defaults[ index ] !== undefined ){
+			if ( uf.defaults[ index ] ){
 				uf.values[ index ] = item;
 			}
 		}
 
 		uf.startPlace = uf.values.start ? parseInt( uf.values.start[1], 10 ) : uf.defaults.start;
-		uf.displayPlacards = uf.values.placards ? parseInt( uf.values.placards[1], 10 ) : uf.defaults.placards;
+		uf.displayPlacards = uf.values.placards ? uf.values.placards : uf.defaults.placards;
 	}
 
 	function setPermalink() {
@@ -323,7 +332,7 @@ if ( !uf.images[name] ) {console.log( point7); break; }
 			point.tileY -= jump;
 			if ( point.tileY < 0 ) point.tileY = max;
 		} else if ( direction === 'down' ) {
-			point.tileY += jump + 1;
+			point.tileY += jump;
 			if ( point.tileY > max ) point.tileY = 0;
 		}
 		uf.lon = uf.tile2lon( point.tileX, uf.zoom);

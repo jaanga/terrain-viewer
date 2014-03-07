@@ -11,14 +11,14 @@
 <script src = un-flatland-r9.js ></script>
 <script src = un-flatland-r9-menu.js ></script>
 <script>
-	uf.defaults.start = 1624;
-	uf.defaults.placards = 0;
+	uf.startPlace = uf.defaults.start = 1624;
+	uf.displayPlacards = uf.defaults.placards = 0;
 
 	document.body.style.cssText = ' margin: 0; overflow: hidden; ';
 
 	uf.init();
 
-	addMenu(); // in un-flatland-r9-menu.js
+	addMenu();  // in un-flatland-r9-menu.js
  	addHelp(); // ditto
 
 	animate(); // custom animate in un-flatland-r9-menu.js
