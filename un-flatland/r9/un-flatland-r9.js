@@ -101,12 +101,35 @@
 	};
 
 	uf.setCamera = function() {
+		if ( uf.camAlt && uf.camLat && uf.camLon && uf.tarAlt !== undefined && uf.tarLat & uf.tarLon) cameraToLocation();
+
 		uf.controls.target.set( uf.tarX, uf.tarY, uf.tarZ  );
 		uf.camera.position.set( uf.camX, uf.camY, uf.camZ );
 		uf.camera.up = new THREE.Vector3( 0, 1, 0 );
 
 		uf.update = true;
 	};
+
+	function cameraToLocation() {
+		var off = uf.tilesPerSide % 2 > 0 ? -128 : -256;
+		var pointStart = uf.getPoint( uf.lat, uf.lon, uf.zoom );
+
+		var point = uf.getPoint( uf.camLat, uf.camLon, uf.zoom );
+		point.ptX += off + uf.tileSize * ( point.tileX - pointStart.tileX );
+		point.ptY += off + uf.tileSize * ( point.tileY - pointStart.tileY );
+
+		uf.camX = point.ptX;
+		uf.camY = uf.camAlt;
+		uf.camZ = point.ptY;
+
+		point = uf.getPoint( uf.tarLat, uf.tarLon, uf.zoom );
+		point.ptX += off + uf.tileSize * ( point.tileX - pointStart.tileX );
+		point.ptY += off + uf.tileSize * ( point.tileY - pointStart.tileY );
+
+		uf.tarX = point.ptX;
+		uf.tarY = uf.tarAlt;
+		uf.tarZ = point.ptY;
+	}
 
 	uf.image = function( source, count, pointLevel, latCurrent, lonCurrent, i, j ) {
 		this.img = document.createElement( 'img' );

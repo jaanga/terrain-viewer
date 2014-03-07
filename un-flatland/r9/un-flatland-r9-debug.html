@@ -51,7 +51,7 @@
 				'<a href=JavaScript:moveCamera(); >moveCamera</a> ' +
 				'<a href=JavaScript:updateCameraTarget(); >updateCameraTarget</a> ' +
 			'<br>' +
-				'<a href=JavaScript:fidiToAngelIsland(); >fidiToAngelIsland</a> ' +
+				'<a href=JavaScript:fidiToAngelIsland(); >fidiToAngelIsland</a><br>' +
 				'<a href=JavaScript:benNevis(); >benNevis</a> ' +
 
 				
@@ -137,18 +137,22 @@ console.log( point, mesh );
 
 	function benNevis() {
 		inpTille = uf.tilesPerSide = 8;
+
 		inpLat.value = uf.lat = 56.7968;
 		inpLon.value = uf.lon = -5.0035;
 
-		inpCamLat.value = 56.75;
+		inpCamLat.value = 56.95;
 		inpCamLon.value = -5.0035;
-		inpCamAlt.value = 300;
+		inpCamAlt.value = 250;
 
 		inpTarLat.value = 56.7968;
 		inpTarLon.value = -5.0035;
-		inpTarAlt.value = 300;
+		inpTarAlt.value = 380;
+		
+		updateCameraTarget() 
 
 		uf.drawTerrain();
+//		uf.setCamera();
 	}
 
 	function updateInputs() {
@@ -161,7 +165,7 @@ console.log( point, mesh );
 		inpTarAlt.value = inp32.value;
 	}
 
-	function updateCameraTarget() {
+	function ccccupdateCameraTarget() {
 		inp11.value = uf.camera.position.x;
 		inp21.value = uf.camera.position.y;
 		inp31.value = uf.camera.position.z;

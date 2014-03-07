@@ -161,14 +161,13 @@
 		inpTarLon.value = uf.tarLon;
 		inpTarAlt.value = uf.tarAlt;
 
-		butCam.onclick = cameraToLocation;
+		butCam.onclick = function() { updateCameraTarget() };
 		chkPlacards.checked = uf.displayPlacards > 0 ? true : false;
 		chkPlacards.onchange = function() { uf.displayPlacards = chkPlacards.checked ? 1 : 0; uf.update = true; };
 	}
 
-	function cameraToLocation() {
-		var off = uf.tilesPerSide % 2 > 0 ? -128 : -256;
-		var pointStart = uf.getPoint( uf.lat, uf.lon, uf.zoom );
+
+	function updateCameraTarget() {
 
 		uf.camLat = parseFloat( inpCamLat.value);
 		uf.camLon = parseFloat( inpCamLon.value );
@@ -177,22 +176,6 @@
 		uf.tarLat = parseFloat( inpTarLat.value );
 		uf.tarLon = parseFloat( inpTarLon.value );
 		uf.tarAlt = parseFloat( inpTarAlt.value );
-
-		var point = uf.getPoint( uf.camLat, uf.camLon, uf.zoom );
-		point.ptX += off + uf.tileSize * ( point.tileX - pointStart.tileX );
-		point.ptY += off + uf.tileSize * ( point.tileY - pointStart.tileY );
-
-		uf.camX = point.ptX;
-		uf.camY = uf.camAlt;
-		uf.camZ = point.ptY;
-
-		point = uf.getPoint( uf.tarLat, uf.tarLon, uf.zoom );
-		point.ptX += off + uf.tileSize * ( point.tileX - pointStart.tileX );
-		point.ptY += off + uf.tileSize * ( point.tileY - pointStart.tileY );
-
-		uf.tarX = point.ptX;
-		uf.tarY = uf.tarAlt;
-		uf.tarZ = point.ptY;
 
 		uf.setCamera();
 	}
