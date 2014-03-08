@@ -1,6 +1,5 @@
 // Theo Armour ~ 2014-03-05 ~ MIT License
 
-	uf.defaults.placards = 0;
 	uf.ref = 'r9';
 
 	var offsetX;
@@ -146,45 +145,36 @@
 
 		butGo.onclick = function() { 
 			selPlace.selectedIndex = uf.startPlace = 0;
-			uf.setCamera();
 			uf.lat = parseFloat( inpLat.value);
 			uf.lon = parseFloat( inpLon.value);
-			updateMenu(); 
+			uf.drawTerrain();
 		};
 
 		selPlace.selectedIndex = uf.startPlace;
 		selPlace.onchange = function() {
-			uf.startPlace = this.selectedIndex;
-			uf.setCamera();
-			inpLat.value = uf.lat = uf.gazetteer[ uf.startPlace ][1];
-			inpLon.value = uf.lon = uf.gazetteer[ uf.startPlace ][2];
-			updateMenu(); 
+			updateLocation( this.selectedIndex );
 		};
-
-		inpCamAlt.value = uf.camAlt;
-		inpCamLat.value = uf.camLat;
-		inpCamLon.value = uf.camLon;
-
-		inpTarAlt.value = uf.tarAlt;
-		inpTarLat.value = uf.tarLat;
-		inpTarLon.value = uf.tarLon;
 
 		butCam.onclick = function() { updateCameraTarget() };
 		chkPlacards.checked = uf.displayPlacards > 0 ? true : false;
 		chkPlacards.onchange = function() { uf.displayPlacards = chkPlacards.checked ? 1 : 0; uf.update = true; };
 	}
 
+	function updateLocation( index ) {
+			selPlace.selectedIndex = uf.startPlace = index;
+			inpLat.value = uf.lat = uf.gazetteer[ uf.startPlace ][1];
+			inpLon.value = uf.lon = uf.gazetteer[ uf.startPlace ][2];
+			uf.drawTerrain();
+	}
+
 	function updateMenu() {
-
-		uf.drawTerrain();
-
 		var lat = uf.ulLat - 0.5 * (uf.ulLat - uf.lrLat);
 		var lon = uf.ulLon - 0.5 * ( uf.ulLon - uf.lrLon)
 
 		var point = uf.getPoint( lat, lon, uf.zoom );
 		inpCamAlt.value = uf.camAlt = 500;
 		inpCamLat.value = uf.camLat = point.ulTileLat - 0.5;
-		inpCamLon.value = uf.camLon = point.ulTileLon;
+		inpCamLon.value = uf.camLon = point.ulTileLon + 0.1;
 
 		inpTarAlt.value = uf.tarAlt = 0;
 		inpTarLat.value = uf.tarLat = point.ulTileLat;
@@ -421,7 +411,7 @@ if ( !uf.images[name] ) {console.log( i, point7); break; }
 		stats.update();
 		if ( uf.update ) {
 			updatePlacards();
-//			updateMenu();
+			updateMenu();
 
 			uf.update = false
 		}

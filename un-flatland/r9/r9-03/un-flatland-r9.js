@@ -5,7 +5,7 @@
 	uf.defaults = {
 		camalt: 200,
 		camlat: 37.4,
-		camlon: -122.2,
+		camlon: -122.4,
 		camx: 0,
 		camy: 700,
 		camz: 1600,
@@ -176,7 +176,7 @@
 					}
 				}
 				name = pointLevel.tileX + '/' + pointLevel.tileY;
-				uf.images[ name ] = new uf.image( '../../../../' + xDir + name + '.png', pointLevel, latCurrent, lonCurrent, i, j );
+				uf.images[ name ] = new uf.image( '../../../../projects/' + xDir + name + '.png', pointLevel, latCurrent, lonCurrent, i, j );
 			}
 		}
 		pointLevel = uf.getPoint( latStart - j * uf.pointZoomWin.deltaLat, lonStart + i * uf.pointZoomWin.deltaLon, uf.zoom);

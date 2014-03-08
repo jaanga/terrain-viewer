@@ -53,7 +53,7 @@
 				'<a href=JavaScript:benNevis(); >benNevis</a>' + b +
 				'<a href=JavaScript:iquique(); >iquique</a>' + b +
 				'<a href=JavaScript:ressons(); >ressons</a>' + b +
-				'<a href=JavaScript:sb(); >sb</a>' + b +
+				
 			'<p>' +
 			'1-1<input type=text id=inp11 value=37.700 size=8 /> ' +
 			'2-1<input type=text id=inp21 value=-122.300 size=8 /> ' +
@@ -149,42 +149,17 @@ console.log( point, mesh );
 
 		selPlace.selectedIndex = uf.startPlace = 195;
 
-		inpCamLat.value = uf.camLat = 57.05;
+		inpCamLat.value = uf.camLat = 56.75;
 		inpCamLon.value = uf.camLon = -5.0035;
-		inpCamAlt.value = uf.camAlt = 200;
+		inpCamAlt.value = uf.camAlt = 250;
 
 		inpTarLat.value = uf.tarLat = 56.7968;
 		inpTarLon.value = uf.talLon = -5.0035;
 		inpTarAlt.value = uf.tarAlt = 380;
 
+		uf.setCamera();
 
 		uf.drawTerrain();
-		uf.setCamera();
-	}
-
-	function iquique() {
-
-		setZoom.value = uf.zoom = 14;
-		setScale.value = uf.scaleVertical = 9;
-
-		setTiles.value = uf.tilesPerSide = 10;
-		setVerts.value = uf.vertsPerTile = 24;
-
-		inpLat.value = uf.lat = -20.2167;
-		inpLon.value = uf.lon = -70.15;
-
-		selPlace.selectedIndex = uf.startPlace = 876;
-
-		inpCamLat.value = uf.camLat = -20.2167;
-		inpCamLon.value = uf.camLon = -70.3;
-		inpCamAlt.value = uf.camAlt = 500;
-
-		inpTarLat.value = uf.tarLat = -20.2267;
-		inpTarLon.value = uf.talLon = -70.15;
-		inpTarAlt.value = uf.tarAlt = 2;
-
-		uf.drawTerrain();
-		uf.setCamera();
 	}
 
 	function ressons() {
@@ -200,10 +175,10 @@ console.log( point, mesh );
 		inpLat.value = uf.lat = 49.3889;
 		inpLon.value = uf.lon = 3.1494;
 
-		selPlace.selectedIndex = uf.startPlace = 1547;
+		selPlace.selectedIndex = uf.startPlace = 195;
 
 		inpCamLat.value = uf.camLat = 49.391;
-		inpCamLon.value = uf.camLon = 3.1475830078125;
+		inpCamLon.value = uf.camLon = 3.1475830078125;;
 		inpCamAlt.value = uf.camAlt = 100;
 
 		inpTarLat.value = uf.tarLat = 49.38952445158216;
@@ -215,32 +190,6 @@ console.log( point, mesh );
 	}
 
 // 34.456314,-119.686383 2224 Gibralter Road, Santa Barbara
-
-
-	function sb() {
-
-		setZoom.value = uf.zoom = 15;
-		setScale.value = uf.scaleVertical = 9;
-
-		setTiles.value = uf.tilesPerSide = 20;
-		setVerts.value = uf.vertsPerTile = 12;
-
-		inpLat.value = uf.lat = 34.456314;
-		inpLon.value = uf.lon = -119.686383;
-
-		selPlace.selectedIndex = uf.startPlace = 1641;
-
-		inpCamLat.value = uf.camLat = 34.45;
-		inpCamLon.value = uf.camLon = -119.8;
-		inpCamAlt.value = uf.camAlt = 800;
-
-		inpTarLat.value = uf.tarLat = 34.456314;
-		inpTarLon.value = uf.talLon = -119.686383;
-		inpTarAlt.value = uf.tarAlt = 300;
-
-		uf.setCamera();
-		uf.drawTerrain();
-	}
 
 	function updateInputs() {
 		inpCamLat.value = inp11.value;
