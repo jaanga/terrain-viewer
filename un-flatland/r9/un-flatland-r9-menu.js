@@ -40,6 +40,7 @@
 		for ( var i = 1, length = lines.length; i < length; i++ ) {
 			pl = lines[i].split( ';' );
 			uf.gazetteer.push( [ pl[0], parseFloat( pl[1] ), parseFloat( pl[2] ) ] );
+			if ( pl[0] === 'San Francisco CA' ) uf.defaults.start = i; 
 		}
 
 		parsePermalink();
@@ -141,15 +142,17 @@
 
 		inpLat.value = uf.lat;
 		inpLon.value = uf.lon;
+
 		butGo.onclick = function() { 
-			updateLocation( 0 );
+			selPlace.selectedIndex = uf.startPlace = 0;
+			uf.lat = parseFloat( inpLat.value);
+			uf.lon = parseFloat( inpLon.value);
 			uf.drawTerrain();
 		};
 
-		updateLocation( uf.startPlace );
+		selPlace.selectedIndex = uf.startPlace;
 		selPlace.onchange = function() {
 			updateLocation( this.selectedIndex );
-			uf.drawTerrain();
 		};
 
 		butCam.onclick = function() { updateCameraTarget() };
@@ -159,9 +162,9 @@
 
 	function updateLocation( index ) {
 			selPlace.selectedIndex = uf.startPlace = index;
-
 			inpLat.value = uf.lat = uf.gazetteer[ uf.startPlace ][1];
 			inpLon.value = uf.lon = uf.gazetteer[ uf.startPlace ][2];
+			uf.drawTerrain();
 	}
 
 	function updateMenu() {

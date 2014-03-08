@@ -11,8 +11,6 @@
 <script src = un-flatland-r9.js ></script>
 <script src = un-flatland-r9-menu.js ></script>
 <script>
-	uf.defaults.start = 1624;
-	uf.defaults.placards = 0;
 
 	var b = '<br>';
 	var pointStart;
@@ -41,7 +39,7 @@
 		cons.innerHTML = 'console' +
 			'<p>' +
 				'<a href=JavaScript:clearObjects() >clearObjects</a>' +
-			'<br>' +
+			b +
 				'<a href=JavaScript:addHomePlus() >addHomePlus</a> ' +
 				'<a href=JavaScript:showUlLrOrigin(); >showUlLrOrigin</a> ' +
 				'<a href=JavaScript:addFloater(); >add floater</a>' +
@@ -50,16 +48,17 @@
 				'<a href=JavaScript:updateInputs(); >updateInputs</a> ' +
 				'<a href=JavaScript:moveCamera(); >moveCamera</a> ' +
 				'<a href=JavaScript:updateCameraTarget(); >updateCameraTarget</a> ' +
-			'<br>' +
-				'<a href=JavaScript:fidiToAngelIsland(); >fidiToAngelIsland</a><br>' +
-				'<a href=JavaScript:benNevis(); >benNevis</a> ' +
-
+			b +
+				'<a href=JavaScript:fidiToAngelIsland(); >fidiToAngelIsland</a>' + b +
+				'<a href=JavaScript:benNevis(); >benNevis</a>' + b +
+				'<a href=JavaScript:iquique(); >iquique</a>' + b +
+				'<a href=JavaScript:ressons(); >ressons</a>' + b +
 				
 			'<p>' +
 			'1-1<input type=text id=inp11 value=37.700 size=8 /> ' +
 			'2-1<input type=text id=inp21 value=-122.300 size=8 /> ' +
 			'3-1<input type=text id=inp31 value=140 size=8 /> ' +
-			'<br>' +
+			b +
 			'1-2<input type=text id=inp12 value=00 size=8 /> ' +
 			'2-2<input type=text id=inp22 value=00 size=8 /> ' +
 			'3-2<input type=text id=inp32 value=00 size=8 /> ' +
@@ -136,24 +135,61 @@ console.log( point, mesh );
 	}
 
 	function benNevis() {
-		inpTille = uf.tilesPerSide = 8;
+
+// #start=195#camalt=250#camlat=56.75#camlon=-5.0035#lat=56.7968#lon=-5.0035#tiles=8#verts=24#taralt=380#tarlat=6.7968#tarlon=-5.0035
+
+		setZoom.value = uf.zoom = 12;
+		setScale.value = uf.scaleVertical = 5;
+
+		setTiles.value = uf.tilesPerSide = 8;
+		setVerts.value = uf.vertsPerTile = 24;
 
 		inpLat.value = uf.lat = 56.7968;
 		inpLon.value = uf.lon = -5.0035;
 
-		inpCamLat.value = 56.95;
-		inpCamLon.value = -5.0035;
-		inpCamAlt.value = 250;
+		selPlace.selectedIndex = uf.startPlace = 195;
 
-		inpTarLat.value = 56.7968;
-		inpTarLon.value = -5.0035;
-		inpTarAlt.value = 380;
-		
-		updateCameraTarget() 
+		inpCamLat.value = uf.camLat = 56.75;
+		inpCamLon.value = uf.camLon = -5.0035;
+		inpCamAlt.value = uf.camAlt = 250;
+
+		inpTarLat.value = uf.tarLat = 56.7968;
+		inpTarLon.value = uf.talLon = -5.0035;
+		inpTarAlt.value = uf.tarAlt = 380;
+
+		uf.setCamera();
 
 		uf.drawTerrain();
-//		uf.setCamera();
 	}
+
+	function ressons() {
+
+// #start=195#camalt=250#camlat=56.75#camlon=-5.0035#lat=56.7968#lon=-5.0035#tiles=8#verts=24#taralt=380#tarlat=6.7968#tarlon=-5.0035
+
+		setZoom.value = uf.zoom = 16;
+		setScale.value = uf.scaleVertical = 9;
+
+		setTiles.value = uf.tilesPerSide = 15;
+		setVerts.value = uf.vertsPerTile = 24;
+
+		inpLat.value = uf.lat = 49.3889;
+		inpLon.value = uf.lon = 3.1494;
+
+		selPlace.selectedIndex = uf.startPlace = 195;
+
+		inpCamLat.value = uf.camLat = 49.391;
+		inpCamLon.value = uf.camLon = 3.1475830078125;;
+		inpCamAlt.value = uf.camAlt = 100;
+
+		inpTarLat.value = uf.tarLat = 49.38952445158216;
+		inpTarLon.value = uf.talLon = 3.1475830078125;
+		inpTarAlt.value = uf.tarAlt = 20;
+
+		uf.setCamera();
+		uf.drawTerrain();
+	}
+
+// 34.456314,-119.686383 2224 Gibralter Road, Santa Barbara
 
 	function updateInputs() {
 		inpCamLat.value = inp11.value;
