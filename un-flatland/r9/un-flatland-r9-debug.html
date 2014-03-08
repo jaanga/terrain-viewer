@@ -242,6 +242,7 @@ console.log( point, mesh );
 	}
 
 	function clearObjects() {
+		msg.innerHTML = '';
 		if ( uf.placards && uf.placards.children.length > 0) {
 			uf.scene.remove( uf.placards );
 			uf.placards.children.length = 0;

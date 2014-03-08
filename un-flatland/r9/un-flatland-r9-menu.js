@@ -36,7 +36,7 @@
 
 		var data = requestFile( '../../../terrain-plus/gazetteer/places-2000.csv' );
 		var lines = data.split(/\r\n|\n/);
-		uf.gazetteer = [ ['Select a location','',''] ];
+		uf.gazetteer = [ ['Select a location','37.796','-122.398'] ];
 		for ( var i = 1, length = lines.length; i < length; i++ ) {
 			pl = lines[i].split( ';' );
 			uf.gazetteer.push( [ pl[0], parseFloat( pl[1] ), parseFloat( pl[2] ) ] );
@@ -76,9 +76,7 @@
 				'Lat:<input id=inpLat type="text" size=4 />' +
 				'Lon:<input id=inpLon type="text" size=4 /> ' +
 				'<button id=butGo title="Click Go to update location longitude and latitude" >Go</button><br>' +
-				'<select id=selPlace ' +
-					'onchange="inpLat.value = lat = gazetteer[this.selectedIndex][1]; inpLon.value = lon = gazetteer[this.selectedIndex][2]; initMap();" >' +
-				'</select>' +
+				'<select id=selPlace ></select>' +
 			'</p>' +
 			'<hr>' +
 			'<p>' +
@@ -101,7 +99,7 @@
 				'<a href=JavaScript:setPermalink(); >Permalink</a> ' +
 				'<a href=JavaScript:clearPermalink(); >Clear Permalink</a><br>' +
 //				'<a href=JavaScript:cameraToPermalink(); >Link to View</a> ' +
-				'<a href=JavaScript:uf.setCamera(); style:float:right; >Reset Camera</a>' +
+//				'<a href=JavaScript:uf.setCamera(); style:float:right; >Reset Camera</a>' +
 			'</p>' +
 			'<p>' +
 				'<a href=JavaScript:viewPNG(); >View PNG</a></p>' +
@@ -143,32 +141,44 @@
 
 		inpLat.value = uf.lat;
 		inpLon.value = uf.lon;
-		butGo.onclick = function() { uf.lat = parseFloat(inpLat.value); uf.lon = parseFloat(inpLon.value); uf.drawTerrain(); };
-
-		selPlace.selectedIndex = uf.startPlace;
-		selPlace.onchange = function() {
-			uf.startPlace = this.selectedIndex;
-			inpLat.value = uf.lat = uf.gazetteer[ uf.startPlace ][1];
-			inpLon.value = uf.lon = uf.gazetteer[ uf.startPlace ][2];
+		butGo.onclick = function() { 
+			updateLocation( 0 );
 			uf.drawTerrain();
 		};
 
-		inpCamLat.value = uf.camLat;
-		inpCamLon.value = uf.camLon;
-		inpCamAlt.value = uf.camAlt;
-
-		inpTarLat.value = uf.tarLat;
-		inpTarLon.value = uf.tarLon;
-		inpTarAlt.value = uf.tarAlt;
+		updateLocation( uf.startPlace );
+		selPlace.onchange = function() {
+			updateLocation( this.selectedIndex );
+			uf.drawTerrain();
+		};
 
 		butCam.onclick = function() { updateCameraTarget() };
 		chkPlacards.checked = uf.displayPlacards > 0 ? true : false;
 		chkPlacards.onchange = function() { uf.displayPlacards = chkPlacards.checked ? 1 : 0; uf.update = true; };
 	}
 
+	function updateLocation( index ) {
+			selPlace.selectedIndex = uf.startPlace = index;
+
+			inpLat.value = uf.lat = uf.gazetteer[ uf.startPlace ][1];
+			inpLon.value = uf.lon = uf.gazetteer[ uf.startPlace ][2];
+	}
+
+	function updateMenu() {
+		var lat = uf.ulLat - 0.5 * (uf.ulLat - uf.lrLat);
+		var lon = uf.ulLon - 0.5 * ( uf.ulLon - uf.lrLon)
+
+		var point = uf.getPoint( lat, lon, uf.zoom );
+		inpCamAlt.value = uf.camAlt = 500;
+		inpCamLat.value = uf.camLat = point.ulTileLat - 0.5;
+		inpCamLon.value = uf.camLon = point.ulTileLon + 0.1;
+
+		inpTarAlt.value = uf.tarAlt = 0;
+		inpTarLat.value = uf.tarLat = point.ulTileLat;
+		inpTarLon.value = uf.tarLon = point.ulTileLon;
+	}
 
 	function updateCameraTarget() {
-
 		uf.camLat = parseFloat( inpCamLat.value);
 		uf.camLon = parseFloat( inpCamLon.value );
 		uf.camAlt = parseFloat( inpCamAlt.value );
@@ -196,12 +206,12 @@
 		var point7, name, img, xStart, yStart, spot, point;
 		var scale = 0.5 * uf.scaleVertical * uf.zoomScales[ uf.zoom ][1];
 
-		for ( var i = 0, iLen = uf.gazetteer.length; i < iLen; i++ ) {
+		for ( var i = 1, iLen = uf.gazetteer.length; i < iLen; i++ ) {
 			place = uf.gazetteer[i];
 			if ( place[1] < uf.ulLat && place[1] > uf.lrLat && place[2] > uf.ulLon  && place[2] < uf.lrLon ) {
 				point7 = uf.getPoint( place[1], place[2], 7);
 				name = point7.tileX + '/' + point7.tileY;
-if ( !uf.images[name] ) {console.log( point7); break; }
+if ( !uf.images[name] ) {console.log( i, point7); break; }
 				img = uf.images[name].img;
 				xStart = img.width * Math.abs( point7.ulTileLon - place[2] ) /  point7.deltaLon;
 				yStart = img.height * ( point7.ulTileLat - place[1] ) /  point7.deltaLat;
@@ -224,7 +234,6 @@ if ( !uf.images[name] ) {console.log( point7); break; }
 		}
 		uf.scene.add( uf.placards );
 	}
-
 
 	function parsePermalink() {
 		var item, index;
@@ -269,18 +278,6 @@ if ( !uf.images[name] ) {console.log( point7); break; }
 		if ( uf.zoom && uf.zoom !== uf.defaults.zoom) txt += '#zoom=' + uf.zoom;
 
 		window.location.hash = txt;
-	}
-
-	function cameraToPermalink() {
-		uf.camX = uf.camera.position.x;
-		uf.camY = uf.camera.position.y;
-		uf.camZ = uf.camera.position.z;
-
-		uf.tarX = uf.controls.target.x;
-		uf.tarY = uf.controls.target.y;
-		uf.tarZ = uf.controls.target.z;
-
-		setPermalink();
 	}
 
 	function clearPermalink() {
@@ -411,6 +408,8 @@ if ( !uf.images[name] ) {console.log( point7); break; }
 		stats.update();
 		if ( uf.update ) {
 			updatePlacards();
+			updateMenu();
+
 			uf.update = false
 		}
 	}
