@@ -1,4 +1,4 @@
-// Theo Armour ~ 2014-03-05 ~ MIT License
+// Theo Armour ~ 2014-03-08 ~ MIT License
 
 	uf.defaults.placards = 0;
 	uf.ref = 'r9';
@@ -175,7 +175,6 @@
 	}
 
 	function updateMenu() {
-
 		uf.drawTerrain();
 
 		var lat = uf.ulLat - 0.5 * (uf.ulLat - uf.lrLat);
@@ -421,8 +420,6 @@ if ( !uf.images[name] ) {console.log( i, point7); break; }
 		stats.update();
 		if ( uf.update ) {
 			updatePlacards();
-//			updateMenu();
-
 			uf.update = false
 		}
 	}
