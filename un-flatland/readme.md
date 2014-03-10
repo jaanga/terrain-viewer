@@ -166,6 +166,13 @@ https://github.com/stevenhorner/PeakVisibility/edit/master/Horners/Horners.geojs
 
 ## Change Log
 
+2014-03-09 ~ Theo
+
+* R10 first commit
+* Adds get altitude
+* Files and folders rejiggled
+* Adds Crossfeed simulator
+
 2014-03-07 ~ Theo
 
 * Fixing permalink issues
