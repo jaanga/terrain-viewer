@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang=en >
+<head>
+<title>unFlatLand R9 ~ Mountains of Scotland</title>
+<meta charset=utf-8 >
+</head>
+<body>
+<script src = http://mrdoob.github.io/three.js/build/three.min.js ></script>
+<script src = http://mrdoob.github.io/three.js/examples/js/controls/TrackballControls.js ></script>
+<script src = http://mrdoob.github.io/three.js/examples/js/libs/stats.min.js ></script>
+<script src = ../r10/un-flatland-r10.js ></script>
+<script src = ../r10/un-flatland-r10-menu.js ></script>
+<script>
+
+	uf.defaults.start = 721;
+	uf.defaults.placards = 1;
+	uf.defaults.lat = 56.7968;
+	uf.defaults.lon = -5.0035;
+
+	uf.defaults.camlat= 55.0;
+	uf.defaults.camlon = -5.0035;
+	uf.defaults.camalt = 3000;
+
+	uf.defaults.tarlat = 56.7968;
+	uf.defaults.tarlon = -5.0035;
+	uf.defaults.taralt = 380;
+
+	uf.defaults.map = 4;
+	uf.defaults.tiles = 11;
+	uf.defaults.zoom = 9;
+
+	document.body.style.cssText = ' margin: 0; overflow: hidden; ';
+	var scotlandMountains;
+
+	uf.init();
+	addMenu();  // in un-flatland-r9-menu.js
+ 	addHelp(); // ditto
+	addScotlandMountains();
+	scotlanimate(); // custom animate
+
+	function addScotlandMountains() {
+		scotlandMountainsDiv = document.body.appendChild( document.createElement( 'div' ) );
+		scotlandMountainsDiv.id = 'movable';
+		scotlandMountainsDiv.style.cssText = ' background-color: #ccc; height: 400px; left: ' + (window.innerWidth - 400) + 'px; opacity: 0.8; overflow:hidden; top: 400px; width: 300px; ';
+		scotlandMountainsDiv.addEventListener( 'mousedown', mouseMove, false );
+		scotlandMountainsDiv.innerHTML = scotlandMountainsText = 
+			'<div id=closer onclick=scotlandMountainsDiv.style.display="none";>[x]</div>' +
+			'<h2 style=margin-bottom:0; >Mountains of Scotland</h2>' +
+			'<a href=JavaScript:uf.lat=56.7968;uf.lon=-5.0035;uf.startPlace=721;uf.zoom=9;uf.setCamera();uf.drawTerrain(); >home</a><br>' +
+		'';
+
+		scotlandMountains = JSON.parse( requestFile( '../../../terrain-plus/gazetteer-geojson/horners.geojson' ) ); 
+		if ( !scotlandMountains ) return;
+		var txt = '', col;
+		
+		for ( var i = 0, iLen = scotlandMountains.features.length; i < iLen; i++ ) {
+			f = scotlandMountains.features[i];
+			lon = f.geometry.coordinates[0];
+			lat = f.geometry.coordinates[1];
+			fp = f.properties;
+			col = fp.Metres > 1200 ? '#c55' : '';
+			txt += '<tr>' +
+				'<td style=background-color:' + col +'; ><a href=JavaScript:uf.lat=' + lat +';uf.lon=' + lon + ';uf.startPlace="";uf.setCamera();uf.zoom=12;uf.drawTerrain(); >' + fp.Name + '</a></td><td>' +  
+					fp.Metres + '</td><td>' + fp.Feet + '</td><td>' + fp.Number + '</td>' + 
+			'</tr>';
+		}
+		scotlandMountainsDiv.innerHTML = scotlandMountainsText + scotlandMountains.features.length + ' mountains listed' +
+			'<div style=height:300px;overflow:scroll; >' +
+			'<table >' +  
+				'<tr><td>name </td><td>metres</td><td>feet </td><td> number</td></tr>' + txt +
+			'</table>' +
+			'</div>';
+	}
+
+	function updateMountains() {
+		if ( uf.mountains && uf.mountains.children.length > 0) {
+			uf.scene.remove( uf.mountains );
+			uf.mountains.children.length = 0;
+		}
+		if ( uf.displayPlacards === 0 ) return;
+
+		uf.mountains = new THREE.Object3D();
+
+		var canvas = document.createElement( 'canvas' );
+		var context = canvas.getContext( '2d' );
+		var off = uf.tilesPerSide % 2 > 0 ? -128 : -256;
+		var pointStart = uf.getPoint( uf.lat, uf.lon, uf.zoom );
+		var point7, name, img, xStart, yStart, spot, point;
+		var scale = 0.5 * uf.scaleVertical * uf.zoomScales[ uf.zoom ][1];
+
+		for ( var i = 0, iLen = scotlandMountains.features.length; i < iLen; i++ ) {
+			f = scotlandMountains.features[i];
+			lon = f.geometry.coordinates[0];
+			lat = f.geometry.coordinates[1];
+			fp = f.properties;
+			if ( lat < uf.ulLat && lat > uf.lrLat && lon > uf.ulLon  && lon < uf.lrLon ) {
+				point7 = uf.getPoint( lat, lon, 7);
+				name = point7.tileX + '/' + point7.tileY;
+				img = uf.images[name].img
+				xStart = img.width * Math.abs( point7.ulTileLon - lon) /  point7.deltaLon;
+				yStart = img.height * ( point7.ulTileLat - lat ) /  point7.deltaLat;
+				canvas.width = img.width;
+				canvas.height = img.height;
+				context.drawImage( img, 0, 0 );
+				spot = context.getImageData( xStart, yStart, 1, 1 ).data;
+
+				point = uf.getPoint( lat, lon, uf.zoom );
+				point.ptX += off + uf.tileSize * ( point.tileX - pointStart.tileX )
+				point.ptY += off + uf.tileSize * ( point.tileY - pointStart.tileY );
+				point.alt = scale * spot[0];
+
+				mesh = drawObject( point.ptX, 0.5 * point.alt, point.ptY );
+				mesh.scale.set( 5, point.alt, 5 );
+				uf.mountains.add( mesh );
+
+				mesh = drawSprite( fp.Name + ' ' + point.alt , '#0f0', point.ptX, 70 + point.alt , point.ptY );
+				uf.mountains.add( mesh );
+			}
+		}
+		uf.scene.add( uf.mountains );
+	}
+
+	function scotlanimate() {
+		requestAnimationFrame( scotlanimate );
+		uf.controls.update();
+		uf.renderer.render( uf.scene, uf.camera );
+		stats.update();
+		if ( uf.update ) {
+			updateMountains();
+			updatePlacards();
+			uf.update = false
+		}
+	}
+</script>
+</body>
+</html>
