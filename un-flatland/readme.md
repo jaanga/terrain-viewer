@@ -21,10 +21,10 @@ Pleasingly, the file size is under 300 lines of code.
 	* [View of Ben Nevis]( http://jaanga.github.io/terrain-viewer/un-flatland/r9/un-flatland-r9.html#placards=1#start=195#camlat=57.05#camlon=-5.0035#camy=200#lat=56.7968#lon=-5.0035#tiles=8#verts=24#taralt=380#tarlat=56.7968#tarlon=-5.0035 )  
 	* [Iquique Chile]( http://jaanga.github.io/terrain-viewer/un-flatland/r9/un-flatland-r9.html#placards=1#start=875#camalt=500#camlat=-20.2167#camlon=-70.3#lat=-20.2167#lon=-70.15#scale=9#tiles=10#verts=24#taralt=2#tarlat=-20.2267#tarlon=-70.15#zoom=14 )
 
-Current crazines:
-[Unflatland Dev]( http://jaanga.github.io/terrain-viewer/un-flatland/r10/un-flatland-r10-debug.html )  
-* Click 'addPath' << right side console menu
-* Have a look, then click 'toggleFollow'
+Current crazines:  
+[Unflatland Dev]( http://jaanga.github.io/terrain-viewer/un-flatland/r10/un-flatland-r10-debug.html )   
+* Click 'addPath' << right side console menu  
+* Have a look, then click 'toggleFollow'  
 
 [unFlatland r6]( http://jaanga.github.io/terrain-viewer/un-flatland/r6/un-flatland-r6.html )
 
