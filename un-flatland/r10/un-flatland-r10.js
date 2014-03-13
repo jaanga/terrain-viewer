@@ -176,7 +176,7 @@
 					}
 				}
 				name = pointLevel.tileX + '/' + pointLevel.tileY;
-				uf.images[ name ] = new uf.image( '../../../' + xDir + name + '.png', pointLevel, latCurrent, lonCurrent, i, j );
+				uf.images[ name ] = new uf.image( '../../../projects/' + xDir + name + '.png', pointLevel, latCurrent, lonCurrent, i, j );
 			}
 		}
 		pointLevel = uf.getPoint( latStart - j * uf.pointZoomWin.deltaLat, lonStart + i * uf.pointZoomWin.deltaLon, uf.zoom);
