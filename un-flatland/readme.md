@@ -8,18 +8,18 @@ _Cropped iframe view of unFlatland latest revision_
 Live demo:
 [unFlatland latest revision]( http://jaanga.github.io/terrain-viewer/un-flatland/latest/index.html )  
 
-* Currently r9 is the latest. The code hs been split into two files: a mapmaking file and a menu or user interface making file.
+* Currently r10 is the latest. The code hs been split into two files: a mapmaking file and a menu or user interface making file.
 The map-making file is fully functional. It can be embedded with a minmimal HTL wrapper in an iframe. It supports numerous permalink parameters.
 Pleasingly, the file size is under 300 lines of code. 
-* Embed in HTML: [Embedded map demo]( http://jaanga.github.io/terrain-viewer/un-flatland/r9/un-flatland-r9-embed-demo.html )  
+* Embed in HTML: [Embedded map demo]( http://jaanga.github.io/terrain-viewer/un-flatland/gallery10/un-flatland-embed-demo.html )  
 	* This demo shows the unflatland JavaScript being embedded in a normal HTML web page. 
 	* Permaninkls are used to set location, altitude, camera and locations and more. 
-* Read geoJSON: [Mountains of Scotland Edition]( http://jaanga.github.io/terrain-viewer/un-flatland/r9/un-flatland-r9-scotland-mountains.html )  
+* Read geoJSON: [Mountains of Scotland Edition]( http://jaanga.github.io/terrain-viewer/un-flatland/gallery10/un-flatland-scotland-mountains.html )  
 	* Demo reads a geoJSON file obtained in GitHub
 * Permalinks: 
-	* [View from My Window]( http://jaanga.github.io/terrain-viewer/un-flatland/r9/un-flatland-r9.html#camalt=20#camlat=37.796#camlon=-122.398#tiles=12#taralt=20#tarlat=37.86#tarlon=-122.43#zoom=13 )  
-	* [View of Ben Nevis]( http://jaanga.github.io/terrain-viewer/un-flatland/r9/un-flatland-r9.html#placards=1#start=195#camlat=57.05#camlon=-5.0035#camy=200#lat=56.7968#lon=-5.0035#tiles=8#verts=24#taralt=380#tarlat=56.7968#tarlon=-5.0035 )  
-	* [Iquique Chile]( http://jaanga.github.io/terrain-viewer/un-flatland/r9/un-flatland-r9.html#placards=1#start=875#camalt=500#camlat=-20.2167#camlon=-70.3#lat=-20.2167#lon=-70.15#scale=9#tiles=10#verts=24#taralt=2#tarlat=-20.2267#tarlon=-70.15#zoom=14 )
+	* [View from My Window]( http://jaanga.github.io/terrain-viewer/un-flatland/r10/un-flatland-r10.html#camalt=20#camlat=37.796#camlon=-122.398#tiles=12#taralt=20#tarlat=37.86#tarlon=-122.43#zoom=13 )  
+	* [View of Ben Nevis]( http://jaanga.github.io/terrain-viewer/un-flatland/r10/un-flatland-r10.html#placards=1#start=195#camlat=57.05#camlon=-5.0035#camy=200#lat=56.7968#lon=-5.0035#tiles=8#verts=24#taralt=380#tarlat=56.7968#tarlon=-5.0035 )  
+	* [Iquique Chile]( http://jaanga.github.io/terrain-viewer/un-flatland/r10/un-flatland-r10.html#placards=1#start=875#camalt=500#camlat=-20.2167#camlon=-70.3#lat=-20.2167#lon=-70.15#scale=9#tiles=10#verts=24#taralt=2#tarlat=-20.2267#tarlon=-70.15#zoom=14 )
 
 Current craziness:  
 [Unflatland Dev]( http://jaanga.github.io/terrain-viewer/un-flatland/r10/un-flatland-r10-debug.html )   
@@ -159,12 +159,16 @@ copyright &copy; 2014 Jaanga authors ~ All work herein is under the [MIT License
 
 ## Credits
 
-Thanks to Steve orner for the Mountains of Scotland geoJSON file:
+Thanks to Steve Horner for the Mountains of Scotland geoJSON file:
 
 https://github.com/stevenhorner/PeakVisibility/edit/master/Horners/Horners.geojson
 
 
 ## Change Log
+
+2014-03-12 ~ Theo
+
+* R10 everywhere
 
 2014-03-09 ~ Theo
 
