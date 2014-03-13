@@ -1,7 +1,7 @@
 // Theo Armour ~ 2014-03-08 ~ MIT License
 
 	uf.defaults.placards = 0;
-	uf.ref = 'r10';
+	uf.title = 'Jaanga unFlatland R10';
 
 	var offsetX;
 	var offsetY;
@@ -11,11 +11,11 @@
 	function addHelp() {
 		help = document.body.appendChild( document.createElement( 'div' ) );
 		help.style.cssText = 'display: none; background-color: #ccc; left: 50px; opacity: 0.9; padding: 20px; ' +
-			'bottom: 0; left: 0; height: 350px; margin: auto; position: absolute; right: 0; top: 0; width: 500px; zIndex:10; ';
+			'bottom: 0; left: 0; height: 370px; margin: auto; position: absolute; right: 0; top: 0; width: 500px; zIndex:10; ';
 		help.innerHTML =
 			'<div onclick=help.style.display="none"; >' +
-				'<h3>Jaanga unFlatland ' + uf.ref + '</h3>' +
-				'<h4>Major Issues</h4>' +
+				'<h3>' + uf.title + '</h3>' +
+				'<h4>Major Issues include the following:</h4>' +
 				'<ul>' +
 					'<li>Gaps betwen tiles</li>' +
 					'<li>High elevations truncated</li>' +
@@ -54,16 +54,16 @@
 			'h1 a {text-decoration: none; }' +
 			'td {font: 400 10pt monospace; }' +
 			'#closer { position: absolute; right: 5px; top: 5px; }' +
-			'#movable { overflow: autp; margin: 10px; padding: 10px 20px; position: absolute; }' +
+			'#movable { overflow: auto; margin: 10px; padding: 10px 20px; position: absolute; }' +
 		'';
 
 		uf.info = document.body.appendChild( document.createElement( 'div' ) );
 		uf.info.id = 'movable';
-		uf.info.style.cssText = ' background-color: #ccc; left: 10px; opacity: 0.8; top: 10px; ';
+		uf.info.style.cssText = ' background-color: #ccc; left: 10px; opacity: 0.8; top: 10px; max-width: 320px; ';
 		uf.info.addEventListener( 'mousedown', mouseMove, false );
 		uf.info.innerHTML = '<div onclick=uf.info.style.display="none";stats.domElement.style.display="none"; >[x]</div>' +
 			'<h1>' +
-				'<a href="" >Jaanga unFlatland<br>' + uf.ref + '</a> ' +
+				'<a href="" >' + uf.title + '</a> ' +
 				'<a href=# title="Get help and info" onclick=help.style.display="block"; ><large>&#x24D8;</large></a>' +
 			'</h1>' +
 			'<p>' +
@@ -172,16 +172,18 @@
 		inpTarLat.value = uf.tarLat;
 		inpTarLon.value = uf.tarLon;
 
-		butCam.onclick = function() { updateCameraTarget() };
+		butCam.onclick = function() { updateCameraTarget(); };
 		chkPlacards.checked = uf.displayPlacards > 0 ? true : false;
 		chkPlacards.onchange = function() { uf.displayPlacards = chkPlacards.checked ? 1 : 0; uf.update = true; };
+
+		window.addEventListener('mouseup', mouseUp, false);
 	}
 
 	function updateMenu() {
 		uf.drawTerrain();
 
 		var lat = uf.ulLat - 0.5 * (uf.ulLat - uf.lrLat);
-		var lon = uf.ulLon - 0.5 * ( uf.ulLon - uf.lrLon)
+		var lon = uf.ulLon - 0.5 * ( uf.ulLon - uf.lrLon);
 
 		var point = uf.getPoint( lat, lon, uf.zoom );
 		inpCamAlt.value = uf.camAlt = 500;
@@ -212,33 +214,36 @@
 			uf.placards.children.length = 0;
 		}
 		if ( uf.displayPlacards === 0 ) return;
-
 		uf.placards = new THREE.Object3D();
 
 		var pointStart = uf.getPoint( uf.lat, uf.lon, uf.zoom );
 		var alt, point, mesh;
+
 		var off = uf.tilesPerSide % 2 > 0 ? -128 : -256;
-		var scale = 0.5 * uf.scaleVertical * uf.zoomScales[ uf.zoom ][1];
+//		var scale = 0.2 * uf.scaleVertical * uf.zoomScales[ uf.zoom ][1];
+
+		var distance = 0.0002 * uf.camera.position.distanceTo( uf.controls.target );
+		var scalePlacard = distance < 0.25 ? 0.25 : distance;
 
 		for ( var i = 1, iLen = uf.gazetteer.length; i < iLen; i++ ) {
 			place = uf.gazetteer[i];
 			lat = place[1]; lon = place[2];
 			if ( lat < uf.ulLat && lat > uf.lrLat && lon > uf.ulLon && lon < uf.lrLon ) {
 				point = uf.getPoint( lat, lon, uf.zoom );
-				point.ptX += off + uf.tileSize * ( point.tileX - pointStart.tileX )
+				point.ptX += off + uf.tileSize * ( point.tileX - pointStart.tileX );
 				point.ptY += off + uf.tileSize * ( point.tileY - pointStart.tileY );
-				alt = getAltitude( lat, lon )
-				point.alt = scale * alt;
-				mesh = drawObject( point.ptX, 0.5 * point.alt, point.ptY );
+				alt = getAltitude( lat, lon );
+				point.alt = uf.scaleVerticalCurrent * alt;
+				mesh = drawObject( point.ptX, 30 + 0.5 * point.alt, point.ptY );
 				mesh.scale.set( 5, point.alt, 5 );
 				uf.placards.add( mesh );
 
-				mesh = drawSprite( place[0] + ' ' + point.alt , '#0f0', point.ptX, 50 + point.alt , point.ptY );
+				mesh = drawSprite( place[0] + ' ' + point.alt , scalePlacard, '#0f0', point.ptX, 50 + point.alt , point.ptY );
+				mesh.material.opacity = 0.5;
 				uf.placards.add( mesh );
 			}
 		}
 		uf.scene.add( uf.placards );
-
 	}
 
 	function parsePermalink() {
@@ -321,7 +326,7 @@
 	function getAltitude( lat, lon ) {
 		var point7 = uf.getPoint( lat, lon, 7);
 		var name = point7.tileX + '/' + point7.tileY;
-if ( !uf.images[name] ) { console.log( point7 ); return 0; }
+if ( !uf.images[name] ) { console.log( 'bad altitude' /*,  point7 */ ); return 0; }
 		var dim, img = uf.images[name].img;
 		canvasAlt.height = canvasAlt.width = dim = img.width;
 		contextAlt.drawImage( img, 0, 0 );
@@ -339,10 +344,7 @@ if ( !uf.images[name] ) { console.log( point7 ); return 0; }
 		return mesh;
 	}
 
-	function drawSprite( text, color, x, y, z) {
-		var distance = uf.camera.position.distanceTo( uf.controls.target );
-		var scale = 0.0005 * distance;
-
+	function drawSprite( text, scale, color, x, y, z) {
 		texture = canvasText( text, color );
 		var spriteMaterial = new THREE.SpriteMaterial( { map: texture, useScreenCoordinates: false, opacity: 1 } );
 		var sprite = new THREE.Sprite( spriteMaterial );
@@ -363,15 +365,19 @@ if ( !uf.images[name] ) { console.log( point7 ); return 0; }
 		return line;
 	}
 
-	function canvasText( text, color ) {
+	function canvasText( textArray, color ) {
 		var canvas = document.createElement( 'canvas' );
 		var context = canvas.getContext( '2d' );
 
-		context.font = '18px sans-serif';
-		var width = context.measureText( text );
+		if ( typeof textArray === 'string' ) textArray = [ textArray ];
+		context.font = '48px sans-serif';
+		var width = 0;
+		for (var i = 0, len = textArray.length; i < len; i++) {
+			width = context.measureText( textArray[i] ).width > width ? context.measureText( textArray[i] ).width : width;
+		}
 
-		canvas.width = ( width.width + 10 ) ; // 480
-		canvas.height = 20;
+		canvas.width = width + 20; // 480
+		canvas.height = textArray.length * 60;
 
 		context.fillStyle = color;
 		context.fillRect( 0, 0, canvas.width, canvas.height);
@@ -381,12 +387,23 @@ if ( !uf.images[name] ) { console.log( point7 ); return 0; }
 		context.strokeRect( 0, 0, canvas.width, canvas.height);
 
 		context.fillStyle = '#000' ;
-		context.font = '18px sans-serif';
-		context.fillText( text, 5, 17 );
+		context.font = '48px sans-serif';
+
+		for (var i = 0, len = textArray.length; i < len; i++) {
+			context.fillText( textArray[i], 10, 48  + i * 60 );
+		}
 
 		var texture = new THREE.Texture( canvas );
 		texture.needsUpdate = true;
 		return texture;
+	}
+
+	function requestFile( fname ) {
+		var xmlHttp = new XMLHttpRequest();
+		xmlHttp.crossOrigin = "Anonymous";
+		xmlHttp.open( 'GET', fname, false );
+		xmlHttp.send( null );
+		return xmlHttp.responseText;
 	}
 
 // events
@@ -409,14 +426,6 @@ if ( !uf.images[name] ) { console.log( point7 ); return 0; }
 		event.target.style.top = ( event.clientY - offsetY ) + 'px';
 	}
 
-	function requestFile( fname ) {
-		var xmlHttp = new XMLHttpRequest();
-		xmlHttp.crossOrigin = "Anonymous";
-		xmlHttp.open( 'GET', fname, false );
-		xmlHttp.send( null );
-		return xmlHttp.responseText;
-	}
-
 // custom animate
 // adds stata * placard support
 	function animate() {
@@ -427,6 +436,6 @@ if ( !uf.images[name] ) { console.log( point7 ); return 0; }
 		if ( uf.update ) {
 			updatePlacards();
 			spnAlt.innerHTML = 'Alt: ' + getAltitude( uf.lat, uf.lon );
-			uf.update = false
+			uf.update = false;
 		}
 	}

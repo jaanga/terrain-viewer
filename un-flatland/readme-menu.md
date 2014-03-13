@@ -7,6 +7,10 @@
 
 
 See also:  
+
+[San Francisco WebG Meet-Up 2014-03-13]( http://jaanga.github.io/events/sf-webgl-2014-03-13/readme-reader.html )
+
+
 [FGx Plane Spotter]( ../../fgx-plane-spotter/index.html )  
   
 

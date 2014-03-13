@@ -176,7 +176,7 @@
 					}
 				}
 				name = pointLevel.tileX + '/' + pointLevel.tileY;
-				uf.images[ name ] = new uf.image( '../../../../' + xDir + name + '.png', pointLevel, latCurrent, lonCurrent, i, j );
+				uf.images[ name ] = new uf.image( '../../../../projects/' + xDir + name + '.png', pointLevel, latCurrent, lonCurrent, i, j );
 			}
 		}
 		pointLevel = uf.getPoint( latStart - j * uf.pointZoomWin.deltaLat, lonStart + i * uf.pointZoomWin.deltaLon, uf.zoom);
@@ -211,9 +211,9 @@
 			geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
 
 			var verts = geometry.vertices;
-			var scale = 0.2 * uf.scaleVertical * uf.zoomScales[ uf.zoom ][1];
+			uf.scaleVerticalCurrent = 0.2 * uf.scaleVertical * uf.zoomScales[ uf.zoom ][1];
 			for ( var i = 0, j = 0, len = imgData.length; i < len; i += 4 ) {
-				verts[j++].y = scale * imgData[i];
+				verts[j++].y = uf.scaleVerticalCurrent * imgData[i];
 			}
 
 			if ( uf.mapType < 1 ) {

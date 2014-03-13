@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang=en >
 <head>
-<title>unFlatLand R9 ~ Mountains of Scotland</title>
+<title>Jaanga unFlatLand Mountains of Scotland</title>
 <meta charset=utf-8 >
 </head>
 <body>
@@ -12,7 +12,7 @@
 <script src = ../r10/un-flatland-r10-menu.js ></script>
 <script>
 
-	uf.defaults.start = 721;
+	uf.defaults.start = 722;
 	uf.defaults.placards = 1;
 	uf.defaults.lat = 56.7968;
 	uf.defaults.lon = -5.0035;
@@ -64,6 +64,7 @@
 					fp.Metres + '</td><td>' + fp.Feet + '</td><td>' + fp.Number + '</td>' + 
 			'</tr>';
 		}
+
 		scotlandMountainsDiv.innerHTML = scotlandMountainsText + scotlandMountains.features.length + ' mountains listed' +
 			'<div style=height:300px;overflow:scroll; >' +
 			'<table >' +  
@@ -87,6 +88,9 @@
 		var pointStart = uf.getPoint( uf.lat, uf.lon, uf.zoom );
 		var point7, name, img, xStart, yStart, spot, point;
 		var scale = 0.5 * uf.scaleVertical * uf.zoomScales[ uf.zoom ][1];
+
+		var distance = uf.camera.position.distanceTo( uf.controls.target );
+		var scalePlacard = 0.0002 * distance;
 
 		for ( var i = 0, iLen = scotlandMountains.features.length; i < iLen; i++ ) {
 			f = scotlandMountains.features[i];
@@ -113,7 +117,7 @@
 				mesh.scale.set( 5, point.alt, 5 );
 				uf.mountains.add( mesh );
 
-				mesh = drawSprite( fp.Name + ' ' + point.alt , '#0f0', point.ptX, 70 + point.alt , point.ptY );
+				mesh = drawSprite( fp.Name + ' ' + point.alt , scalePlacard, '#0f0', point.ptX, 70 + point.alt , point.ptY );
 				uf.mountains.add( mesh );
 			}
 		}
