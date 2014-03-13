@@ -37,7 +37,7 @@
 		stats.domElement.style.cssText = 'position: absolute; right: 0; top: 0; zIndex: 100; ';
 		document.body.appendChild( stats.domElement );
 
-		var data = requestFile( '../../terrain-plus/gazetteer/places-2000.csv' );
+		var data = requestFile( '../../../terrain-plus/gazetteer/places-2000.csv' );
 		var lines = data.split(/\r\n|\n/);
 		uf.gazetteer = [ ['Select a location','37.796','-122.398'] ];
 		for ( var i = 1, length = lines.length; i < length; i++ ) {
