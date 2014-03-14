@@ -176,7 +176,11 @@
 					}
 				}
 				name = pointLevel.tileX + '/' + pointLevel.tileY;
+<<<<<<< HEAD
 				uf.images[ name ] = new uf.image( '../../../../projects/' + xDir + name + '.png', pointLevel, latCurrent, lonCurrent, i, j );
+=======
+				uf.images[ name ] = new uf.image( '../../../' + xDir + name + '.png', pointLevel, latCurrent, lonCurrent, i, j );
+>>>>>>> bc91ea0573e6c2aa88b01c243053eca9dc9ce4ba
 			}
 		}
 		pointLevel = uf.getPoint( latStart - j * uf.pointZoomWin.deltaLat, lonStart + i * uf.pointZoomWin.deltaLon, uf.zoom);
