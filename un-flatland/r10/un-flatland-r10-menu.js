@@ -37,7 +37,7 @@
 		stats.domElement.style.cssText = 'position: absolute; right: 0; top: 0; zIndex: 100; ';
 		document.body.appendChild( stats.domElement );
 
-		var data = requestFile( '../../terrain-plus/gazetteer/places-2000.csv' );
+		var data = requestFile( '../../../terrain-plus/gazetteer/places-2000.csv' );
 		var lines = data.split(/\r\n|\n/);
 		uf.gazetteer = [ ['Select a location','37.796','-122.398'] ];
 		for ( var i = 1, length = lines.length; i < length; i++ ) {
@@ -295,8 +295,8 @@
 	}
 
 	function viewPNG() {
-		window.location = 'http://jaanga.github.io/terrain-viewer/png-viewer/r3/png-viewer-r3.html#' +
-			lon2tile( uf.lon, 7 ) + '#' + lat2tile( uf.lat, 7 );
+		window.location = '../../png-viewer/r3/png-viewer-r3.html#' +
+			uf.lon2tile( uf.lon, 7 ) + '#' + uf.lat2tile( uf.lat, 7 );
 	}
 
 	function getTile( direction ) {
