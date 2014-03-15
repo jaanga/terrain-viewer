@@ -1,4 +1,4 @@
-[Jaanga](../index.html ) &raquo; [Terrain Viewer]( ./index.html )
+[Jaanga](../index.html ) &raquo;<br>[Terrain Viewer]( ./index.html )
 =================================================================
 
 <p id=rm >
@@ -18,11 +18,12 @@
 </p>
 
 ****
+
 All the action is currently here:  
 [Jaanga unFlatland]( ./un-flatland/index.html )
 
 The source of the 3D data:  
-[Terrain]( ../terrain/index.html )
+[Jaanga Terrain]( ../terrain/index.html )
 
 
 ****

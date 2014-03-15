@@ -32,7 +32,7 @@ Source code: [Hello World]( https://github.com/jaanga/terrain-viewer/tree/gh-pag
 * Set location, zoom and scale using window.location.hash. Source code page has sample links
 
 #### 3. PNG Viewer
-Live Demo: [PNG Viewer]( http://jaanga.github.io/terrain-viewer/png-viewer/r3/png-viewer-r3.html )  
+Live Demo: [PNG Viewer]( http://jaanga.github.io/terrain-viewer/png-viewer/latest/index.html )  
 Web page: [PNG Viewer Read Me]( http://jaanga.github.io/terrain-viewer/png-viewer/index.html )  
 Source code: [PNG Viewer]( https://github.com/jaanga/terrain-viewer/tree/gh-pages/png-viewer )
 
@@ -210,6 +210,15 @@ See also and in particular <a href="http://fgx.github.io" target="_blank">FGx on
 
 
 ## Change Log
+
+2014-03-15 ~ Theo
+
+* Update read me files
+
+2014-01-30 ~ 2014-03-15
+
+* Many updates
+* See individual folders for details
 
 2014-01-29 ~ Theo
 
