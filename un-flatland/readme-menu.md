@@ -8,9 +8,7 @@
 
 See also:  
 
-[San Francisco WebGL Meet-Up 2014-03-13 - Presentation]( ../../../events/sf-webgl-2014-03-13/r1/demo/sf-webgl-2014-03-13.html )
-
-[San Francisco WebGL Meet-Up 2014-03-13 - Read Me]( ../../../events/sf-webgl-2014-03-13/index.html )
+[San Francisco WebGL Meet-Up 2014-03-13]( http://jaanga.github.io/events/sf-webgl-2014-03-13/ )
 
 
 [FGx Plane Spotter - Latest Rev]( ../../fgx-plane-spotter/latest/index.html )  
@@ -18,11 +16,6 @@ See also:
 [FGx Plane Spotter - Read Me]( ../../fgx-plane-spotter/index.html )  
   
 
-<!--
-<p id=def >
-	<a href=JavaScript:displayPage("test-folder-def/readme.md",def); >test-folder-def Read Me</a>
-</p>
--->
 
 ****
 
