@@ -19,12 +19,10 @@
 
 ****
 
-All the action is currently here:  
-[Jaanga unFlatland]( ./un-flatland/index.html )
-
 The source of the 3D data:  
 [Jaanga Terrain]( ../terrain/index.html )
 
+[Terrain Plus]( ../terrain-plus/index.html )
 
 ****
 
