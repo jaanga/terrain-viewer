@@ -109,7 +109,7 @@
 
 		uf.update = true;
 	};
-
+// why not name space? 
 	function cameraToLocation() {
 		var off = uf.tilesPerSide % 2 > 0 ? -128 : -256;
 		var pointStart = uf.getPoint( uf.lat, uf.lon, uf.zoom );
@@ -153,10 +153,10 @@
 		var latStart = uf.lat + uf.start * uf.pointZoomWin.deltaLat;
 		var lonStart = uf.lon - uf.start * uf.pointZoomWin.deltaLon;
 
-		var lonCurrent, latCurrent, pointLevel7, xDir;
-		for ( var i = 0; i < uf.tilesPerSide; i++ ) {
+		var i, j, lonCurrent, latCurrent, xDir;
+		for ( i = 0; i < uf.tilesPerSide; i++ ) {
 			lonCurrent = lonStart + i * uf.pointZoomWin.deltaLon;
-			for ( var j = 0; j < uf.tilesPerSide; j++ ) {
+			for ( j = 0; j < uf.tilesPerSide; j++ ) {
 				latCurrent = latStart - j * uf.pointZoomWin.deltaLat;
 				if ( uf.zoom < 8) {
 					pointLevel = uf.getPoint( latCurrent, lonCurrent, uf.zoom);

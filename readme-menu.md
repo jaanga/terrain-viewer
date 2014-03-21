@@ -2,7 +2,7 @@
 ====================================================================
 
 <p id=rm >
-	<a href=JavaScript:displayPage("readme.md",rm); >Read Me</a>
+	<a href=JavaScript:displayPage("#readme.md#rm"); >Read Me</a>
 </p>
 
 <p id=uf >
