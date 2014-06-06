@@ -13,7 +13,7 @@
 
 	var fileName = '../../../terrain-plus/gazetteer/places-2000.csv';
 	var gazetteer;
-	var startPlace =  1627; // San Francisco ~ but see below  // barcelona 154;
+	var startPlace =  1623; // San Francisco ~ but see below  // barcelona 154;
 
 	var image;
 	var canvas, context;
@@ -49,7 +49,7 @@
 				'X tile: <input type=number min=0 max=127 value=' + xTile + ' onchange=xTile=parseInt(this.value,10);getImage(); ><br>' +
 				'Y tile: <input type=number min=0 max=127 value=' + yTile + ' onchange=yTile=parseInt(this.value,10);getImage(); ><br>' +
 			'</div>' +
-			'<select title="Choose one of ' + gazetteer.length + ' places" id=selPlace ' +
+			'<select title="Choose one of ' + gazetteer.length + ' places" id=selPlace ' + 
 					'onchange="setLocation( this.selectedIndex );" >' +
 			'</select>' +
 			'<hr>' +
@@ -118,7 +118,7 @@
 	}
 
 	function setText() {
-
+		
 		canvas.width = image.width;
 		canvas.height =  image.height;
 
@@ -159,7 +159,7 @@
 				context.fillText( gazetteer[i][0] + ' - altitude: ' + ( place[0] - 1.5 ) * 20, xStart + 15, yStart + 5 );
 // console.log( gazetteer[i][0], place[0] );
 			}
-		}
+		} 
 
 		var br = '<br>', br2 = br + br;
 		var txt = 'Folder: ' + xDir + br2 +
@@ -178,7 +178,7 @@
 			'<textarea cols=40 >' + places + '</textarea>' + br;
 			menu.innerHTML = txt;
 
-			shades.innerHTML =
+			shades.innerHTML = 
 			'PNG:' + br +
 			'width: ' + image.width + br +
 			'height: ' + image.height + br +
@@ -189,7 +189,7 @@
 			'Shades/heights:<br>' +
 			'<div id=swatch style=color:white;height=40px; >&nbsp;</div>' +
 			'<a href=JavaScript:lighten(); >Lighten</a>' + br2 ;
-			actions.innerHTML =
+			actions.innerHTML = 
 			'<a href=JavaScript:link(); >Permalink</a>' + br +
 			'<a href="http://jaanga.github.io/terrain-viewer/hello-world/r1/hello-world.html#terrain-de15#' + xTile + '#' + yTile + '" >Hello Word</a>' + br +
 			'<a href="http://jaanga.github.io/terrain-viewer/un-flatland/latest/index.html#7#' + ulLat + '#' + ulLon + '#1#1" >unFlatland</a>' +
@@ -227,7 +227,7 @@
 		context.putImageData(image, 0, 0);
 
 		var br = '<br>', br2 = br + br;
-		shades.innerHTML =
+		shades.innerHTML = 
 			'PNG:' + br +
 			'width: ' + image.width + br +
 			'height: ' + image.height + br +
@@ -274,7 +274,7 @@ console.log( colors.sort( function(a,b){return a-b} ) )
 	Array.max = function( array ){
 		return Math.max.apply( Math, array );
 	};
-
+	 
 	Array.min = function( array ){
 		return Math.min.apply( Math, array );
 	};
@@ -298,12 +298,10 @@ console.log( colors.sort( function(a,b){return a-b} ) )
 	}
 
 	function rgbToHex(r, g, b) {
-		if (r > 255 || g > 255 || b > 255) throw "Invalid color component";
-		var str = ( ( r << 16 ) | ( g << 8 ) | b ).toString( 16 );
-		str = ('0' + str).slice(-6); 
-console.log ( str );
-		return str;
+		if ( r > 255 || g > 255 || b > 255) throw "Invalid color component";
+		return ( (r << 16) | (g << 8) | b ).toString(16);
 	}
+
 </script>
 </body>
 </html>

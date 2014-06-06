@@ -19,12 +19,13 @@ Pleasingly, the file size is under 300 lines of code.
 * Read geoJSON: [Mountains of Scotland Edition]( http://jaanga.github.io/terrain-viewer/un-flatland/gallery10/un-flatland-scotland-mountains.html )  
 	* Demo reads a geoJSON file obtained in GitHub
 * Sample permalinks: 
-	* [View from My Window]( http://jaanga.github.io/terrain-viewer/un-flatland/r10/un-flatland-r10.html#camalt=20#camlat=37.796#camlon=-122.398#tiles=12#taralt=20#tarlat=37.86#tarlon=-122.43#zoom=13 )  
-	* [View of Ben Nevis]( http://jaanga.github.io/terrain-viewer/un-flatland/r10/un-flatland-r10.html#placards=1#start=195#camlat=57.05#camlon=-5.0035#camy=200#lat=56.7968#lon=-5.0035#tiles=8#verts=24#taralt=380#tarlat=56.7968#tarlon=-5.0035 )  
-	* [Iquique Chile]( http://jaanga.github.io/terrain-viewer/un-flatland/r10/un-flatland-r10.html#placards=1#start=875#camalt=500#camlat=-20.2167#camlon=-70.3#lat=-20.2167#lon=-70.15#scale=9#tiles=10#verts=24#taralt=2#tarlat=-20.2267#tarlon=-70.15#zoom=14 )
+	* [View from My Window]( http://jaanga.github.io/terrain-viewer/un-flatland/r11/un-flatland-r11.html#camalt=20#camlat=37.796#camlon=-122.398#tiles=12#taralt=20#tarlat=37.86#tarlon=-122.43#zoom=13 )  
+	* [View of Ben Nevis]( http://jaanga.github.io/terrain-viewer/un-flatland/r11/un-flatland-r11.html#placards=1#start=195#camlat=57.05#camlon=-5.0035#camy=200#lat=56.7968#lon=-5.0035#tiles=8#verts=24#taralt=380#tarlat=56.7968#tarlon=-5.0035 )  
+	* [Iquique Chile]( http://jaanga.github.io/terrain-viewer/un-flatland/r11/un-flatland-r11.html#placards=1#start=875#camalt=500#camlat=-20.2167#camlon=-70.3#lat=-20.2167#lon=-70.15#scale=9#tiles=10#verts=24#taralt=2#tarlat=-20.2267#tarlon=-70.15#zoom=14 )   
+	* [Jotunheimen Norway]( http://jaanga.github.io/terrain-viewer/un-flatland/r11/un-flatland-r11.html#start=0#camalt=500#camlat=61.10639637138628#camlon=8.349609375#lat=61.63#lon=8.3#scale=4#tiles=10#tarlat=61.60639637138628#tarlon=8.349609375#zoom=11 )
 
 Current craziness:  
-[Unflatland Dev]( http://jaanga.github.io/terrain-viewer/un-flatland/r10/un-flatland-r10-debug.html )   
+[Unflatland Dev]( http://jaanga.github.io/terrain-viewer/un-flatland/r11/un-flatland-r11-debug.html )   
 * Click 'addPath' << right side console menu  
 * Have a look, then click 'toggleFollow'  
 
