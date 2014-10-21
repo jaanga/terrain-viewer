@@ -99,7 +99,7 @@ See also
 
 ## Road Map
 
-* every location has an assoco=iated github gist - with near real-time updates
+* Every location has an associated github gist - with near real-time updates
 * Fast, accurate way to go from XYZ to lat/ln/alt. Opposite of getPoint.
 * Add shade and shadows
 * Add fog
@@ -169,6 +169,11 @@ https://github.com/stevenhorner/PeakVisibility/edit/master/Horners/Horners.geojs
 
 
 ## Change Log
+
+2014-10-21 ~ Theo
+
+* fix r11 titles
+* cube to box in r10/11
 
 2014-03-12 ~ Theo
 
