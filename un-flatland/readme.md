@@ -99,6 +99,7 @@ See also
 
 ## Road Map
 
+* every location has an assoco=iated github gist - with near real-time updates
 * Fast, accurate way to go from XYZ to lat/ln/alt. Opposite of getPoint.
 * Add shade and shadows
 * Add fog

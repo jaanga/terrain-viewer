@@ -109,6 +109,7 @@
 
 		uf.update = true;
 	};
+
 // why not name space? 
 	function cameraToLocation() {
 		var off = uf.tilesPerSide % 2 > 0 ? -128 : -256;

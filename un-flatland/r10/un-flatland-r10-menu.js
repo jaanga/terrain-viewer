@@ -337,7 +337,7 @@ if ( !uf.images[name] ) { console.log( 'bad altitude' /*,  point7 */ ); return 0
 	}
 
 	function drawObject( x, y, z ) {
-		var geometry = new THREE.CubeGeometry( 1, 1, 1 );
+		var geometry = new THREE.BoxGeometry( 1, 1, 1 );
 		var material = new THREE.MeshNormalMaterial( { opacity: 0.5, transparent: true });
 		var mesh = new THREE.Mesh( geometry, material );
 		mesh.position.set( x, y, z) ;
