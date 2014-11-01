@@ -208,7 +208,7 @@
 			uf.context.drawImage( heightmap, cropStartX - 2, cropStartY - 2, cropSizeX + 2, cropSizeY + 2, 0, 0, uf.vertsPerTile, uf.vertsPerTile);
 			var imgData = uf.context.getImageData( 0, 0, uf.vertsPerTile, uf.vertsPerTile ).data;
 
-			geometry = new THREE.PlaneGeometry( uf.tileSize + 2, uf.tileSize + 2, uf.vertsPerTile - 1, uf.vertsPerTile - 1);
+			geometry = new THREE.PlaneBufferGeometry( uf.tileSize + 2, uf.tileSize + 2, uf.vertsPerTile - 1, uf.vertsPerTile - 1);
 			geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
 
 			var verts = geometry.vertices;

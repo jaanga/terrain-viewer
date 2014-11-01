@@ -17,7 +17,7 @@
 				'<h3>' + uf.title + '</h3>' +
 				'<h4>Major Issues include the following:</h4>' +
 				'<ul>' +
-					'<li>Gaps betwen tiles</li>' +
+					'<li>Gaps between tiles</li>' +
 					'<li>High elevations truncated</li>' +
 					'<li>Occasional repeating of rows or columns of tiles</li>' +
 					'<li>Altitudes indicate relative not actual positions</li>' +
