@@ -332,7 +332,7 @@ Offset x:0 y:0
 		var pointsLL = [];
 		var pointsControl = [];
 		var off = uf.tilesPerSide % 2 > 0 ? -128 : -256;
-		var point
+		var point;
 		for (var i = 0, len = pointsArr.length; i < len; i++) {
 			point = uf.getPoint( pointsArr[i][0], pointsArr[i][2], uf.zoom )
 			point.offsetX = off + uf.tileSize * ( point.tileX - pointStart.tileX );
@@ -496,8 +496,8 @@ Offset x:0 y:0
 	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
 
 	function updatePosition() {
-	var binormal = new THREE.Vector3();
-	var normal = new THREE.Vector3();
+		var binormal = new THREE.Vector3();
+		var normal = new THREE.Vector3();
 		t += 0.002;
 		t = t >= 1.0 ? 0 : t;
 
@@ -513,12 +513,13 @@ Offset x:0 y:0
 		normal.copy( binormal ).cross( dir );
 		pos.add( normal.clone() );
 
-		cameraBot.position = pos;
+		cameraBot.position.set( pos.x, pos.y, pos.z );
 		var lookAt = tube.parameters.path.getPointAt( ( t + 30 / tube.parameters.path.getLength() ) % 1 );
 		cameraBot.matrix.lookAt(cameraBot.position, lookAt, normal);
 		cameraBot.rotation.setFromRotationMatrix( cameraBot.matrix, cameraBot.rotation.order );
 
-		aircraft.position = tube.parameters.path.getPointAt( ( t + 60 / tube.parameters.path.getLength() ) % 1 );
+		pos = tube.parameters.path.getPointAt( ( t + 60 / tube.parameters.path.getLength() ) % 1 );
+		aircraft.position.set( pos.x, pos.y, pos.z );
 		var aircraftLookAt = tube.parameters.path.getPointAt( ( t + 90 / tube.parameters.path.getLength() ) % 1 );
 		aircraft.matrix.lookAt(aircraft.position, aircraftLookAt, normal);
 		aircraft.rotation.setFromRotationMatrix( aircraft.matrix, aircraft.rotation.order );

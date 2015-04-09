@@ -41,6 +41,7 @@
 		controls = new THREE.TrackballControls( camera, renderer.domElement );
 
 		heightMap = document.createElement('img' )
+		heightMap.crossOrigin = 'Anonymous';
 		heightMap.src =  'http://jaanga.github.io/' + zoom + '/' + x + '/' + y +'.png';
 		heightMap.onload = initCanvas;
 	}
@@ -75,6 +76,7 @@
 		controls.update();
 		renderer.render( scene, camera );
 	}
+
 </script>
 </body>
 </html>
